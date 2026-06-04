@@ -5,6 +5,7 @@ import NeuroStore from './components/NeuroStore';
 import TokenMarket from './components/TokenMarket';
 import SynapticMap from './components/SynapticMap';
 import AdminPanel from './components/AdminPanel';
+import SettingsModal from './components/SettingsModal';
 
 export default function App() {
   // --- Persistent LocalStorage State Initialization ---
@@ -126,6 +127,8 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
       }
     ];
   });
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [settingsActiveTab, setSettingsActiveTab] = useState('general');
 
   // --- Synchronization Effects ---
 
@@ -248,6 +251,10 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
         createNewChat={createNewChat}
+        onOpenSettings={(tab) => {
+          setIsSettingsOpen(true);
+          setSettingsActiveTab(tab);
+        }}
       />
 
       {/* Main Panel Routing */}
@@ -311,6 +318,18 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
           />
         )}
       </main>
+
+      {/* Settings Dashboard Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        activeTab={settingsActiveTab}
+        setActiveTab={setSettingsActiveTab}
+        nostalgicMode={nostalgicMode}
+        setNostalgicMode={setNostalgicMode}
+        tokenBalance={tokenBalance}
+        setTokenBalance={setTokenBalance}
+      />
     </div>
   );
 }

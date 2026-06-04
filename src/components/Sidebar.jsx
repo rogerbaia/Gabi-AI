@@ -14,7 +14,10 @@ import {
   Sparkles, 
   Heart,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  SlidersHorizontal,
+  LayoutGrid,
+  Monitor
 } from 'lucide-react';
 
 export default function Sidebar({
@@ -26,7 +29,8 @@ export default function Sidebar({
   chats,
   activeChatId,
   setActiveChatId,
-  createNewChat
+  createNewChat,
+  onOpenSettings
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [openFolders, setOpenFolders] = useState({
@@ -305,6 +309,36 @@ export default function Sidebar({
       <div className={`p-4 border-t ${
         nostalgicMode ? 'border-[#39ff14] bg-black/80' : 'border-slate-800 bg-slate-950/20'
       }`}>
+        {/* Settings, Personalization and Computer icons */}
+        <div className="flex items-center justify-between mb-3 px-1 text-slate-500">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => onOpenSettings('general')}
+              className="hover:text-slate-200 transition-colors"
+              title="Configuración"
+            >
+              <SlidersHorizontal size={14} />
+            </button>
+            <button
+              onClick={() => onOpenSettings('personalizacion')}
+              className="hover:text-slate-200 transition-colors"
+              title="Personalización"
+            >
+              <LayoutGrid size={14} />
+            </button>
+            <button
+              onClick={() => onOpenSettings('computer')}
+              className="hover:text-slate-200 transition-colors"
+              title="My Computer (Sandbox)"
+            >
+              <Monitor size={14} />
+            </button>
+          </div>
+          <span className="text-[10px] opacity-60 font-mono tracking-wide">
+            from Synaptica
+          </span>
+        </div>
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {nostalgicMode ? (
