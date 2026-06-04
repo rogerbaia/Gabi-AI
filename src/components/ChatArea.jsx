@@ -935,74 +935,77 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
         <div className={`p-4 border-t ${
           nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-950'
         }`}>
-          <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto space-y-3">
+          <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto">
             
             {/* Main big search input container */}
-            <div className={`rounded-2xl border flex items-end p-2 transition-all ${
+            <div className={`rounded-2xl border p-3 flex flex-col gap-2 transition-all ${
               nostalgicMode
                 ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
                 : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
             }`}>
-              <div className="flex-1">
-                <textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
-                  rows={1}
-                  className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage(e);
-                    }
-                  }}
+              {/* Top Row: Textarea and Actions */}
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <textarea
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
+                    rows={1}
+                    className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage(e);
+                      }
+                    }}
+                  />
+                </div>
+                
+                {/* Input action items */}
+                <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50 flex-shrink-0">
+                  {/* Voice microphone button */}
+                  <button
+                    type="button"
+                    onClick={toggleListening}
+                    className={`p-2 rounded-xl transition-all ${
+                      isListening
+                        ? 'bg-rose-500 text-slate-950 animate-pulse'
+                        : nostalgicMode
+                          ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
+                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    }`}
+                    title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
+                  >
+                    {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                  </button>
+
+                  <button
+                    type="submit"
+                    className={`p-2 rounded-xl transition-all ${
+                      nostalgicMode
+                        ? 'retro-button border border-[#39ff14] text-[#39ff14]'
+                        : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
+                    }`}
+                  >
+                    <Send size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Bottom Row: Specialization selection and balance info (inside the box!) */}
+              <div className="flex items-center justify-between border-t border-slate-800/40 pt-2.5 mt-1 text-xs">
+                <NeuroHubMenu
+                  selectedModel={selectedModel}
+                  setSelectedModel={setSelectedModel}
+                  isOpen={modelSelectorOpen}
+                  setIsOpen={setModelSelectorOpen}
+                  nostalgicMode={nostalgicMode}
                 />
+
+                <span className="text-[10px] text-slate-500 font-mono">
+                  Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
+                </span>
               </div>
-              
-              {/* Input action items */}
-              <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50">
-                {/* Voice microphone button */}
-                <button
-                  type="button"
-                  onClick={toggleListening}
-                  className={`p-2 rounded-xl transition-all ${
-                    isListening
-                      ? 'bg-rose-500 text-slate-950 animate-pulse'
-                      : nostalgicMode
-                        ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                  }`}
-                  title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
-                >
-                  {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-                </button>
-
-                <button
-                  type="submit"
-                  className={`p-2 rounded-xl transition-all ${
-                    nostalgicMode
-                      ? 'retro-button border border-[#39ff14] text-[#39ff14]'
-                      : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
-                  }`}
-                >
-                  <Send size={14} />
-                </button>
-              </div>
-            </div>
-
-            {/* Model selection and balance info bar */}
-            <div className="flex items-center justify-between text-xs px-2">
-              <NeuroHubMenu
-                selectedModel={selectedModel}
-                setSelectedModel={setSelectedModel}
-                isOpen={modelSelectorOpen}
-                setIsOpen={setModelSelectorOpen}
-                nostalgicMode={nostalgicMode}
-              />
-
-              <span className="text-[10px] text-slate-500 font-mono">
-                Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
-              </span>
             </div>
           </form>
         </div>
