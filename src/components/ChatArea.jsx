@@ -933,14 +933,14 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   <ChevronUp size={12} className="text-slate-500" />
                   
                   {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
-                  <div className="w-24 h-5 relative flex-shrink-0">
-                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[20px] md:right-[-4px] w-24 h-[86px] rounded-2xl border overflow-hidden bg-black shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
+                  <div className="w-[106px] h-5 relative flex-shrink-0">
+                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[20px] md:right-[-4px] w-[106px] h-[76px] rounded-2xl border overflow-hidden bg-black shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
                       nostalgicMode 
                         ? 'border-[#39ff14]/70 shadow-[#39ff14]/30' 
                         : 'border-slate-700/80 shadow-slate-950/80'
                     }`}>
-                      {/* Inner Container: Rendered at 192x172px and scaled to 50% to bypass browser minimum font size limitations */}
-                      <div className="w-[192px] h-[172px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
+                      {/* Inner Container: Rendered at 212x152px and scaled to 50% to bypass browser minimum font size limitations */}
+                      <div className="w-[212px] h-[152px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-1 px-1 opacity-70">
                           <span className="font-bold text-[11px] text-slate-400 font-mono">gabi-sh</span>
                           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -967,7 +967,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                               .replace('(env) ubuntu@gabi-sandbox:~/search_workspace$ ', '(env) $ ');
                               
                             return (
-                              <div key={idx} className={`${logColor} truncate max-w-[170px]`}>
+                              <div key={idx} className={`${logColor} truncate max-w-[190px]`}>
                                 {cleanLog}
                               </div>
                             );
