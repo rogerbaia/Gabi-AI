@@ -934,7 +934,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   
                   {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
                   <div className="w-24 h-5 relative flex-shrink-0">
-                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-50px] right-[38px] md:right-[14px] w-24 h-24 rounded-2xl border flex flex-col justify-between overflow-hidden bg-black p-2 shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
+                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-25px] right-[13px] md:right-[-11px] w-24 h-24 rounded-2xl border flex flex-col justify-between overflow-hidden bg-black p-2 shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
                       nostalgicMode 
                         ? 'border-[#39ff14]/70 text-[#39ff14] shadow-[#39ff14]/30' 
                         : 'border-slate-700/80 text-emerald-500 shadow-slate-950/80'
