@@ -126,7 +126,7 @@ export default function Sidebar({
               className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold text-center transition-all ${
                 nostalgicMode
                   ? 'retro-button border border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14]/10'
-                  : 'bg-sky-400 text-slate-950 hover:bg-sky-300 shadow-md shadow-sky-950/20'
+                  : 'bg-[#7ED4FD] text-slate-950 hover:bg-[#9adffd] shadow-md shadow-sky-950/10'
               }`}
             >
               Cargar Tokens

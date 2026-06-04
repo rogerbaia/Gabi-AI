@@ -1027,7 +1027,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                         className={`p-2 rounded-xl transition-all ${
                           nostalgicMode
                             ? 'retro-button border border-[#39ff14] text-[#39ff14]'
-                            : 'bg-violet-500 text-white hover:bg-violet-400 shadow-md shadow-violet-950/20'
+                            : 'bg-[#AC91FD] text-slate-950 hover:bg-[#c2adff] shadow-md shadow-violet-950/10'
                         }`}
                       >
                         <Send size={14} />
