@@ -29,6 +29,103 @@ import { playDialUpSound, stopDialUpSound } from '../utils/audio';
 import NeuroHubMenu from './NeuroHubMenu';
 import confetti from 'canvas-confetti';
 
+// Helper for simple, natural language mock responses (matches backend)
+const generateSimpleMockResponse = (queryText, model) => {
+  const query = queryText.toLowerCase().trim();
+  
+  if (query.includes('arcoiris') || query.includes('arco iris')) {
+    return `Los arcoíris se forman por la descomposición de la luz solar al refractarse en las gotas de lluvia. Sus 7 colores principales de afuera hacia adentro son:
+
+1. **Rojo** 🔴
+2. **Naranja** 🟠
+3. **Amarillo** 🟡
+4. **Verde** 🟢
+5. **Azul** 🔵
+6. **Añil (Índigo)** 🌀
+7. **Violeta** 🟣
+
+Es un espectro de colores continuo que surge por la refracción y dispersión física de la luz.`;
+  }
+  
+  if (query.includes('hola') || query.includes('buenos dias') || query.includes('buenas tardes') || query.includes('saludos')) {
+    return `¡Hola! Soy **Gabi AI**, tu meta-IA de Synaptica. ¿En qué te puedo colaborar hoy? Puedes usarme para resolver consultas generales o seleccionar una de mis especialidades en el NeuroHub.`;
+  }
+  
+  if (query.includes('quien eres') || query.includes('que eres') || query.includes('tu nombre')) {
+    return `Soy **Gabi AI**, un agente cognitivo orquestado por Synaptica Labs. Combino múltiples modelos de IA (OpenAI, Claude, Perplexity, DeepSeek) y ejecuto tareas en una computadora virtual (Sandbox) en tiempo real.`;
+  }
+  
+  if (query.includes('synaptica')) {
+    return `**Synaptica** es un laboratorio de Inteligencia Artificial que se especializa en desarrollar agentes autónomos cognitivos y plataformas de computación en la nube para automatizar flujos técnicos complejos.`;
+  }
+  
+  if (query.includes('creador') || query.includes('creo') || query.includes('fundador')) {
+    return `Fui diseñada e implementada por los ingenieros e investigadores de **Synaptica Labs**, bajo la dirección de Rogerio Baia.`;
+  }
+  
+  if (query.includes('úlcera') || query.includes('herpética') || query.includes('corneal')) {
+    return `### Enfoque Terapéutico: Úlcera Corneal Herpética Recurrente
+
+Basado en la directiva del estudio HEDS y directrices oftálmicas:
+
+1. **Fase Aguda:**
+   * **Antiviral Tópico:** Ganciclovir gel oftálmico 0.15% 5 veces al día (menos tóxico que trifluridina).
+   * **Antiviral Oral:** Aciclovir 400 mg 5 veces al día (o Valaciclovir 500 mg c/8h) durante 7-10 días.
+2. **Profilaxis Prolongada:**
+   * **Aciclovir 400 mg c/12h** por 12 meses. Reduce las recurrencias en un **45%**.
+3. **Corticosteroides:**
+   * Contraindicados en úlceras epiteliales activas. Se usan bajo supervisión estricta solo para mitigar cicatrices en queratitis estromal.`;
+  }
+  
+  if (model === 'viajia') {
+    return `### Propuesta de Viaje: ViajIA engine ✈️
+
+Hemos recopilado tarifas hoteleras y opciones de rutas para: *"**${queryText}**"*
+
+1. **Vuelos Directos:**
+   * Económico: $180 USD (Equipaje de mano).
+   * Corporativo: $240 USD (Flexibilidad total).
+2. **Alojamiento Recomendado:**
+   * **Hotel Vista Hermosa (4.8★):** $85 USD/noche con desayuno incluido.
+3. **Recomendaciones:** Agenda con anticipación para asegurar tarifas promocionales.`;
+  }
+  
+  if (model === 'nutriia') {
+    return `### Plan de Bienestar y Nutrición 🥗
+
+Comparando guías nutricionales y médicas preventivas para: *"**${queryText}**"*
+
+1. **Distribución Calórica:** 45% carbohidratos complejos, 30% proteínas, 25% grasas saludables.
+2. **Alimentos Clave:** Espinacas, almendras, salmón y aguacate. Evitar azúcares refinados.
+3. **Ejercicio:** Cardio moderado de 30 minutos y fuerza 3 veces a la semana.`;
+  }
+  
+  if (model === 'tubeia') {
+    return `### Resultados de Búsqueda: TubeIA 🎬
+
+Canales de video de Synaptica indexados para: *"**${queryText}**"*
+
+1. **[Video 1] Tutorial: Agentes de IA en Producción (12:45)**
+   * *Canal:* Synaptica Labs | *Vistas:* 12.4K | *Valoración:* 4.9★
+2. **[Video 2] Computadoras del Futuro: Virtual Sandbox (08:20)**
+   * *Canal:* TechVlog | *Vistas:* 8.1K | *Valoración:* 4.7★
+3. **[Video 3] Curso: Web Audio API y Sintetizadores (15:10)**
+   * *Canal:* AudioCode | *Vistas:* 3.2K | *Valoración:* 4.8★
+
+*Escribe el nombre de un video para reproducirlo virtualmente en el Sandbox.*`;
+  }
+  
+  return `### Síntesis de OmnIA: Respuesta Consolidada
+
+Para tu consulta: *"**${queryText}**"*
+
+Tras analizar y fusionar los datos de OpenAI, Anthropic Claude y Perplexity:
+
+1. **Definición Principal:** Este tema hace referencia a un concepto general de conocimiento. De forma consolidada, los modelos confirman que la respuesta principal se centra en establecer el contexto lógico y los fundamentos básicos del mismo.
+2. **Enfoque Práctico:** Se recomienda abordar la consulta organizando la información en pasos sencillos, evitando términos redundantes y enfocándose en soluciones directas.
+3. **Recomendación de Synaptica:** Si deseas una respuesta en tiempo real detallada o código ejecutable en el sandbox, recuerda que puedes ingresar tu API Key en la configuración para realizar consultas en vivo a través de la red oficial.`;
+};
+
 export default function ChatArea({
   nostalgicMode,
   tokenBalance,
@@ -343,88 +440,7 @@ export default function ChatArea({
     }
 
     if (!aiResponse) {
-      if (userMsg.toLowerCase().includes('úlcera') || userMsg.toLowerCase().includes('herpética')) {
-        aiResponse = `### Enfoque Terapéutico para Úlcera Corneal Herpética Recurrente
-
-Basado en la consolidación sinérgica de modelos médicos y bases de datos académicas (HEDS, JAMA Ophthalmology):
-
-1. **Tratamiento Activo (Fase Aguda):**
-   * **Antivirales Tópicos:** Ganciclovir gel oftálmico 0.15% 5 veces al día (preferido sobre trifluridina por menor toxicidad epitelial).
-   * **Antivirales Orales:** Aciclovir 400 mg 5 veces al día (o Valaciclovir 500 mg cada 8 horas) durante 7-10 días para reducir la carga viral.
-
-2. **Profilaxis Prolongada (Prevención de Recurrencias):**
-   * **Aciclovir Oral 400 mg cada 12 horas** por 6 a 12 meses.
-   * **Evidencia HEDS:** Esta dosificación oral a largo plazo reduce la tasa de recurrencias en un **45%** de manera estadísticamente significativa.
-
-3. **Corticosteroides (Uso Crítico):**
-   * **Contraindicados** en presencia de úlcera epitelial activa (queratitis dendrítica).
-   * **Indicados únicamente** bajo cobertura antiviral estricta en casos de compromiso estromal inmunológico para mitigar cicatrices corneales.
-
-4. **Aspectos Psicosociales y de Educación (Aporte Claude):**
-   * El paciente debe evitar desencadenantes conocidos (estrés emocional, exposición a radiación UV sin lentes de sol, estados de inmunosupresión).
-   * Se requiere apego estricto y seguimiento clínico para evaluar adelgazamiento estromal.`;
-      } else if (selectedModel === 'viajia') {
-        aiResponse = `### Propuesta Consolidada de Viaje (ViajIA engine)
-
-Hemos consultado múltiples agregadores de tarifas hoteleras y de aerolíneas para darte la mejor opción estilo Trivago:
-
-1. **Vuelos Encontrados:**
-   * **Opción Económica:** Vuelo directo operado por aerolínea de bajo coste ($180 USD, excelente horario matutino).
-   * **Opción Corporativa:** Vuelo tradicional con equipaje incluido ($240 USD).
-
-2. **Alojamiento Recomendado (Coincidencia Semántica 4.8★):**
-   * **Hotel Vista Hermosa:** Calificado como el mejor precio/beneficio en 4 plataformas distintas. Tarifa: $85 USD/noche (Incluye desayuno y cancelación gratuita).
-
-3. **Itinerario Sugerido:**
-   * **Día 1:** Arribo, check-in, paseo por el centro histórico y cena recomendada por guías locales.
-   * **Día 2:** Tour guiado de museos y mirador principal.`;
-      } else if (selectedModel === 'nutriia') {
-        aiResponse = `### Plan de Nutrición y Bienestar Personalizado (NutriIA)
-
-Comparando guías nutricionales y recomendaciones médicas preventivas:
-
-1. **Estructura Calórica:**
-   * Distribución sugerida: 45% carbohidratos complejos, 30% proteínas limpias, 25% grasas saludables.
-
-2. **Recomendaciones de Alimentos:**
-   * Incrementar ingesta de espinacas, almendras, salmón and aguacate.
-   * Evitar azúcares procesados para optimizar la salud de la microbiota local.
-
-3. **Rutina de Ejercicios:**
-   * Cardio moderado (30 mins al día) y entrenamiento de fuerza funcional 3 veces por semana.
-   * Consulta al oftalmólogo o médico familiar antes de iniciar levantamientos de carga pesada si tienes antecedentes de presión intraocular elevada.`;
-      } else if (selectedModel === 'tubeia') {
-        aiResponse = `### Resultados de Búsqueda y Reproducción en TubeIA 🎬
-
-Hemos consultado la red de videos, tutoriales y streaming de Synaptica para tu búsqueda: *"**${userMsg}**"*
-
-1. **[Video 1] Tutorial Completo: Orquestación de Agentes con Gabi AI (12:45)**
-   * **Canal:** Synaptica Labs | **Vistas:** 12.4K | **Valoración:** 4.9★
-   * *Descripción:* Aprende a desplegar tus propios modelos locales y sincronizar el sandbox virtual.
-   
-2. **[Video 2] Computadoras del Futuro: Virtual Sandbox y Contenedores en Vivo (08:20)**
-   * **Canal:** TechVlog | **Vistas:** 8.1K | **Valoración:** 4.7★
-   * *Descripción:* Un vistazo a fondo sobre cómo las IAs controlan entornos virtuales de forma segura.
-
-3. **[Video 3] Curso Rápido: Sintetizadores de Audio en la Web (15:10)**
-   * **Canal:** AudioCode | **Vistas:** 3.2K | **Valoración:** 4.8★
-   * *Descripción:* Cómo implementar tonos dial-up y efectos de sonido analógicos usando la Web Audio API.
-
-*¡Puedes escribir el nombre de un video para que simulemos su reproducción en el Sandbox virtual!*`;
-      } else {
-        aiResponse = `### Respuesta Consolidada de OmnIA
-
-Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *"**${userMsg}**"*
-
-* **Análisis Inicial:** Identificado como una consulta general. Hemos coordinado las respuestas de 5 modelos de IA distintos para filtrar y compilar los puntos de mayor coincidencia científica y eliminar contradicciones.
-* **Solución Compilada:**
-  1. La mayoría de los modelos coinciden en estructurar la respuesta con base en prioridades lógicas inmediatas.
-  2. Perplexity aporta que las fuentes académicas recientes recomiendan mantener un enfoque holístico del problema.
-  3. Claude enfatiza los factores psicosociales y de interacción del usuario con su entorno.
-  4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.
-  
-*¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*`;
-      }
+      aiResponse = generateSimpleMockResponse(userMsg, selectedModel);
     }
 
     // Add response to chat state
