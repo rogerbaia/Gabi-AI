@@ -943,11 +943,33 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                         <span className="scale-75 origin-left font-bold text-[8px] text-slate-400 font-mono">gabi-sh</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 scale-75 animate-pulse" />
                       </div>
-                      <div className="flex-1 font-mono leading-[8px] scale-[0.8] origin-top-left pt-1.5 px-[2px] opacity-90 space-y-[2px]">
-                        <div className="text-white text-[7px]">$ python3</div>
-                        <div className="text-emerald-400 font-bold text-[7px]">&gt;&gt;&gt; ir_tune()</div>
-                        <div className="text-slate-500 text-[7px]">synapses: [ok]</div>
-                        <div className="text-slate-400 text-[6px] truncate">gabi-ir-v1.bin</div>
+                      <div className="flex-1 font-mono leading-[7px] scale-[0.8] origin-top-left pt-1.5 px-[2px] opacity-90 space-y-[2px] overflow-hidden">
+                        {sandboxLogs.slice(-5).map((log, idx) => {
+                          const isSystem = log.startsWith('[system]');
+                          const isUserCommand = log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:');
+                          
+                          let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
+                          if (isSystem) {
+                            logColor = 'text-emerald-400 font-bold';
+                          } else if (isUserCommand) {
+                            logColor = 'text-white font-bold';
+                          } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
+                            logColor = 'text-sky-400';
+                          } else if (log.startsWith('[Inteligencia Real]')) {
+                            logColor = 'text-amber-400';
+                          }
+                          
+                          let cleanLog = log
+                            .replace('ubuntu@gabi-sandbox:~$ ', '$ ')
+                            .replace('ubuntu@gabi-sandbox:~/search_workspace$ ', '$ ')
+                            .replace('(env) ubuntu@gabi-sandbox:~/search_workspace$ ', '(env) $ ');
+                            
+                          return (
+                            <div key={idx} className={`${logColor} text-[5.5px] leading-[7px] truncate max-w-[100px]`}>
+                              {cleanLog}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
