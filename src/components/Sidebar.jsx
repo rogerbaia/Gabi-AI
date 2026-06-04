@@ -81,7 +81,7 @@ export default function Sidebar({
           <img
             src="/synaptica_logo.png"
             alt="Synaptica Logo"
-            className={`h-6 object-contain shrink-0 ${nostalgicMode ? 'brightness-[2] hue-rotate-[90deg]' : ''}`}
+            className={`h-8 object-contain shrink-0 ${nostalgicMode ? 'brightness-[2] hue-rotate-[90deg]' : ''}`}
           />
           <div className="flex flex-col">
             <span className={`text-lg font-bold font-display tracking-tight leading-none ${
