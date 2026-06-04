@@ -981,7 +981,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
             )}
 
             {/* Box 2: Dialogue input form */}
-            <form onSubmit={handleSendMessage} className="w-full max-w-[758px] mx-auto">
+            <form onSubmit={handleSendMessage} className="w-full max-w-[738px] mx-auto">
               <div className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
                 nostalgicMode
                   ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
