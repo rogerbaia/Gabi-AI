@@ -12,7 +12,18 @@ import {
   Bot,
   User,
   ExternalLink,
-  Coins
+  Coins,
+  Monitor,
+  Maximize2,
+  X,
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Terminal,
+  Loader2,
+  Minimize2,
+  Columns
 } from 'lucide-react';
 import { playDialUpSound, stopDialUpSound } from '../utils/audio';
 import NeuroHubMenu from './NeuroHubMenu';
@@ -35,6 +46,20 @@ export default function ChatArea({
   const [showThinkingDetails, setShowThinkingDetails] = useState(true);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Sandbox (Computadora virtual de Gabi) state
+  const [sandboxState, setSandboxState] = useState(() => {
+    return localStorage.getItem('synaptica_sandbox_state') || 'minimized';
+  });
+  const [sandboxLogs, setSandboxLogs] = useState([]);
+  const [currentQueryText, setCurrentQueryText] = useState('');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const terminalEndRef = useRef(null);
+
+  // Guardar estado del sandbox
+  useEffect(() => {
+    localStorage.setItem('synaptica_sandbox_state', sandboxState);
+  }, [sandboxState]);
 
   // Web Speech API recognition setup
   const recognitionRef = useRef(null);
@@ -81,6 +106,15 @@ export default function ChatArea({
     scrollToBottom();
   }, [activeChat?.messages, isThinking]);
 
+  // Auto-scroll simulated terminal
+  useEffect(() => {
+    if (sandboxState !== 'hidden' && sandboxState !== 'minimized') {
+      setTimeout(() => {
+        terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+  }, [sandboxLogs, sandboxState]);
+
   // Tasks Checklist for Meta-IA Reasoning (Estilo DeepSeek + Manus)
   const reasoningTasks = [
     "Interpretando consulta e identificando dominios temáticos...",
@@ -92,6 +126,109 @@ export default function ChatArea({
     "Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
     "Compilando y sintetizando respuesta definitiva en formato premium..."
   ];
+
+  // Sincronizar consulta cuando cambia el chat activo
+  useEffect(() => {
+    if (activeChat && activeChat.messages && activeChat.messages.length > 0) {
+      const userMsgs = activeChat.messages.filter(m => m.sender === 'user');
+      if (userMsgs.length > 0) {
+        const lastUserMsg = userMsgs[userMsgs.length - 1].text;
+        setCurrentQueryText(lastUserMsg);
+        setThinkingStep(reasoningTasks.length - 1);
+        setIsThinking(false);
+        setIsPlaying(false);
+      } else {
+        setCurrentQueryText('');
+        setThinkingStep(0);
+        setIsThinking(false);
+        setIsPlaying(false);
+      }
+    } else {
+      setCurrentQueryText('');
+      setThinkingStep(0);
+      setIsThinking(false);
+      setIsPlaying(false);
+    }
+  }, [activeChat?.id]);
+
+  // Efecto del temporizador de razonamiento para la simulación
+  useEffect(() => {
+    let timer;
+    if (isThinking && isPlaying) {
+      const durationPerStep = nostalgicMode ? 950 : 500;
+      timer = setTimeout(() => {
+        if (thinkingStep < reasoningTasks.length - 1) {
+          setThinkingStep(prev => prev + 1);
+        } else {
+          setIsThinking(false);
+          setIsPlaying(false);
+          triggerResponseGeneration();
+        }
+      }, durationPerStep);
+    }
+    return () => clearTimeout(timer);
+  }, [isThinking, isPlaying, thinkingStep, nostalgicMode]);
+
+  // Generar logs en base al paso actual, la consulta y el modelo
+  const getLogsForStep = (step, queryText, model) => {
+    if (!queryText) return ['[system] Computadora lista. Esperando consulta...'];
+    const querySnippet = queryText.substring(0, 30) + (queryText.length > 30 ? '...' : '');
+    const category = model === 'omnia' ? 'general' : model;
+    
+    const allLogs = [
+      [
+        "[system] Inicializando sandbox virtual de Gabi AI...",
+        "ubuntu@gabi-sandbox:~$ mkdir -p ./search_workspace && cd ./search_workspace"
+      ],
+      [
+        `ubuntu@gabi-sandbox:~/search_workspace$ echo "Query: ${querySnippet}" > query.txt`,
+        "ubuntu@gabi-sandbox:~/search_workspace$ python3 -m venv env && source env/bin/activate"
+      ],
+      [
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Consultando OpenAI GPT-4 para estructura clínica...",
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 -c \"import openai; print('OpenAI API connection OK')\"",
+        "OpenAI: Obteniendo directrices para la consulta..."
+      ],
+      [
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Consultando Anthropic Claude para tono y soporte...",
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ curl -s -X POST \"https://api.anthropic.com/v1/messages\" -d \"model=claude-3\" ...",
+        "Claude: Generando respuestas estructuradas y guías de interacción."
+      ],
+      [
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Buscando papers en Perplexity para citas académicas...",
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ curl -s -X POST \"https://api.perplexity.ai/chat/completions\" ...",
+        "Perplexity: Referencias bibliográficas cargadas con éxito."
+      ],
+      [
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 analyze_contradictions.py --inputs=openai,claude,perplexity",
+        "Analizador: Buscando contradicciones lógicas en las respuestas de los modelos...",
+        "Analizador: Sin discrepancias críticas. Datos consolidados."
+      ],
+      [
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 adjust_synapses.py --category=" + category,
+        "[Inteligencia Real] Calibrando pesos neuronales para temática: " + category,
+        "[Inteligencia Real] Ajustando peso de modelos en base a feedback histórico..."
+      ],
+      [
+        `(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 merge.py --category=${category} --output=synthesis.md`,
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ cat ./synthesis.md",
+        "[system] Tareas finalizadas con éxito. Respuesta definitiva enviada al chat."
+      ]
+    ];
+
+    let logs = [];
+    for (let i = 0; i <= step; i++) {
+      if (allLogs[i]) {
+        logs = [...logs, ...allLogs[i]];
+      }
+    }
+    return logs;
+  };
+
+  // Actualizar logs cuando cambia el paso o la consulta
+  useEffect(() => {
+    setSandboxLogs(getLogsForStep(thinkingStep, currentQueryText, selectedModel));
+  }, [thinkingStep, currentQueryText, selectedModel]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -115,32 +252,29 @@ export default function ChatArea({
       text: userMsg
     });
 
-    setIsThinking(true);
+    // Iniciar simulación reactiva controlada por useEffect
+    setCurrentQueryText(userMsg);
     setThinkingStep(0);
+    setIsThinking(true);
+    setIsPlaying(true);
     setShowThinkingDetails(true);
 
-    // If Nostalgic mode is on, play dial-up sounds
+    // Ajustar vista de la computadora a split si estaba minimizada o cerrada
+    if (sandboxState === 'hidden' || sandboxState === 'minimized') {
+      setSandboxState('split');
+    }
+
     if (nostalgicMode) {
       playDialUpSound();
     }
+  };
 
-    // Simulate step by step thinking
-    const totalSteps = reasoningTasks.length;
-    const durationPerStep = nostalgicMode ? 950 : 500; // longer if dial-up is playing to match audio
-
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      currentStep++;
-      if (currentStep < totalSteps) {
-        setThinkingStep(currentStep);
-      } else {
-        clearInterval(interval);
-        
-        // Generate simulated response based on the query or select template
-        let aiResponse = "";
-        
-        if (userMsg.toLowerCase().includes('úlcera') || userMsg.toLowerCase().includes('herpética')) {
-          aiResponse = `### Enfoque Terapéutico para Úlcera Corneal Herpética Recurrente
+  const triggerResponseGeneration = () => {
+    const userMsg = currentQueryText || "Consulta";
+    let aiResponse = "";
+    
+    if (userMsg.toLowerCase().includes('úlcera') || userMsg.toLowerCase().includes('herpética')) {
+      aiResponse = `### Enfoque Terapéutico para Úlcera Corneal Herpética Recurrente
 
 Basado en la consolidación sinérgica de modelos médicos y bases de datos académicas (HEDS, JAMA Ophthalmology):
 
@@ -159,8 +293,8 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
 4. **Aspectos Psicosociales y de Educación (Aporte Claude):**
    * El paciente debe evitar desencadenantes conocidos (estrés emocional, exposición a radiación UV sin lentes de sol, estados de inmunosupresión).
    * Se requiere apego estricto y seguimiento clínico para evaluar adelgazamiento estromal.`;
-        } else if (selectedModel === 'viajia') {
-          aiResponse = `### Propuesta Consolidada de Viaje (ViajIA engine)
+    } else if (selectedModel === 'viajia') {
+      aiResponse = `### Propuesta Consolidada de Viaje (ViajIA engine)
 
 Hemos consultado múltiples agregadores de tarifas hoteleras y de aerolíneas para darte la mejor opción estilo Trivago:
 
@@ -174,8 +308,8 @@ Hemos consultado múltiples agregadores de tarifas hoteleras y de aerolíneas pa
 3. **Itinerario Sugerido:**
    * **Día 1:** Arribo, check-in, paseo por el centro histórico y cena recomendada por guías locales.
    * **Día 2:** Tour guiado de museos y mirador principal.`;
-        } else if (selectedModel === 'nutriia') {
-          aiResponse = `### Plan de Nutrición y Bienestar Personalizado (NutriIA)
+    } else if (selectedModel === 'nutriia') {
+      aiResponse = `### Plan de Nutrición y Bienestar Personalizado (NutriIA)
 
 Comparando guías nutricionales y recomendaciones médicas preventivas:
 
@@ -189,8 +323,8 @@ Comparando guías nutricionales y recomendaciones médicas preventivas:
 3. **Rutina de Ejercicios:**
    * Cardio moderado (30 mins al día) y entrenamiento de fuerza funcional 3 veces por semana.
    * Consulta al oftalmólogo o médico familiar antes de iniciar levantamientos de carga pesada si tienes antecedentes de presión intraocular elevada.`;
-        } else {
-          aiResponse = `### Respuesta Consolidada de OmnIA
+    } else {
+      aiResponse = `### Respuesta Consolidada de OmnIA
 
 Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *"**${userMsg}**"*
 
@@ -202,24 +336,21 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
   4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.
   
 *¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*`;
-        }
+    }
 
-        // Add response to chat state
-        addMessageToChat({
-          id: Date.now() + 1,
-          sender: 'omnia',
-          text: aiResponse,
-          model: selectedModel,
-          wasVoted: false,
-          thoughts: reasoningTasks.map((t, i) => `[OK] ${t}`)
-        });
+    // Add response to chat state
+    addMessageToChat({
+      id: Date.now() + 1,
+      sender: 'omnia',
+      text: aiResponse,
+      model: selectedModel,
+      wasVoted: false,
+      thoughts: reasoningTasks.map((t, i) => `[OK] ${t}`)
+    });
 
-        setIsThinking(false);
-        if (nostalgicMode) {
-          stopDialUpSound();
-        }
-      }
-    }, durationPerStep);
+    if (nostalgicMode) {
+      stopDialUpSound();
+    }
   };
 
   const handleVote = (msgId, voteType) => {
@@ -251,322 +382,643 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
     });
   };
 
-  return (
-    <div className={`flex-1 flex flex-col h-full overflow-hidden ${
-      nostalgicMode ? 'nostalgic-crt text-[#39ff14]' : 'bg-slate-950'
-    }`}>
-      {/* Top Header */}
-      <div className={`px-6 py-4 flex items-center justify-between border-b ${
-        nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-900/20'
+  const handlePlayPause = () => {
+    if (isThinking) {
+      setIsPlaying(prev => !prev);
+      if (nostalgicMode) {
+        if (!isPlaying) {
+          playDialUpSound();
+        } else {
+          stopDialUpSound();
+        }
+      }
+    } else {
+      // Re-run simulation
+      setIsThinking(true);
+      setIsPlaying(true);
+      setThinkingStep(0);
+      if (nostalgicMode) {
+        playDialUpSound();
+      }
+    }
+  };
+
+  const renderReducedOverlay = () => {
+    return (
+      <div className={`w-full rounded-2xl border p-5 shadow-2xl ${
+        nostalgicMode 
+          ? 'bg-black border-[#39ff14] text-[#39ff14] font-mono' 
+          : 'bg-slate-900/95 border-slate-800 backdrop-blur-md text-slate-100'
       }`}>
-        <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-xl border ${
-            nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-900 border-slate-800 text-emerald-400'
-          }`}>
-            <BrainCircuit size={18} className={nostalgicMode ? 'text-[#39ff14]' : 'animate-pulse'} />
+        <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-4">
+          <div className="flex items-center gap-2.5">
+            <div className={`p-1.5 rounded-lg border ${
+              nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-950 border-slate-800 text-emerald-400'
+            }`}>
+              <Terminal size={14} className={isThinking && isPlaying ? 'animate-pulse' : ''} />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold font-display">La computadora de Gabi</h4>
+              <p className="text-[9px] text-slate-500 font-mono">Gabi está usando Terminal</p>
+            </div>
           </div>
-          <div>
-            <h2 className={`text-sm font-bold ${nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-100'}`}>
-              Meta-IA Consolidada
-            </h2>
-            <p className="text-[10px] text-slate-500 font-mono">
-              Omni-routing activo | {selectedModel.toUpperCase()}
-            </p>
+          
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setSandboxState('split')}
+              className={`p-1.5 rounded-lg hover:bg-slate-800 transition-colors ${
+                nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Acoplar a la derecha"
+            >
+              <Columns size={12} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setSandboxState('minimized')}
+              className={`p-1.5 rounded-lg hover:bg-slate-800 transition-colors ${
+                nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Minimizar"
+            >
+              <ChevronDown size={12} />
+            </button>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-xs text-slate-500 font-mono hidden sm:inline">
-            Tokens gastados: 5 NTK por envío
+
+        <div className="space-y-3 font-mono text-[11px] leading-relaxed">
+          <div className="text-xs font-bold text-slate-400 mb-2">Progreso de la tarea</div>
+          <div className="space-y-2">
+            {reasoningTasks.map((task, idx) => {
+              const isDone = thinkingStep > idx;
+              const isActive = thinkingStep === idx;
+              return (
+                <div
+                  key={idx}
+                  className={`flex items-start gap-3 transition-all duration-200 ${
+                    isDone 
+                      ? 'text-emerald-400 font-bold' 
+                      : isActive 
+                        ? 'text-slate-100 font-bold' 
+                        : 'text-slate-500'
+                  }`}
+                >
+                  <span className="flex-shrink-0 mt-0.5">
+                    {isDone ? (
+                      <span className="inline-block w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[9px]">✓</span>
+                    ) : isActive ? (
+                      isThinking && isPlaying ? (
+                        <Loader2 size={12} className="animate-spin text-emerald-400" />
+                      ) : (
+                        <span className="inline-block w-4 h-4 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-center leading-3 font-bold text-[9px]">▶</span>
+                      )
+                    ) : (
+                      <span className="inline-block w-4 h-4 rounded-full bg-transparent text-transparent border border-slate-800 text-center leading-3 font-bold text-[9px]">•</span>
+                    )}
+                  </span>
+                  <span>{task}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-5 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+          <span className="flex items-center gap-1">
+            <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-emerald-400 animate-pulse' : 'bg-emerald-500'}`} />
+            {isThinking ? (isPlaying ? 'Procesando...' : 'Pausado') : 'Completado'}
           </span>
-          <span className={`text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 ${
-            nostalgicMode ? 'border border-[#39ff14] text-[#39ff14]' : 'bg-emerald-950 text-emerald-400 border border-emerald-900/30'
-          }`}>
-            <Activity size={10} className="animate-ping" />
-            ONLINE
-          </span>
+          <span>{thinkingStep + 1} / 8 tareas</span>
         </div>
       </div>
+    );
+  };
 
-      {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {activeChat?.messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-lg mx-auto space-y-4">
-            <div className={`w-16 h-16 rounded-2xl border flex items-center justify-center ${
-              nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-900 border-slate-800 text-emerald-400'
+  const renderTerminalSidebar = () => {
+    const isFullscreen = sandboxState === 'fullscreen';
+    
+    return (
+      <div className={`h-full border-l flex flex-col overflow-hidden transition-all duration-300 ${
+        isFullscreen ? 'w-full md:w-[70vw] lg:w-[80vw]' : 'w-full md:w-[480px] lg:w-[500px]'
+      } ${
+        nostalgicMode 
+          ? 'bg-black border-[#39ff14] text-[#39ff14]' 
+          : 'bg-synaptica-dark border-slate-850'
+      }`}>
+        <div className={`px-4 py-3 flex items-center justify-between border-b ${
+          nostalgicMode ? 'border-[#39ff14]' : 'border-slate-850 bg-slate-900/40'
+        }`}>
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className={`p-1 rounded ${
+              nostalgicMode ? 'border border-[#39ff14]' : 'bg-slate-950 text-emerald-400'
             }`}>
-              <BrainCircuit size={32} />
+              <Terminal size={12} />
             </div>
-            <div className="space-y-1">
-              <h3 className={`text-lg font-bold font-display ${nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-200'}`}>
-                Pregunta a Gabi AI
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                Escribe tu consulta y observa el proceso de razonamiento en tiempo real. Gabi AI consultará a 5 IAs distintas para darte la mejor síntesis filtrada.
+            <div className="overflow-hidden">
+              <h3 className="text-xs font-bold truncate">Ordenador de Gabi</h3>
+              <p className="text-[9px] text-slate-500 font-mono truncate">
+                {isThinking ? 'Ejecutando proceso de razonamiento...' : 'Computadora lista - Conexión SSH'}
               </p>
             </div>
-            {/* Try simulated medical query */}
-            <div className="flex gap-2 flex-wrap justify-center pt-2">
-              <button
-                onClick={() => setInputText('¿Cuál es el mejor enfoque terapéutico para una úlcera corneal herpética recurrente?')}
-                className={`text-[11px] px-3 py-1.5 rounded-lg border transition-all ${
-                  nostalgicMode
-                    ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14]/10 font-mono'
-                    : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
-                }`}
-              >
-                Simular Caso Clínico (Úlcera Corneal) 🩺
-              </button>
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setSandboxState('reduced')}
+              className={`p-1.5 rounded hover:bg-slate-800 transition-colors ${
+                nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Convertir en panel flotante"
+            >
+              <Monitor size={12} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setSandboxState(isFullscreen ? 'split' : 'fullscreen')}
+              className={`p-1.5 rounded hover:bg-slate-800 transition-colors ${
+                nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title={isFullscreen ? "Restaurar tamaño lateral" : "Expandir a pantalla completa"}
+            >
+              {isFullscreen ? <Minimize2 size={12} /> : <Columns size={12} />}
+            </button>
+            <button
+              type="button"
+              onClick={() => setSandboxState('minimized')}
+              className={`p-1.5 rounded hover:bg-slate-800 transition-colors ${
+                nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Minimizar panel"
+            >
+              <X size={12} />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 bg-black font-mono text-[11px] leading-relaxed space-y-2">
+          {sandboxLogs.map((log, idx) => {
+            const isSystem = log.startsWith('[system]');
+            const isUserCommand = log.includes('ubuntu@gabi-sandbox:~$') || log.includes('ubuntu@gabi-sandbox:~/search_workspace$') || log.includes('(env) ubuntu@gabi-sandbox:');
+            
+            let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-300';
+            if (isSystem) {
+              logColor = 'text-emerald-500 font-bold';
+            } else if (isUserCommand) {
+              logColor = 'text-white font-bold';
+            } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
+              logColor = 'text-sky-400';
+            } else if (log.startsWith('[Inteligencia Real]')) {
+              logColor = 'text-amber-400';
+            }
+            
+            return (
+              <div key={idx} className={`${logColor} whitespace-pre-wrap`}>
+                {log}
+              </div>
+            );
+          })}
+          <div ref={terminalEndRef} />
+        </div>
+
+        <div className={`p-3 border-t flex flex-col gap-2 ${
+          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-850 bg-slate-950'
+        }`}>
+          <div className="flex items-center justify-between gap-3">
+            <input
+              type="range"
+              min="0"
+              max={reasoningTasks.length - 1}
+              value={thinkingStep}
+              onChange={(e) => {
+                const val = parseInt(e.target.value);
+                setThinkingStep(val);
+                setIsPlaying(false);
+                if (isThinking && nostalgicMode) {
+                  stopDialUpSound();
+                }
+              }}
+              className="flex-1 accent-emerald-500 h-1 rounded bg-slate-800 cursor-pointer"
+            />
+            
+            <div className="flex items-center gap-1.5 text-[9px] font-mono select-none flex-shrink-0">
+              <span className={`w-2 h-2 rounded-full ${
+                isPlaying && isThinking 
+                  ? 'bg-emerald-500 animate-ping' 
+                  : 'bg-red-500'
+              }`} />
+              <span className={isPlaying && isThinking ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
+                {isPlaying && isThinking ? 'EN VIVO' : 'PAUSADO'}
+              </span>
             </div>
           </div>
-        ) : (
-          activeChat?.messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex gap-4 max-w-3xl ${
-                msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''
-              }`}
-            >
-              {/* Avatar */}
-              <div className={`w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center ${
-                msg.sender === 'user'
-                  ? nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-800 border-slate-700 text-slate-300'
-                  : nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-emerald-950 border-emerald-900/40 text-emerald-400'
-              }`}>
-                {msg.sender === 'user' ? <User size={16} /> : <Bot size={16} />}
-              </div>
 
-              {/* Bubble Body */}
-              <div className="space-y-3 flex-1 overflow-hidden">
-                <div className={`p-4 rounded-2xl text-sm leading-relaxed border ${
-                  msg.sender === 'user'
-                    ? nostalgicMode
-                      ? 'bg-black border-[#39ff14] text-[#39ff14]'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-100'
-                    : nostalgicMode
-                      ? 'bg-black border-[#39ff14] text-[#39ff14]'
-                      : 'bg-slate-900/30 border-slate-850/70 text-slate-200 backdrop-blur-sm'
-                }`}>
-                  {/* Markdown simulator (simple parsing for titles/bullets) */}
-                  <div className="space-y-3">
-                    {msg.text.split('\n').map((line, idx) => {
-                      if (line.startsWith('### ')) {
-                        return <h4 key={idx} className="font-bold font-display text-base text-slate-100 mt-2">{line.replace('### ', '')}</h4>;
-                      }
-                      if (line.startsWith('1. ') || line.startsWith('2. ') || line.startsWith('3. ') || line.startsWith('4. ')) {
-                        return <div key={idx} className="font-bold text-slate-200 mt-1">{line}</div>;
-                      }
-                      if (line.startsWith('   * ') || line.startsWith(' * ') || line.startsWith('o ') || line.startsWith('• ')) {
-                        return <div key={idx} className="pl-5 text-slate-400 flex items-start gap-1.5"><span className="text-emerald-400">•</span><span>{line.replace(/^(\s*\*\s*|\s*o\s*|\s*•\s*)/, '')}</span></div>;
-                      }
-                      return <p key={idx} className="text-xs text-slate-300 font-sans leading-relaxed">{line}</p>;
-                    })}
-                  </div>
-                </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                disabled={thinkingStep === 0}
+                onClick={() => {
+                  setThinkingStep(prev => Math.max(0, prev - 1));
+                  setIsPlaying(false);
+                  if (nostalgicMode) stopDialUpSound();
+                }}
+                className={`p-1.5 rounded hover:bg-slate-800/80 transition-colors disabled:opacity-30 ${
+                  nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Paso Anterior"
+              >
+                <SkipBack size={12} />
+              </button>
+              
+              <button
+                type="button"
+                onClick={handlePlayPause}
+                className={`p-1.5 rounded hover:bg-slate-800/80 transition-colors ${
+                  nostalgicMode ? 'text-[#39ff14]' : 'text-slate-200 hover:text-white'
+                }`}
+                title={isPlaying && isThinking ? 'Pausar' : 'Reproducir'}
+              >
+                {isPlaying && isThinking ? <Pause size={12} /> : <Play size={12} />}
+              </button>
 
-                {/* Rating & Action buttons for AI messages */}
-                {msg.sender === 'omnia' && (
-                  <div className="flex items-center gap-3 text-xs pl-2">
-                    <span className="text-[10px] text-slate-500 font-mono">¿Te sirvió la síntesis?</span>
-                    <button
-                      disabled={msg.voted}
-                      onClick={() => handleVote(msg.id, 'up')}
-                      className={`flex items-center gap-1 py-0.5 px-2 rounded hover:bg-slate-800 transition-colors ${
-                        msg.voted === 'up' 
-                          ? 'text-emerald-400 font-bold bg-emerald-950/20' 
-                          : 'text-slate-500 hover:text-slate-300'
-                      }`}
-                    >
-                      <ThumbsUp size={12} />
-                      <span>Útil (+5 NTK)</span>
-                    </button>
-                    <button
-                      disabled={msg.voted}
-                      onClick={() => handleVote(msg.id, 'down')}
-                      className={`flex items-center gap-1 py-0.5 px-2 rounded hover:bg-slate-800 transition-colors ${
-                        msg.voted === 'down' 
-                          ? 'text-rose-400 font-bold bg-rose-950/20' 
-                          : 'text-slate-500 hover:text-slate-300'
-                      }`}
-                    >
-                      <ThumbsDown size={12} />
-                      <span>Impreciso</span>
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button
+                type="button"
+                disabled={thinkingStep === reasoningTasks.length - 1}
+                onClick={() => {
+                  setThinkingStep(prev => Math.min(reasoningTasks.length - 1, prev + 1));
+                  setIsPlaying(false);
+                  if (nostalgicMode) stopDialUpSound();
+                }}
+                className={`p-1.5 rounded hover:bg-slate-800/80 transition-colors disabled:opacity-30 ${
+                  nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Paso Siguiente"
+              >
+                <SkipForward size={12} />
+              </button>
             </div>
-          ))
-        )}
 
-        {/* Real-time Reasoning Terminal Panel (Manus/DeepSeek Style) */}
-        {isThinking && (
-          <div className="flex gap-4 max-w-3xl">
-            <div className={`w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center ${
-              nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-emerald-950 border-emerald-900/40 text-emerald-400 animate-pulse'
+            <div className="text-[10px] text-slate-500 font-mono text-right max-w-[70%] truncate">
+              {reasoningTasks[thinkingStep]}
+            </div>
+          </div>
+        </div>
+
+        <div className={`px-4 py-2 text-[10px] font-mono flex items-center justify-between border-t select-none ${
+          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-850 bg-slate-900/60'
+        }`}>
+          <div className="flex items-center gap-1.5 text-emerald-400 font-bold truncate">
+            <span>✓</span>
+            <span className="truncate">
+              {thinkingStep === reasoningTasks.length - 1 ? 'Entregar resultados finales' : reasoningTasks[thinkingStep]}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span>{thinkingStep + 1}/{reasoningTasks.length}</span>
+            <ChevronUp size={10} className="opacity-60" />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex-1 flex h-full w-full overflow-hidden">
+      {/* Chat Pane (Left) */}
+      <div className={`relative flex-1 flex flex-col h-full overflow-hidden transition-all duration-300 ${
+        sandboxState === 'fullscreen' ? 'hidden md:flex md:max-w-[20%]' : 'w-full'
+      } ${
+        nostalgicMode ? 'nostalgic-crt text-[#39ff14]' : 'bg-slate-950'
+      }`}>
+        {/* Top Header */}
+        <div className={`px-6 py-4 flex items-center justify-between border-b ${
+          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-900/20'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-xl border ${
+              nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-900 border-slate-800 text-emerald-400'
             }`}>
-              <BrainCircuit size={16} />
+              <BrainCircuit size={18} className={nostalgicMode ? 'text-[#39ff14]' : 'animate-pulse'} />
             </div>
+            <div>
+              <h2 className={`text-sm font-bold ${nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-100'}`}>
+                Gabi AI
+              </h2>
+              <p className="text-[10px] text-slate-500 font-mono">
+                By Synaptica | {selectedModel.toUpperCase()}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            {/* Terminal Trigger Toggle button */}
+            <button
+              type="button"
+              onClick={() => setSandboxState(prev => prev === 'minimized' ? 'split' : 'minimized')}
+              className={`p-2 rounded-xl border text-xs font-mono flex items-center gap-1.5 transition-all duration-300 ${
+                nostalgicMode
+                  ? 'border-[#39ff14] hover:bg-[#39ff14]/15 text-[#39ff14]'
+                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+              }`}
+              title="Abrir/Cerrar computadora virtual"
+            >
+              <Terminal size={14} className={isThinking ? 'animate-pulse text-emerald-400' : ''} />
+              <span className="hidden sm:inline">Computadora</span>
+            </button>
 
-            <div className="flex-1 space-y-3">
-              <div className={`p-5 rounded-2xl border ${
-                nostalgicMode 
-                  ? 'bg-black border-[#39ff14] text-[#39ff14] font-mono' 
-                  : 'bg-slate-900/35 border-slate-850/80 backdrop-blur-md'
+            <span className={`text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 ${
+              nostalgicMode ? 'border border-[#39ff14] text-[#39ff14]' : 'bg-emerald-950 text-emerald-400 border border-emerald-900/30'
+            }`}>
+              <Activity size={10} className="animate-ping" />
+              ONLINE
+            </span>
+          </div>
+        </div>
+
+        {/* Messages area */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {activeChat?.messages.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-center p-8 max-w-lg mx-auto space-y-4">
+              <div className={`w-16 h-16 rounded-2xl border flex items-center justify-center ${
+                nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-900 border-slate-800 text-emerald-400'
               }`}>
-                {/* Thinking Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${nostalgicMode ? 'bg-[#39ff14]' : 'bg-emerald-400'}`}></span>
-                      <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${nostalgicMode ? 'bg-[#39ff14]' : 'bg-emerald-500'}`}></span>
-                    </span>
-                    <span className="text-xs font-bold font-display">Pensamiento de Gabi AI (Consolidación)</span>
-                  </div>
-
-                  <button
-                    onClick={() => setShowThinkingDetails(!showThinkingDetails)}
-                    className="text-slate-500 hover:text-slate-300 flex items-center gap-1 text-[11px]"
-                  >
-                    <span>{showThinkingDetails ? 'Ocultar bitácora' : 'Ver bitácora'}</span>
-                    {showThinkingDetails ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                  </button>
+                <BrainCircuit size={32} />
+              </div>
+              <div className="space-y-1">
+                <h3 className={`text-lg font-bold font-display ${nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-200'}`}>
+                  Pregunta a Gabi AI
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed font-sans">
+                  Escribe tu consulta y observa el proceso de razonamiento en tiempo real. Gabi AI consultará a 5 IAs distintas para darte la mejor síntesis filtrada.
+                </p>
+              </div>
+              {/* Try simulated medical query */}
+              <div className="flex gap-2 flex-wrap justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInputText('¿Cuál es el mejor enfoque terapéutico para una úlcera corneal herpética recurrente?');
+                  }}
+                  className={`text-[11px] px-3 py-1.5 rounded-lg border transition-all ${
+                    nostalgicMode
+                      ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14]/10 font-mono'
+                      : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  }`}
+                >
+                  Simular Caso Clínico (Úlcera Corneal) 🩺
+                </button>
+              </div>
+            </div>
+          ) : (
+            activeChat?.messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex gap-4 max-w-3xl ${
+                  msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''
+                }`}
+              >
+                {/* Avatar */}
+                <div className={`w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center ${
+                  msg.sender === 'user'
+                    ? nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-800 border-slate-700 text-slate-300'
+                    : nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-emerald-950 border-emerald-900/40 text-emerald-400'
+                }`}>
+                  {msg.sender === 'user' ? <User size={16} /> : <Bot size={16} />}
                 </div>
 
-                {/* Checklist steps */}
-                {showThinkingDetails && (
-                  <div className="space-y-2 mb-4 font-mono text-[11px] leading-relaxed">
-                    {reasoningTasks.map((task, idx) => {
-                      const isDone = thinkingStep > idx;
-                      const isActive = thinkingStep === idx;
-                      return (
-                        <div
-                          key={idx}
-                          className={`flex items-start gap-2.5 transition-all ${
-                            isDone 
-                              ? 'text-emerald-400' 
-                              : isActive 
-                                ? 'text-slate-200 font-bold' 
-                                : 'text-slate-600'
-                          }`}
-                        >
-                          <span className="flex-shrink-0">
-                            {isDone ? "☑" : isActive ? "▶" : "☐"}
-                          </span>
-                          <span>{task}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Ares/Napster vintage Progress Bar */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                    <span>Progreso de Gabi AI: {thinkingStep + 1} de {reasoningTasks.length} tareas</span>
-                    <span>{Math.round(((thinkingStep + 1) / reasoningTasks.length) * 100)}%</span>
-                  </div>
-                  
-                  {nostalgicMode ? (
-                    /* Ares retro progress bar style */
-                    <div className="retro-progress-container">
-                      <div
-                        className="retro-progress-bar"
-                        style={{ width: `${((thinkingStep + 1) / reasoningTasks.length) * 100}%` }}
-                      />
+                {/* Bubble Body */}
+                <div className="space-y-3 flex-1 overflow-hidden">
+                  <div className={`p-4 rounded-2xl text-sm leading-relaxed border ${
+                    msg.sender === 'user'
+                      ? nostalgicMode
+                        ? 'bg-black border-[#39ff14] text-[#39ff14]'
+                        : 'bg-slate-900/60 border-slate-800 text-slate-100'
+                      : nostalgicMode
+                        ? 'bg-black border-[#39ff14] text-[#39ff14]'
+                        : 'bg-slate-900/30 border-slate-850/70 text-slate-200 backdrop-blur-sm'
+                  }`}>
+                    {/* Markdown simulator (simple parsing for titles/bullets) */}
+                    <div className="space-y-3">
+                      {msg.text.split('\n').map((line, idx) => {
+                        if (line.startsWith('### ')) {
+                          return <h4 key={idx} className="font-bold font-display text-base text-slate-100 mt-2">{line.replace('### ', '')}</h4>;
+                        }
+                        if (line.startsWith('1. ') || line.startsWith('2. ') || line.startsWith('3. ') || line.startsWith('4. ')) {
+                          return <div key={idx} className="font-bold text-slate-200 mt-1">{line}</div>;
+                        }
+                        if (line.startsWith('   * ') || line.startsWith(' * ') || line.startsWith('o ') || line.startsWith('• ')) {
+                          return <div key={idx} className="pl-5 text-slate-400 flex items-start gap-1.5"><span className="text-emerald-400">•</span><span>{line.replace(/^(\s*\*\s*|\s*o\s*|\s*•\s*)/, '')}</span></div>;
+                        }
+                        return <p key={idx} className="text-xs text-slate-300 font-sans leading-relaxed">{line}</p>;
+                      })}
                     </div>
-                  ) : (
-                    /* Premium modern gradient progress bar */
-                    <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800/40">
-                      <div
-                        className="h-full bg-gradient-to-r from-emerald-500 to-indigo-500 transition-all duration-300"
-                        style={{ width: `${((thinkingStep + 1) / reasoningTasks.length) * 100}%` }}
-                      />
+                  </div>
+
+                  {/* Rating & Action buttons for AI messages */}
+                  {msg.sender === 'omnia' && (
+                    <div className="flex items-center gap-3 text-xs pl-2">
+                      <span className="text-[10px] text-slate-500 font-mono">¿Te sirvió la síntesis?</span>
+                      <button
+                        type="button"
+                        disabled={msg.voted}
+                        onClick={() => handleVote(msg.id, 'up')}
+                        className={`flex items-center gap-1 py-0.5 px-2 rounded hover:bg-slate-800 transition-colors ${
+                          msg.voted === 'up' 
+                            ? 'text-emerald-400 font-bold bg-emerald-950/20' 
+                            : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                      >
+                        <ThumbsUp size={12} />
+                        <span>Útil (+5 NTK)</span>
+                      </button>
+                      <button
+                        type="button"
+                        disabled={msg.voted}
+                        onClick={() => handleVote(msg.id, 'down')}
+                        className={`flex items-center gap-1 py-0.5 px-2 rounded hover:bg-slate-800 transition-colors ${
+                          msg.voted === 'down' 
+                            ? 'text-rose-400 font-bold bg-rose-950/20' 
+                            : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                      >
+                        <ThumbsDown size={12} />
+                        <span>Impreciso</span>
+                      </button>
                     </div>
                   )}
                 </div>
               </div>
+            ))
+          )}
+
+          {/* Simple step display inside messages area if terminal is closed */}
+          {isThinking && (sandboxState === 'hidden' || sandboxState === 'minimized') && (
+            <div className="flex gap-4 max-w-3xl">
+              <div className={`w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center ${
+                nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-emerald-950 border-emerald-900/40 text-emerald-400 animate-pulse'
+              }`}>
+                <BrainCircuit size={16} />
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className={`p-4 rounded-2xl border ${
+                  nostalgicMode 
+                    ? 'bg-black border-[#39ff14] text-[#39ff14] font-mono' 
+                    : 'bg-slate-900/35 border-slate-850/80 backdrop-blur-md text-slate-300'
+                }`}>
+                  <div className="flex items-center gap-2 text-xs font-bold mb-2">
+                    <Loader2 size={12} className="animate-spin text-emerald-400" />
+                    <span>Pensando... ({thinkingStep + 1}/8)</span>
+                  </div>
+                  <div className="text-xs text-slate-400 truncate">
+                    {reasoningTasks[thinkingStep]}
+                  </div>
+                </div>
+              </div>
             </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Minimized Terminal Badge */}
+        {sandboxState === 'minimized' && currentQueryText && (
+          <div className="flex justify-end px-4 mb-2">
+            <button
+              type="button"
+              onClick={() => setSandboxState('split')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-xs shadow-lg transition-all duration-300 font-mono ${
+                nostalgicMode
+                  ? 'bg-black border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14]/10'
+                  : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-slate-100 hover:border-slate-700 hover:shadow-emerald-950/20'
+              }`}
+            >
+              {/* Left mini terminal screen icon */}
+              <div className={`w-8 h-6 rounded border flex items-center justify-center overflow-hidden bg-black text-[8px] ${
+                nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-emerald-500'
+              }`}>
+                <span>$_</span>
+              </div>
+              
+              {/* Center: active task or status */}
+              <div className="text-left max-w-[200px] sm:max-w-[300px]">
+                <div className="flex items-center gap-1.5 font-bold">
+                  {isThinking ? (
+                    <>
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>Pensando en tiempo real...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      <span>Cerebro de la computadora</span>
+                    </>
+                  )}
+                </div>
+                <div className="text-[10px] text-slate-500 truncate">
+                  {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
+                </div>
+              </div>
+
+              {/* Right: Progress ratio and chevron */}
+              <div className="flex items-center gap-2 border-l border-slate-800/80 pl-3 ml-1">
+                <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : ''}`}>
+                  {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
+                </span>
+                <ExternalLink size={12} className="text-slate-500" />
+              </div>
+            </button>
           </div>
         )}
 
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Text Box Input Area */}
-      <div className={`p-4 border-t ${
-        nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-950'
-      }`}>
-        <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto space-y-3">
-          
-          {/* Main big search input container */}
-          <div className={`rounded-2xl border flex items-end p-2 transition-all ${
-            nostalgicMode
-              ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
-              : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
-          }`}>
-            <div className="flex-1">
-              <textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder={selectedModel === 'omnia' ? 'Habla con OmnIA (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
-                rows={1}
-                className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage(e);
-                  }
-                }}
-              />
-            </div>
+        {/* Text Box Input Area */}
+        <div className={`p-4 border-t ${
+          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-950'
+        }`}>
+          <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto space-y-3">
             
-            {/* Input action items */}
-            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50">
-              {/* Voice microphone button */}
-              <button
-                type="button"
-                onClick={toggleListening}
-                className={`p-2 rounded-xl transition-all ${
-                  isListening
-                    ? 'bg-rose-500 text-slate-950 animate-pulse'
-                    : nostalgicMode
-                      ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                }`}
-                title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
-              >
-                {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-              </button>
+            {/* Main big search input container */}
+            <div className={`rounded-2xl border flex items-end p-2 transition-all ${
+              nostalgicMode
+                ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
+                : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
+            }`}>
+              <div className="flex-1">
+                <textarea
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
+                  rows={1}
+                  className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e);
+                    }
+                  }}
+                />
+              </div>
+              
+              {/* Input action items */}
+              <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50">
+                {/* Voice microphone button */}
+                <button
+                  type="button"
+                  onClick={toggleListening}
+                  className={`p-2 rounded-xl transition-all ${
+                    isListening
+                      ? 'bg-rose-500 text-slate-950 animate-pulse'
+                      : nostalgicMode
+                        ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                  }`}
+                  title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
+                >
+                  {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                </button>
 
-              <button
-                type="submit"
-                className={`p-2 rounded-xl transition-all ${
-                  nostalgicMode
-                    ? 'retro-button border border-[#39ff14] text-[#39ff14]'
-                    : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
-                }`}
-              >
-                <Send size={14} />
-              </button>
+                <button
+                  type="submit"
+                  className={`p-2 rounded-xl transition-all ${
+                    nostalgicMode
+                      ? 'retro-button border border-[#39ff14] text-[#39ff14]'
+                      : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
+                  }`}
+                >
+                  <Send size={14} />
+                </button>
+              </div>
+            </div>
+
+            {/* Model selection and balance info bar */}
+            <div className="flex items-center justify-between text-xs px-2">
+              <NeuroHubMenu
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+                isOpen={modelSelectorOpen}
+                setIsOpen={setModelSelectorOpen}
+                nostalgicMode={nostalgicMode}
+              />
+
+              <span className="text-[10px] text-slate-500 font-mono">
+                Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
+              </span>
+            </div>
+          </form>
+        </div>
+
+        {/* Floating Reduced Overlay Panel (Rendered absolutely inside the relative Chat area) */}
+        {sandboxState === 'reduced' && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+            <div className="w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+              {renderReducedOverlay()}
             </div>
           </div>
-
-          {/* Model selection and balance info bar */}
-          <div className="flex items-center justify-between text-xs px-2">
-            <NeuroHubMenu
-              selectedModel={selectedModel}
-              setSelectedModel={setSelectedModel}
-              isOpen={modelSelectorOpen}
-              setIsOpen={setModelSelectorOpen}
-              nostalgicMode={nostalgicMode}
-            />
-
-            <span className="text-[10px] text-slate-500 font-mono">
-              Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
-            </span>
-          </div>
-        </form>
+        )}
       </div>
+
+      {/* Split/Fullscreen Sidebar Panel (Right) */}
+      {(sandboxState === 'split' || sandboxState === 'fullscreen') && renderTerminalSidebar()}
     </div>
   );
 }
