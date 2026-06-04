@@ -132,8 +132,38 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
 
   // --- Synchronization Effects ---
 
+  // Initial Sync from Backend with local fallback
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const tokenRes = await fetch('/api/tokens');
+        if (tokenRes.ok) {
+          const { tokenBalance: backendTokens } = await tokenRes.json();
+          if (backendTokens !== undefined) {
+            setTokenBalance(backendTokens);
+          }
+        }
+        const chatsRes = await fetch('/api/chats');
+        if (chatsRes.ok) {
+          const backendChats = await chatsRes.json();
+          if (backendChats && backendChats.length > 0) {
+            setChats(backendChats);
+          }
+        }
+      } catch (err) {
+        console.warn("Backend no disponible. Usando fallback de localStorage:", err);
+      }
+    }
+    loadData();
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('synaptica_token_balance', tokenBalance);
+    fetch('/api/tokens', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ balance: tokenBalance })
+    }).catch(() => {});
   }, [tokenBalance]);
 
   useEffect(() => {
@@ -154,6 +184,11 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
 
   useEffect(() => {
     localStorage.setItem('synaptica_chats', JSON.stringify(chats));
+    fetch('/api/chats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(chats)
+    }).catch(() => {});
   }, [chats]);
 
   useEffect(() => {

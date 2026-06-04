@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   User, 
@@ -45,6 +45,37 @@ export default function SettingsModal({
   const [ramSize, setRamSize] = useState(8);
   const [storageSize, setStorageSize] = useState(50);
   const [apiKey, setApiKey] = useState('sk-synaptica-••••••••••••••••');
+
+  const [keys, setKeys] = useState({
+    openai: '',
+    anthropic: '',
+    perplexity: '',
+    deepseek: ''
+  });
+
+  // Load keys on mount
+  useEffect(() => {
+    if (isOpen) {
+      fetch('/api/tokens')
+        .then(res => res.json())
+        .then(data => {
+          if (data.apiKeys) {
+            setKeys(data.apiKeys);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
+
+  const handleSaveKey = (provider, value) => {
+    const updatedKeys = { ...keys, [provider]: value };
+    setKeys(updatedKeys);
+    fetch('/api/tokens', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKeys: { [provider]: value } })
+    }).catch(() => {});
+  };
 
   const categories = [
     {
@@ -527,25 +558,52 @@ export default function SettingsModal({
             <div className="space-y-6">
               <div>
                 <h2 className="text-xl font-bold font-display">Conectores de API</h2>
-                <p className="text-xs text-slate-500 mt-1">Estado de los puentes de comunicación y endpoints con redes de Modelos de Lenguaje.</p>
+                <p className="text-xs text-slate-500 mt-1">Configura tus credenciales reales para realizar consultas en vivo a través del backend.</p>
               </div>
 
-              <div className="space-y-3">
-                <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>Canal OpenAI API</span>
-                  <span className="text-emerald-400 font-bold">CONECTADO</span>
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-350 block">OpenAI API Key (GPT-4)</label>
+                  <input
+                    type="password"
+                    placeholder="sk-or-..."
+                    value={keys.openai || ''}
+                    onChange={(e) => handleSaveKey('openai', e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
+                  />
                 </div>
-                <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>Canal Anthropic Claude</span>
-                  <span className="text-emerald-400 font-bold">CONECTADO</span>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-350 block">Anthropic Claude API Key</label>
+                  <input
+                    type="password"
+                    placeholder="sk-ant-..."
+                    value={keys.anthropic || ''}
+                    onChange={(e) => handleSaveKey('anthropic', e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
+                  />
                 </div>
-                <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>Canal Perplexity Search</span>
-                  <span className="text-emerald-400 font-bold">CONECTADO</span>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-350 block">Perplexity API Key</label>
+                  <input
+                    type="password"
+                    placeholder="pplx-..."
+                    value={keys.perplexity || ''}
+                    onChange={(e) => handleSaveKey('perplexity', e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
+                  />
                 </div>
-                <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>Canal DeepSeek API</span>
-                  <span className="text-emerald-400 font-bold">CONECTADO</span>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-350 block">DeepSeek API Key</label>
+                  <input
+                    type="password"
+                    placeholder="sk-..."
+                    value={keys.deepseek || ''}
+                    onChange={(e) => handleSaveKey('deepseek', e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
+                  />
                 </div>
               </div>
             </div>

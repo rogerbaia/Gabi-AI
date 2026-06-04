@@ -225,9 +225,58 @@ export default function ChatArea({
     return logs;
   };
 
-  // Actualizar logs cuando cambia el paso o la consulta
+  // Actualizar logs cuando cambia el paso o la consulta (con ejecución de comando real en backend)
   useEffect(() => {
-    setSandboxLogs(getLogsForStep(thinkingStep, currentQueryText, selectedModel));
+    if (!currentQueryText) {
+      setSandboxLogs(['[system] Computadora lista. Esperando consulta...']);
+      return;
+    }
+
+    async function runRealSandboxCommand() {
+      const stepLogs = getLogsForStep(thinkingStep, currentQueryText, selectedModel);
+      
+      // Intentamos extraer el comando del paso actual (líneas que inician con ubuntu@gabi-sandbox o similar)
+      const commandLine = stepLogs.find(log => log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:'));
+      
+      if (commandLine) {
+        // Limpiamos el host prompt para obtener el comando limpio
+        const cleanCommand = commandLine
+          .replace(/ubuntu@gabi-sandbox:~\$ /g, '')
+          .replace(/ubuntu@gabi-sandbox:~\/search_workspace\$ /g, '')
+          .replace(/\(env\) ubuntu@gabi-sandbox:~\/search_workspace\$ /g, '')
+          .trim();
+          
+        if (cleanCommand && !cleanCommand.startsWith('#')) {
+          try {
+            const res = await fetch('/api/sandbox/run', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ command: cleanCommand })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.logs && data.logs.length > 0) {
+                // Formateamos las salidas del sandbox real y las agregamos
+                const realOutputs = data.logs.map(log => `[sandbox-stdout] ${log}`);
+                setSandboxLogs([
+                  ...stepLogs,
+                  `[system] Ejecución real en Sandbox completada para: "${cleanCommand}"`,
+                  ...realOutputs
+                ]);
+                return;
+              }
+            }
+          } catch (err) {
+            console.warn("Error en la ejecución real del sandbox, usando simulación local:", err);
+          }
+        }
+      }
+      
+      // Fallback a los logs simulados estáticos si no hay comando ejecutable o falla el backend
+      setSandboxLogs(stepLogs);
+    }
+
+    runRealSandboxCommand();
   }, [thinkingStep, currentQueryText, selectedModel]);
 
   const handleSendMessage = (e) => {
@@ -269,12 +318,33 @@ export default function ChatArea({
     }
   };
 
-  const triggerResponseGeneration = () => {
+  const triggerResponseGeneration = async () => {
     const userMsg = currentQueryText || "Consulta";
     let aiResponse = "";
     
-    if (userMsg.toLowerCase().includes('úlcera') || userMsg.toLowerCase().includes('herpética')) {
-      aiResponse = `### Enfoque Terapéutico para Úlcera Corneal Herpética Recurrente
+    // Consultar al backend para llamada real a la API si existen llaves configuradas
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: userMsg,
+          model: selectedModel
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.response) {
+          aiResponse = data.response;
+        }
+      }
+    } catch (err) {
+      console.warn("Error consultando API real en backend, usando simulación local:", err);
+    }
+
+    if (!aiResponse) {
+      if (userMsg.toLowerCase().includes('úlcera') || userMsg.toLowerCase().includes('herpética')) {
+        aiResponse = `### Enfoque Terapéutico para Úlcera Corneal Herpética Recurrente
 
 Basado en la consolidación sinérgica de modelos médicos y bases de datos académicas (HEDS, JAMA Ophthalmology):
 
@@ -293,8 +363,8 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
 4. **Aspectos Psicosociales y de Educación (Aporte Claude):**
    * El paciente debe evitar desencadenantes conocidos (estrés emocional, exposición a radiación UV sin lentes de sol, estados de inmunosupresión).
    * Se requiere apego estricto y seguimiento clínico para evaluar adelgazamiento estromal.`;
-    } else if (selectedModel === 'viajia') {
-      aiResponse = `### Propuesta Consolidada de Viaje (ViajIA engine)
+      } else if (selectedModel === 'viajia') {
+        aiResponse = `### Propuesta Consolidada de Viaje (ViajIA engine)
 
 Hemos consultado múltiples agregadores de tarifas hoteleras y de aerolíneas para darte la mejor opción estilo Trivago:
 
@@ -308,8 +378,8 @@ Hemos consultado múltiples agregadores de tarifas hoteleras y de aerolíneas pa
 3. **Itinerario Sugerido:**
    * **Día 1:** Arribo, check-in, paseo por el centro histórico y cena recomendada por guías locales.
    * **Día 2:** Tour guiado de museos y mirador principal.`;
-    } else if (selectedModel === 'nutriia') {
-      aiResponse = `### Plan de Nutrición y Bienestar Personalizado (NutriIA)
+      } else if (selectedModel === 'nutriia') {
+        aiResponse = `### Plan de Nutrición y Bienestar Personalizado (NutriIA)
 
 Comparando guías nutricionales y recomendaciones médicas preventivas:
 
@@ -323,8 +393,8 @@ Comparando guías nutricionales y recomendaciones médicas preventivas:
 3. **Rutina de Ejercicios:**
    * Cardio moderado (30 mins al día) y entrenamiento de fuerza funcional 3 veces por semana.
    * Consulta al oftalmólogo o médico familiar antes de iniciar levantamientos de carga pesada si tienes antecedentes de presión intraocular elevada.`;
-    } else if (selectedModel === 'tubeia') {
-      aiResponse = `### Resultados de Búsqueda y Reproducción en TubeIA 🎬
+      } else if (selectedModel === 'tubeia') {
+        aiResponse = `### Resultados de Búsqueda y Reproducción en TubeIA 🎬
 
 Hemos consultado la red de videos, tutoriales y streaming de Synaptica para tu búsqueda: *"**${userMsg}**"*
 
@@ -341,8 +411,8 @@ Hemos consultado la red de videos, tutoriales y streaming de Synaptica para tu b
    * *Descripción:* Cómo implementar tonos dial-up y efectos de sonido analógicos usando la Web Audio API.
 
 *¡Puedes escribir el nombre de un video para que simulemos su reproducción en el Sandbox virtual!*`;
-    } else {
-      aiResponse = `### Respuesta Consolidada de OmnIA
+      } else {
+        aiResponse = `### Respuesta Consolidada de OmnIA
 
 Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *"**${userMsg}**"*
 
@@ -354,6 +424,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
   4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.
   
 *¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*`;
+      }
     }
 
     // Add response to chat state
