@@ -79,27 +79,23 @@ export default function Sidebar({
       <div className={`p-5 border-b flex flex-col items-center gap-2 ${
         nostalgicMode ? 'border-[#39ff14]' : 'border-slate-800'
       }`}>
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveView('chat'); }}>
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            {/* Pulsing Synaptica network nodes visual */}
-            <div className={`absolute w-3 h-3 rounded-full ${nostalgicMode ? 'bg-[#39ff14] dot-glow' : 'bg-emerald-400'} -top-1 left-2 animate-bounce`} />
-            <div className={`absolute w-3 h-3 rounded-full ${nostalgicMode ? 'bg-[#39ff14] dot-glow' : 'bg-blue-400'} -bottom-1 left-0`} />
-            <div className={`absolute w-3 h-3 rounded-full ${nostalgicMode ? 'bg-[#39ff14] dot-glow' : 'bg-purple-400'} -bottom-1 right-0`} />
-            <svg className="absolute w-full h-full stroke-slate-500" viewBox="0 0 40 40">
-              <line x1="20" y1="10" x2="10" y2="30" strokeWidth="2" />
-              <line x1="20" y1="10" x2="30" y2="30" strokeWidth="2" />
-              <line x1="10" y1="30" x2="30" y2="30" strokeWidth="2" />
-            </svg>
+        <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => { setActiveView('chat'); }}>
+          <img
+            src="/synaptica_logo.png"
+            alt="Synaptica Logo"
+            className={`h-6 object-contain shrink-0 ${nostalgicMode ? 'brightness-[2] hue-rotate-[90deg]' : ''}`}
+          />
+          <div className="flex flex-col">
+            <span className={`text-lg font-bold font-display tracking-tight leading-none ${
+              nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-100'
+            }`}>
+              Gabi AI
+            </span>
+            <span className="text-[10px] text-slate-500 font-mono tracking-wide mt-0.5">
+              By Synaptica
+            </span>
           </div>
-          <span className={`text-xl font-bold font-display tracking-wide ${
-            nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-100'
-          }`}>
-            Synaptica
-          </span>
         </div>
-        <p className="text-[10px] text-slate-500 font-mono text-center">
-          Muchas mentes. Una solución.
-        </p>
       </div>
 
       {/* User Token Wallet */}

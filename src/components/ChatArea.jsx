@@ -298,10 +298,10 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
             </div>
             <div className="space-y-1">
               <h3 className={`text-lg font-bold font-display ${nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-200'}`}>
-                Pregunta a Synaptica
+                Pregunta a Gabi AI
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                Escribe tu consulta y observa el proceso de razonamiento en tiempo real. Synaptica consultará a 5 IAs distintas para darte la mejor síntesis filtrada.
+                Escribe tu consulta y observa el proceso de razonamiento en tiempo real. Gabi AI consultará a 5 IAs distintas para darte la mejor síntesis filtrada.
               </p>
             </div>
             {/* Try simulated medical query */}
@@ -420,7 +420,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                       <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${nostalgicMode ? 'bg-[#39ff14]' : 'bg-emerald-400'}`}></span>
                       <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${nostalgicMode ? 'bg-[#39ff14]' : 'bg-emerald-500'}`}></span>
                     </span>
-                    <span className="text-xs font-bold font-display">Pensamiento de Synaptica (Consolidación)</span>
+                    <span className="text-xs font-bold font-display">Pensamiento de Gabi AI (Consolidación)</span>
                   </div>
 
                   <button
@@ -462,7 +462,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                 {/* Ares/Napster vintage Progress Bar */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                    <span>Progreso de Synaptica: {thinkingStep + 1} de {reasoningTasks.length} tareas</span>
+                    <span>Progreso de Gabi AI: {thinkingStep + 1} de {reasoningTasks.length} tareas</span>
                     <span>{Math.round(((thinkingStep + 1) / reasoningTasks.length) * 100)}%</span>
                   </div>
                   

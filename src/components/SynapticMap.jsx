@@ -114,7 +114,7 @@ export default function SynapticMap({ nostalgicMode, categoryWeights, feedbackHi
 
   // Node coordination details in the network diagram
   const nodes = [
-    { id: 'synaptica', label: 'Synaptica Core', x: 200, y: 180, r: 24, color: '#10B981', fontColor: '#F3F4F6' },
+    { id: 'synaptica', label: 'Gabi AI Core', x: 200, y: 180, r: 24, color: '#10B981', fontColor: '#F3F4F6' },
     { id: 'gpt', label: 'OpenAI GPT', x: 200, y: 50, r: 16, weight: weights.gpt, color: '#10b981', labelOffset: -25 },
     { id: 'claude', label: 'Claude', x: 330, y: 110, r: 16, weight: weights.claude, color: '#d97706', labelOffset: 25 },
     { id: 'perplexity', label: 'Perplexity', x: 330, y: 250, r: 16, weight: weights.perplexity, color: '#2563eb', labelOffset: 25 },
@@ -134,7 +134,7 @@ export default function SynapticMap({ nostalgicMode, categoryWeights, feedbackHi
           Mapa de Sinapsis Dinámica (Inteligencia Real)
         </h1>
         <p className={`text-sm mt-1 leading-relaxed ${nostalgicMode ? 'nostalgic-green-text opacity-80' : 'text-slate-400'}`}>
-          A diferencia de los agregadores tradicionales, Synaptica evalúa constantemente el desempeño de las IAs según la categoría de la consulta y las calificaciones del usuario, reajustando sus conexiones neuronales para generar la síntesis perfecta.
+          A diferencia de los agregadores tradicionales, Gabi AI evalúa constantemente el desempeño de las IAs según la categoría de la consulta y las calificaciones del usuario, reajustando sus conexiones neuronales para generar la síntesis perfecta.
         </p>
       </div>
 
@@ -221,7 +221,7 @@ export default function SynapticMap({ nostalgicMode, categoryWeights, feedbackHi
               fontWeight="bold"
               fontFamily={nostalgicMode ? 'monospace' : 'sans-serif'}
             >
-              SYN
+              GABI
             </text>
 
             {/* Draw Model Nodes */}
@@ -403,7 +403,7 @@ export default function SynapticMap({ nostalgicMode, categoryWeights, feedbackHi
             ))
           ) : (
             <div className="text-xs text-slate-500 italic py-2">
-              No hay calificaciones de usuario registradas aún. A medida que votes las respuestas con pulgar arriba (👍), Synaptica reajustará sus conexiones y te recompensará con NeuroTokens.
+              No hay calificaciones de usuario registradas aún. A medida que votes las respuestas con pulgar arriba (👍), Gabi AI reajustará sus conexiones y te recompensará con NeuroTokens.
             </div>
           )}
         </div>
