@@ -881,135 +881,150 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Minimized Terminal Badge and Input Box stacked in a single container */}
+        {/* Minimized Terminal Badge and Input Box stacked in two separate containers */}
         <div className={`p-4 border-t ${
           nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-950/20'
         }`}>
-          <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto">
-            <div className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
-              nostalgicMode
-                ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
-                : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
-            }`}>
-              
-              {/* Minimized Terminal Badge (Stacked at the top inside the same border, no separator line) */}
-              {sandboxState === 'minimized' && currentQueryText && (
-                <button
-                  type="button"
-                  onClick={() => setSandboxState('split')}
-                  className={`w-full flex items-center justify-between px-4 py-3 text-xs font-mono transition-all duration-300 ${
-                    nostalgicMode
-                      ? 'bg-[#39ff14]/5 text-[#39ff14] hover:bg-[#39ff14]/10'
-                      : 'bg-slate-900/40 text-slate-350 hover:bg-slate-900/80'
-                  }`}
-                >
-                  {/* Left: screen icon and details */}
-                  <div className="flex items-center gap-3 truncate">
-                    <div className={`w-8 h-6 rounded border flex items-center justify-center overflow-hidden bg-black text-[8px] flex-shrink-0 ${
-                      nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-emerald-500'
-                    }`}>
-                      <span>$_</span>
-                    </div>
-                    
-                    <div className="text-left truncate">
-                      <div className="flex items-center gap-1.5 font-bold">
-                        {isThinking ? (
-                          <>
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-                            <span className="truncate">Pensando en tiempo real...</span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-                            <span className="truncate">Cerebro de la computadora</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="text-[10px] text-slate-500 truncate max-w-[200px] sm:max-w-[400px]">
-                        {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right: Progress ratio and expand link */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : ''}`}>
-                      {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
-                    </span>
-                    <ExternalLink size={12} className="text-slate-500" />
-                  </div>
-                </button>
-              )}
-
-              {/* Main Input Textarea and Actions */}
-              <div className="p-3 flex flex-col gap-2">
-                {/* Top Row: Textarea and Actions */}
-                <div className="flex items-end gap-2">
-                  <div className="flex-1">
-                    <textarea
-                      value={inputText}
-                      onChange={(e) => setInputText(e.target.value)}
-                      placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
-                      rows={1}
-                      className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSendMessage(e);
-                        }
-                      }}
-                    />
+          <div className="max-w-3xl mx-auto flex flex-col gap-3">
+            
+            {/* Box 1: Minimized Terminal Badge (AI brain) */}
+            {sandboxState === 'minimized' && currentQueryText && (
+              <button
+                type="button"
+                onClick={() => setSandboxState('split')}
+                className={`w-full flex items-center justify-between px-4 py-3 text-xs font-mono transition-all duration-300 rounded-2xl border ${
+                  nostalgicMode
+                    ? 'border-[#39ff14] bg-black text-[#39ff14] hover:bg-[#39ff14]/10 focus:outline-none focus:ring-1 focus:ring-[#39ff14]'
+                    : 'border-slate-800 bg-slate-900/60 text-slate-350 hover:bg-slate-900/90 hover:border-slate-700 focus:outline-none focus:border-slate-700'
+                }`}
+              >
+                {/* Left: Checkmark status and details */}
+                <div className="flex items-center gap-3 truncate">
+                  <div className="flex-shrink-0">
+                    {isThinking ? (
+                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse">
+                        <Loader2 size={10} className="animate-spin" />
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[10px]">
+                        ✓
+                      </span>
+                    )}
                   </div>
                   
-                  {/* Input action items */}
-                  <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50 flex-shrink-0">
-                    {/* Voice microphone button */}
-                    <button
-                      type="button"
-                      onClick={toggleListening}
-                      className={`p-2 rounded-xl transition-all ${
-                        isListening
-                          ? 'bg-rose-500 text-slate-950 animate-pulse'
-                          : nostalgicMode
-                            ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
-                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                      }`}
-                      title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
-                    >
-                      {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-                    </button>
-
-                    <button
-                      type="submit"
-                      className={`p-2 rounded-xl transition-all ${
-                        nostalgicMode
-                          ? 'retro-button border border-[#39ff14] text-[#39ff14]'
-                          : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
-                      }`}
-                    >
-                      <Send size={14} />
-                    </button>
+                  <div className="text-left truncate">
+                    <div className="flex items-center gap-1.5 font-bold">
+                      <span className="truncate">
+                        {isThinking ? "Pensando en tiempo real..." : "Cerebro de la computadora"}
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-slate-500 truncate max-w-[200px] sm:max-w-[400px]">
+                      {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
+                    </div>
                   </div>
                 </div>
 
-                {/* Bottom Row: Specialization selection and balance info */}
-                <div className="flex items-center justify-between border-t border-slate-800/40 pt-2.5 mt-1 text-xs">
-                  <NeuroHubMenu
-                    selectedModel={selectedModel}
-                    setSelectedModel={setSelectedModel}
-                    isOpen={modelSelectorOpen}
-                    setIsOpen={setModelSelectorOpen}
-                    nostalgicMode={nostalgicMode}
-                  />
-
-                  <span className="text-[10px] text-slate-500 font-mono">
-                    Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
+                {/* Right: Progress ratio and terminal thumbnail */}
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}`}>
+                    {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                   </span>
+                  
+                  {/* Terminal screen thumbnail - RIGHT ALIGNED */}
+                  <div className={`w-10 h-7 rounded border flex flex-col justify-between overflow-hidden bg-black text-[6px] p-0.5 flex-shrink-0 ${
+                    nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-emerald-500'
+                  }`}>
+                    <div className="flex items-center justify-between border-b border-slate-900 pb-[0.5px] px-[2px] opacity-60">
+                      <span className="scale-75 origin-left">gabi-sh</span>
+                      <span className="w-1 h-1 rounded-full bg-emerald-400 scale-75 animate-pulse" />
+                    </div>
+                    <div className="flex-1 font-mono leading-[5px] scale-[0.7] origin-top-left pt-0.5 px-[2px] opacity-80">
+                      <div>$ python</div>
+                      <div className="text-slate-500">ir_weights..</div>
+                    </div>
+                  </div>
+                  
+                  <ChevronUp size={12} className="text-slate-500" />
+                </div>
+              </button>
+            )}
+
+            {/* Box 2: Dialogue input form */}
+            <form onSubmit={handleSendMessage} className="w-full">
+              <div className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
+                nostalgicMode
+                  ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
+                  : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
+              }`}>
+                {/* Main Input Textarea and Actions */}
+                <div className="p-3 flex flex-col gap-2">
+                  {/* Top Row: Textarea and Actions */}
+                  <div className="flex items-end gap-2">
+                    <div className="flex-1">
+                      <textarea
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                        placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
+                        rows={1}
+                        className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSendMessage(e);
+                          }
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Input action items */}
+                    <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50 flex-shrink-0">
+                      {/* Voice microphone button */}
+                      <button
+                        type="button"
+                        onClick={toggleListening}
+                        className={`p-2 rounded-xl transition-all ${
+                          isListening
+                            ? 'bg-rose-500 text-slate-950 animate-pulse'
+                            : nostalgicMode
+                              ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
+                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                        }`}
+                        title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
+                      >
+                        {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                      </button>
+
+                      <button
+                        type="submit"
+                        className={`p-2 rounded-xl transition-all ${
+                          nostalgicMode
+                            ? 'retro-button border border-[#39ff14] text-[#39ff14]'
+                            : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
+                        }`}
+                      >
+                        <Send size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Bottom Row: Specialization selection and balance info (No border-t divider) */}
+                  <div className="flex items-center justify-between pt-2.5 mt-1 text-xs">
+                    <NeuroHubMenu
+                      selectedModel={selectedModel}
+                      setSelectedModel={setSelectedModel}
+                      isOpen={modelSelectorOpen}
+                      setIsOpen={setModelSelectorOpen}
+                      nostalgicMode={nostalgicMode}
+                    />
+
+                    <span className="text-[10px] text-slate-500 font-mono">
+                      Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
+                    </span>
+                  </div>
                 </div>
               </div>
-
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
 
         {/* Floating Reduced Overlay Panel (Rendered absolutely inside the relative Chat area) */}
