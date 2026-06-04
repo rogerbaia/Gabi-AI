@@ -8,8 +8,6 @@ import {
   Folder, 
   FolderPlus, 
   Search, 
-  Volume2, 
-  VolumeX, 
   ShieldAlert, 
   Sparkles, 
   Heart,
@@ -308,7 +306,7 @@ export default function Sidebar({
         nostalgicMode ? 'border-[#39ff14] bg-black/80' : 'border-slate-800 bg-slate-950/20'
       }`}>
         {/* Settings, Style, and Hardware icons (customized to avoid copycat design) */}
-        <div className="flex items-center justify-between mb-3 px-1 text-slate-500">
+        <div className="flex items-center justify-between px-1 text-slate-500">
           <div className="flex items-center gap-4">
             <button
               onClick={() => onOpenSettings('general')}
@@ -336,45 +334,6 @@ export default function Sidebar({
             Synaptica Labs
           </span>
         </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {nostalgicMode ? (
-              <Volume2 className="text-[#39ff14] animate-pulse" size={16} />
-            ) : (
-              <VolumeX className="text-slate-500" size={16} />
-            )}
-            <span className={`text-xs ${
-              nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-400 font-medium'
-            }`}>
-              Modo Retro Dial-Up V.34
-            </span>
-          </div>
-          <button
-            onClick={() => setNostalgicMode(!nostalgicMode)}
-            className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none ${
-              nostalgicMode 
-                ? 'bg-[#39ff14]' 
-                : 'bg-slate-800'
-            }`}
-            role="switch"
-            aria-checked={nostalgicMode}
-          >
-            <span
-              aria-hidden="true"
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full shadow ring-0 transition duration-200 ease-in-out ${
-                nostalgicMode 
-                  ? 'translate-x-5 bg-black' 
-                  : 'translate-x-0 bg-slate-400'
-              }`}
-            />
-          </button>
-        </div>
-        {nostalgicMode && (
-          <p className="text-[9px] text-[#39ff14] opacity-80 mt-1 font-mono leading-tight">
-            * Se reproducirán tonos dial-up al razonar.
-          </p>
-        )}
       </div>
     </aside>
   );
