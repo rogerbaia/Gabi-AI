@@ -530,7 +530,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
               className={`p-1.5 rounded hover:bg-slate-800 transition-colors ${
                 nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Convertir en panel flotante"
+              title="Minimizar a resumen de tareas"
             >
               <Monitor size={12} />
             </button>
@@ -887,107 +887,223 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
         }`}>
           <div className="max-w-3xl mx-auto flex flex-col gap-[7px]">
             
-            {/* Box 1: Minimized Terminal Badge (AI brain) */}
-            {sandboxState === 'minimized' && currentQueryText && (
-              <div
-                className={`w-full max-w-3xl mx-auto flex items-center justify-between p-1.5 text-xs font-mono rounded-2xl border transition-all duration-300 ${
-                  nostalgicMode
-                    ? 'border-[#39ff14] bg-black text-[#39ff14]'
-                    : 'border-slate-800 bg-slate-900/60 text-slate-350'
-                }`}
-              >
-                {/* Left/Middle clickable part to open the task list summary */}
-                <button
-                  type="button"
-                  onClick={() => setSandboxState('reduced')}
-                  className="flex-1 flex items-center justify-between pl-2.5 pr-4 py-0.5 focus:outline-none hover:opacity-85 text-left truncate"
+            {/* Box 1: Minimized / Expanded Terminal Card (AI brain) */}
+            {currentQueryText && (sandboxState === 'minimized' || sandboxState === 'reduced') && (
+              sandboxState === 'minimized' ? (
+                <div
+                  className={`w-full max-w-3xl mx-auto flex items-center justify-between p-1.5 text-xs font-mono rounded-2xl border transition-all duration-300 ${
+                    nostalgicMode
+                      ? 'border-[#39ff14] bg-black text-[#39ff14]'
+                      : 'border-slate-800 bg-slate-900/60 text-slate-350'
+                  }`}
                 >
-                  {/* Checkmark status and details */}
-                  <div className="flex items-center gap-3 truncate">
-                    <div className="flex-shrink-0">
-                      {isThinking ? (
-                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse">
-                          <Loader2 size={10} className="animate-spin" />
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[10px]">
-                          ✓
-                        </span>
-                      )}
+                  {/* Left/Middle clickable part to open the task list summary */}
+                  <button
+                    type="button"
+                    onClick={() => setSandboxState('reduced')}
+                    className="flex-1 flex items-center justify-between pl-2.5 pr-4 py-0.5 focus:outline-none hover:opacity-85 text-left truncate"
+                  >
+                    {/* Checkmark status and details */}
+                    <div className="flex items-center gap-3 truncate">
+                      <div className="flex-shrink-0">
+                        {isThinking ? (
+                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse">
+                            <Loader2 size={10} className="animate-spin" />
+                          </span>
+                        ) : (
+                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[10px]">
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="text-left truncate">
+                        <div className="flex items-center gap-1.5 font-bold">
+                          <span className="truncate">
+                            {isThinking ? "Pensando en tiempo real..." : "Cerebro de la computadora"}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-500 truncate max-w-[150px] sm:max-w-[320px]">
+                          {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progress ratio and ChevronUp */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}`}>
+                        {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
+                      </span>
+                      <ChevronUp size={12} className="text-slate-500" />
+                    </div>
+                  </button>
+
+                  {/* Right clickable part (mini computer screen) to open the full computer sandbox */}
+                  <button
+                    type="button"
+                    onClick={() => setSandboxState('split')}
+                    className="w-[106px] h-5 relative flex-shrink-0 focus:outline-none"
+                    title="Abrir terminal de comandos"
+                  >
+                    {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
+                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[20px] md:right-[-4px] w-[106px] h-[76px] rounded-2xl border overflow-hidden bg-black shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
+                      nostalgicMode 
+                        ? 'border-[#39ff14]/70 shadow-[#39ff14]/30' 
+                        : 'border-slate-700/80 shadow-slate-950/80'
+                    }`}>
+                      {/* Inner Container: Rendered at 212x152px and scaled to 50% to bypass browser minimum font size limitations */}
+                      <div className="w-[212px] h-[152px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
+                        <div className="flex items-center justify-between border-b border-slate-900 pb-1 px-1 opacity-70">
+                          <span className="font-bold text-[11px] text-slate-400 font-mono">gabi-sh</span>
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        </div>
+                        <div className="flex-1 font-mono text-[9.5px] leading-[12px] pt-2 px-1 opacity-90 space-y-[3px] overflow-hidden text-left">
+                          {sandboxLogs.slice(-6).map((log, idx) => {
+                            const isSystem = log.startsWith('[system]');
+                            const isUserCommand = log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:');
+                            
+                            let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
+                            if (isSystem) {
+                              logColor = 'text-emerald-400 font-bold';
+                            } else if (isUserCommand) {
+                              logColor = 'text-white font-bold';
+                            } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
+                              logColor = 'text-sky-400';
+                            } else if (log.startsWith('[Inteligencia Real]')) {
+                              logColor = 'text-amber-400';
+                            }
+                            
+                            let cleanLog = log
+                              .replace('ubuntu@gabi-sandbox:~$ ', '$ ')
+                              .replace('ubuntu@gabi-sandbox:~/search_workspace$ ', '$ ')
+                              .replace('(env) ubuntu@gabi-sandbox:~/search_workspace$ ', '(env) $ ');
+                              
+                            return (
+                              <div key={idx} className={`${logColor} truncate max-w-[190px]`}>
+                                {cleanLog}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className={`w-full max-w-3xl mx-auto rounded-2xl border p-4 shadow-xl font-mono transition-all duration-300 ${
+                    nostalgicMode 
+                      ? 'bg-black border-[#39ff14] text-[#39ff14]' 
+                      : 'bg-slate-900/65 border-slate-800 text-slate-100 backdrop-blur-md'
+                  }`}
+                >
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-850 mb-3">
+                    <div className="flex items-center gap-3">
+                      {/* Mini screen button */}
+                      <button
+                        type="button"
+                        onClick={() => setSandboxState('split')}
+                        className={`w-[48px] h-[34px] rounded-lg border overflow-hidden bg-black transition-all hover:scale-105 flex-shrink-0 ${
+                          nostalgicMode ? 'border-[#39ff14]' : 'border-slate-800 hover:border-slate-700'
+                        }`}
+                        title="Abrir ordenador completo"
+                      >
+                        <div className="w-[96px] h-[68px] scale-50 origin-top-left flex flex-col justify-between p-1 select-none">
+                          <div className="flex items-center justify-between border-b border-slate-950 pb-0.5 px-0.5 opacity-60">
+                            <span className="font-bold text-[8px] text-slate-400 font-mono">gabi-sh</span>
+                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                          </div>
+                          <div className="flex-1 font-mono text-[7px] leading-[9px] pt-1 px-0.5 opacity-80 overflow-hidden text-left">
+                            $ gabi-sandbox
+                          </div>
+                        </div>
+                      </button>
+
+                      <div className="text-left">
+                        <h4 className="text-xs font-bold font-display">La computadora de Gabi</h4>
+                        <p className="text-[9px] text-slate-500">Gabi está usando Terminal</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setSandboxState('split')}
+                        className={`p-1.5 rounded-lg hover:bg-slate-800 transition-colors ${
+                          nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+                        }`}
+                        title="Abrir ordenador completo"
+                      >
+                        <Monitor size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSandboxState('minimized')}
+                        className={`p-1.5 rounded-lg hover:bg-slate-800 transition-colors ${
+                          nostalgicMode ? 'text-[#39ff14]' : 'text-slate-400 hover:text-slate-200'
+                        }`}
+                        title="Minimizar"
+                      >
+                        <ChevronDown size={13} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Card Body - Tasks checklist */}
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-1">
+                      <span>Progreso de la tarea</span>
+                      <span className={isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}>
+                        {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
+                      </span>
                     </div>
                     
-                    <div className="text-left truncate">
-                      <div className="flex items-center gap-1.5 font-bold">
-                        <span className="truncate">
-                          {isThinking ? "Pensando en tiempo real..." : "Cerebro de la computadora"}
-                        </span>
-                      </div>
-                      <div className="text-[10px] text-slate-500 truncate max-w-[150px] sm:max-w-[320px]">
-                        {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
-                      </div>
+                    <div className="space-y-2 text-[11px] leading-relaxed">
+                      {reasoningTasks.map((task, idx) => {
+                        const isDone = thinkingStep > idx;
+                        const isActive = thinkingStep === idx;
+                        return (
+                          <div
+                            key={idx}
+                            className={`flex items-start gap-3 transition-all duration-200 ${
+                              isDone 
+                                ? 'text-emerald-400 font-bold' 
+                                : isActive 
+                                  ? 'text-slate-100 font-bold' 
+                                  : 'text-slate-500'
+                            }`}
+                          >
+                            <span className="flex-shrink-0 mt-0.5">
+                              {isDone ? (
+                                <span className="inline-block w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[9px]">✓</span>
+                              ) : isActive ? (
+                                isThinking && isPlaying ? (
+                                  <Loader2 size={12} className="animate-spin text-emerald-400" />
+                                ) : (
+                                  <span className="inline-block w-4 h-4 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-center leading-3 font-bold text-[9px]">▶</span>
+                                )
+                              ) : (
+                                <span className="inline-block w-4 h-4 rounded-full bg-transparent text-transparent border border-slate-800 text-center leading-3 font-bold text-[9px]">•</span>
+                              )}
+                            </span>
+                            <span>{task}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
-                  {/* Progress ratio and ChevronUp */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}`}>
-                      {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
+                  {/* Card Footer status info */}
+                  <div className="mt-3 pt-2 border-t border-slate-850/60 flex items-center justify-between text-[9px] text-slate-500">
+                    <span className="flex items-center gap-1.5">
+                      <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-emerald-400 animate-pulse' : 'bg-emerald-500'}`} />
+                      {isThinking ? (isPlaying ? 'Ejecutando razonamiento...' : 'Pausado') : 'Finalizado'}
                     </span>
-                    <ChevronUp size={12} className="text-slate-500" />
+                    <span>Consola Gabi Virtual Sandbox</span>
                   </div>
-                </button>
-
-                {/* Right clickable part (mini computer screen) to open the full computer sandbox */}
-                <button
-                  type="button"
-                  onClick={() => setSandboxState('split')}
-                  className="w-[106px] h-5 relative flex-shrink-0 focus:outline-none"
-                  title="Abrir terminal de comandos"
-                >
-                  {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
-                  <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[20px] md:right-[-4px] w-[106px] h-[76px] rounded-2xl border overflow-hidden bg-black shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
-                    nostalgicMode 
-                      ? 'border-[#39ff14]/70 shadow-[#39ff14]/30' 
-                      : 'border-slate-700/80 shadow-slate-950/80'
-                  }`}>
-                    {/* Inner Container: Rendered at 212x152px and scaled to 50% to bypass browser minimum font size limitations */}
-                    <div className="w-[212px] h-[152px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
-                      <div className="flex items-center justify-between border-b border-slate-900 pb-1 px-1 opacity-70">
-                        <span className="font-bold text-[11px] text-slate-400 font-mono">gabi-sh</span>
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      </div>
-                      <div className="flex-1 font-mono text-[9.5px] leading-[12px] pt-2 px-1 opacity-90 space-y-[3px] overflow-hidden text-left">
-                        {sandboxLogs.slice(-6).map((log, idx) => {
-                          const isSystem = log.startsWith('[system]');
-                          const isUserCommand = log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:');
-                          
-                          let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
-                          if (isSystem) {
-                            logColor = 'text-emerald-400 font-bold';
-                          } else if (isUserCommand) {
-                            logColor = 'text-white font-bold';
-                          } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
-                            logColor = 'text-sky-400';
-                          } else if (log.startsWith('[Inteligencia Real]')) {
-                            logColor = 'text-amber-400';
-                          }
-                          
-                          let cleanLog = log
-                            .replace('ubuntu@gabi-sandbox:~$ ', '$ ')
-                            .replace('ubuntu@gabi-sandbox:~/search_workspace$ ', '$ ')
-                            .replace('(env) ubuntu@gabi-sandbox:~/search_workspace$ ', '(env) $ ');
-                            
-                          return (
-                            <div key={idx} className={`${logColor} truncate max-w-[190px]`}>
-                              {cleanLog}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </div>
+                </div>
+              )
             )}
 
             {/* Box 2: Dialogue input form */}
@@ -1068,20 +1184,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
           </div>
         </div>
 
-        {/* Floating Reduced Overlay Panel (Rendered absolutely inside the relative Chat area) */}
-        {sandboxState === 'reduced' && (
-          <div 
-            onClick={() => setSandboxState('minimized')}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40 flex items-center justify-center p-4 cursor-pointer"
-          >
-            <div 
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 cursor-default"
-            >
-              {renderReducedOverlay()}
-            </div>
-          </div>
-        )}
+        {/* Replaced absolute floating reduced overlay with inline version above */}
       </div>
 
       {/* Split/Fullscreen Sidebar Panel (Right) */}
