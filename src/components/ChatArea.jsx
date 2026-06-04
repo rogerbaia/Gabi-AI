@@ -892,7 +892,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
               <button
                 type="button"
                 onClick={() => setSandboxState('split')}
-                className={`w-full max-w-[763px] mx-auto flex items-center justify-between px-4 py-1.5 text-xs font-mono transition-all duration-300 rounded-2xl border ${
+                className={`w-full max-w-3xl mx-auto flex items-center justify-between px-4 py-1 text-xs font-mono transition-all duration-300 rounded-2xl border ${
                   nostalgicMode
                     ? 'border-[#39ff14] bg-black text-[#39ff14] hover:bg-[#39ff14]/10 focus:outline-none focus:ring-1 focus:ring-[#39ff14]'
                     : 'border-slate-800 bg-slate-900/60 text-slate-350 hover:bg-slate-900/90 hover:border-slate-700 focus:outline-none focus:border-slate-700'
@@ -981,14 +981,14 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
             )}
 
             {/* Box 2: Dialogue input form */}
-            <form onSubmit={handleSendMessage} className="w-full max-w-[738px] mx-auto">
+            <form onSubmit={handleSendMessage} className="w-full max-w-3xl mx-auto">
               <div className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
                 nostalgicMode
                   ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
                   : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
               }`}>
                 {/* Main Input Textarea and Actions */}
-                <div className="p-3 flex flex-col gap-2">
+                <div className="px-3 pt-2 pb-1.5 flex flex-col gap-1.5">
                   {/* Top Row: Textarea and Actions */}
                   <div className="flex items-end gap-2">
                     <div className="flex-1">
@@ -1039,7 +1039,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   </div>
 
                   {/* Bottom Row: Specialization selection and balance info (No border-t divider) */}
-                  <div className="flex items-center justify-between pt-2.5 mt-1 text-xs">
+                  <div className="flex items-center justify-between pt-1.5 mt-1 text-xs">
                     <NeuroHubMenu
                       selectedModel={selectedModel}
                       setSelectedModel={setSelectedModel}
