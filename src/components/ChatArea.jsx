@@ -925,22 +925,27 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                 </div>
 
                 {/* Right: Progress ratio and terminal thumbnail */}
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-3 flex-shrink-0 relative">
                   <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}`}>
                     {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                   </span>
                   
-                  {/* Terminal screen thumbnail - RIGHT ALIGNED */}
-                  <div className={`w-10 h-7 rounded border flex flex-col justify-between overflow-hidden bg-black text-[6px] p-0.5 flex-shrink-0 ${
-                    nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-emerald-500'
-                  }`}>
-                    <div className="flex items-center justify-between border-b border-slate-900 pb-[0.5px] px-[2px] opacity-60">
-                      <span className="scale-75 origin-left">gabi-sh</span>
-                      <span className="w-1 h-1 rounded-full bg-emerald-400 scale-75 animate-pulse" />
-                    </div>
-                    <div className="flex-1 font-mono leading-[5px] scale-[0.7] origin-top-left pt-0.5 px-[2px] opacity-80">
-                      <div>$ python</div>
-                      <div className="text-slate-500">ir_weights..</div>
+                  {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
+                  <div className="w-16 h-7 relative flex-shrink-0">
+                    <div className={`absolute bottom-[-6px] right-0 w-16 h-12 rounded-lg border flex flex-col justify-between overflow-hidden bg-black text-[5px] p-1 shadow-2xl transition-transform duration-300 hover:scale-105 ${
+                      nostalgicMode 
+                        ? 'border-[#39ff14]/70 text-[#39ff14] shadow-[#39ff14]/20' 
+                        : 'border-slate-700/80 text-emerald-500 shadow-slate-950/60'
+                    }`}>
+                      <div className="flex items-center justify-between border-b border-slate-900 pb-[1.5px] px-[2px] opacity-70">
+                        <span className="scale-75 origin-left font-bold text-[6px] text-slate-400 font-mono">gabi-sh</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 scale-75 animate-pulse" />
+                      </div>
+                      <div className="flex-1 font-mono leading-[5px] scale-[0.75] origin-top-left pt-1 px-[2px] opacity-90">
+                        <div className="text-white">$ python3</div>
+                        <div className="text-emerald-400 font-bold">&gt;&gt;&gt; ir_tune()</div>
+                        <div className="text-slate-500 truncate">synapses: [ok]</div>
+                      </div>
                     </div>
                   </div>
                   
