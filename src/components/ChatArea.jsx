@@ -317,7 +317,7 @@ Comparando guías nutricionales y recomendaciones médicas preventivas:
    * Distribución sugerida: 45% carbohidratos complejos, 30% proteínas limpias, 25% grasas saludables.
 
 2. **Recomendaciones de Alimentos:**
-   * Incrementar ingesta de espinacas, almendras, salmón y aguacate.
+   * Incrementar ingesta de espinacas, almendras, salmón and aguacate.
    * Evitar azúcares procesados para optimizar la salud de la microbiota local.
 
 3. **Rutina de Ejercicios:**
@@ -881,131 +881,133 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Minimized Terminal Badge */}
-        {sandboxState === 'minimized' && currentQueryText && (
-          <div className="flex justify-end px-4 mb-2">
-            <button
-              type="button"
-              onClick={() => setSandboxState('split')}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-xs shadow-lg transition-all duration-300 font-mono ${
-                nostalgicMode
-                  ? 'bg-black border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14]/10'
-                  : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-slate-100 hover:border-slate-700 hover:shadow-emerald-950/20'
-              }`}
-            >
-              {/* Left mini terminal screen icon */}
-              <div className={`w-8 h-6 rounded border flex items-center justify-center overflow-hidden bg-black text-[8px] ${
-                nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-emerald-500'
-              }`}>
-                <span>$_</span>
-              </div>
-              
-              {/* Center: active task or status */}
-              <div className="text-left max-w-[200px] sm:max-w-[300px]">
-                <div className="flex items-center gap-1.5 font-bold">
-                  {isThinking ? (
-                    <>
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Pensando en tiempo real...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      <span>Cerebro de la computadora</span>
-                    </>
-                  )}
-                </div>
-                <div className="text-[10px] text-slate-500 truncate">
-                  {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
-                </div>
-              </div>
-
-              {/* Right: Progress ratio and chevron */}
-              <div className="flex items-center gap-2 border-l border-slate-800/80 pl-3 ml-1">
-                <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : ''}`}>
-                  {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
-                </span>
-                <ExternalLink size={12} className="text-slate-500" />
-              </div>
-            </button>
-          </div>
-        )}
-
-        {/* Text Box Input Area */}
+        {/* Minimized Terminal Badge and Input Box stacked in a single container */}
         <div className={`p-4 border-t ${
-          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-950'
+          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-950/20'
         }`}>
           <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto">
-            
-            {/* Main big search input container */}
-            <div className={`rounded-2xl border p-3 flex flex-col gap-2 transition-all ${
+            <div className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
               nostalgicMode
                 ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
                 : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
             }`}>
-              {/* Top Row: Textarea and Actions */}
-              <div className="flex items-end gap-2">
-                <div className="flex-1">
-                  <textarea
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
-                    rows={1}
-                    className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage(e);
-                      }
-                    }}
+              
+              {/* Minimized Terminal Badge (Stacked at the top inside the same border, no separator line) */}
+              {sandboxState === 'minimized' && currentQueryText && (
+                <button
+                  type="button"
+                  onClick={() => setSandboxState('split')}
+                  className={`w-full flex items-center justify-between px-4 py-3 text-xs font-mono transition-all duration-300 ${
+                    nostalgicMode
+                      ? 'bg-[#39ff14]/5 text-[#39ff14] hover:bg-[#39ff14]/10'
+                      : 'bg-slate-900/40 text-slate-350 hover:bg-slate-900/80'
+                  }`}
+                >
+                  {/* Left: screen icon and details */}
+                  <div className="flex items-center gap-3 truncate">
+                    <div className={`w-8 h-6 rounded border flex items-center justify-center overflow-hidden bg-black text-[8px] flex-shrink-0 ${
+                      nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-emerald-500'
+                    }`}>
+                      <span>$_</span>
+                    </div>
+                    
+                    <div className="text-left truncate">
+                      <div className="flex items-center gap-1.5 font-bold">
+                        {isThinking ? (
+                          <>
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+                            <span className="truncate">Pensando en tiempo real...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+                            <span className="truncate">Cerebro de la computadora</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-slate-500 truncate max-w-[200px] sm:max-w-[400px]">
+                        {isThinking ? reasoningTasks[thinkingStep] : "Entregar resultados finales"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Progress ratio and expand link */}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : ''}`}>
+                      {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
+                    </span>
+                    <ExternalLink size={12} className="text-slate-500" />
+                  </div>
+                </button>
+              )}
+
+              {/* Main Input Textarea and Actions */}
+              <div className="p-3 flex flex-col gap-2">
+                {/* Top Row: Textarea and Actions */}
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <textarea
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
+                      rows={1}
+                      className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage(e);
+                        }
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Input action items */}
+                  <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50 flex-shrink-0">
+                    {/* Voice microphone button */}
+                    <button
+                      type="button"
+                      onClick={toggleListening}
+                      className={`p-2 rounded-xl transition-all ${
+                        isListening
+                          ? 'bg-rose-500 text-slate-950 animate-pulse'
+                          : nostalgicMode
+                            ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                      }`}
+                      title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
+                    >
+                      {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                    </button>
+
+                    <button
+                      type="submit"
+                      className={`p-2 rounded-xl transition-all ${
+                        nostalgicMode
+                          ? 'retro-button border border-[#39ff14] text-[#39ff14]'
+                          : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
+                      }`}
+                    >
+                      <Send size={14} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bottom Row: Specialization selection and balance info */}
+                <div className="flex items-center justify-between border-t border-slate-800/40 pt-2.5 mt-1 text-xs">
+                  <NeuroHubMenu
+                    selectedModel={selectedModel}
+                    setSelectedModel={setSelectedModel}
+                    isOpen={modelSelectorOpen}
+                    setIsOpen={setModelSelectorOpen}
+                    nostalgicMode={nostalgicMode}
                   />
-                </div>
-                
-                {/* Input action items */}
-                <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50 flex-shrink-0">
-                  {/* Voice microphone button */}
-                  <button
-                    type="button"
-                    onClick={toggleListening}
-                    className={`p-2 rounded-xl transition-all ${
-                      isListening
-                        ? 'bg-rose-500 text-slate-950 animate-pulse'
-                        : nostalgicMode
-                          ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                    }`}
-                    title={isListening ? "Detener grabación de voz" : "Dictar consulta con micrófono"}
-                  >
-                    {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-                  </button>
 
-                  <button
-                    type="submit"
-                    className={`p-2 rounded-xl transition-all ${
-                      nostalgicMode
-                        ? 'retro-button border border-[#39ff14] text-[#39ff14]'
-                        : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold'
-                    }`}
-                  >
-                    <Send size={14} />
-                  </button>
+                  <span className="text-[10px] text-slate-500 font-mono">
+                    Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
+                  </span>
                 </div>
               </div>
 
-              {/* Bottom Row: Specialization selection and balance info (inside the box!) */}
-              <div className="flex items-center justify-between border-t border-slate-800/40 pt-2.5 mt-1 text-xs">
-                <NeuroHubMenu
-                  selectedModel={selectedModel}
-                  setSelectedModel={setSelectedModel}
-                  isOpen={modelSelectorOpen}
-                  setIsOpen={setModelSelectorOpen}
-                  nostalgicMode={nostalgicMode}
-                />
-
-                <span className="text-[10px] text-slate-500 font-mono">
-                  Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
-                </span>
-              </div>
             </div>
           </form>
         </div>
