@@ -885,7 +885,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
         <div className={`px-4 pt-1 pb-0 ${
           nostalgicMode ? 'bg-black' : 'bg-slate-950/20'
         }`}>
-          <div className="max-w-3xl mx-auto flex flex-col gap-3">
+          <div className="max-w-3xl mx-auto flex flex-col gap-[7px]">
             
             {/* Box 1: Minimized Terminal Badge (AI brain) */}
             {sandboxState === 'minimized' && currentQueryText && (
