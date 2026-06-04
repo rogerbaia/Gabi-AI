@@ -259,9 +259,9 @@ export default function ChatArea({
     setIsPlaying(true);
     setShowThinkingDetails(true);
 
-    // Ajustar vista de la computadora a split si estaba minimizada o cerrada
-    if (sandboxState === 'hidden' || sandboxState === 'minimized') {
-      setSandboxState('split');
+    // Ajustar vista de la computadora a minimizada si estaba cerrada (mantiene su estado si ya estaba abierta o minimizada)
+    if (sandboxState === 'hidden') {
+      setSandboxState('minimized');
     }
 
     if (nostalgicMode) {
@@ -934,42 +934,45 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   
                   {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
                   <div className="w-24 h-5 relative flex-shrink-0">
-                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[15px] md:right-[-9px] w-24 h-24 rounded-2xl border flex flex-col justify-between overflow-hidden bg-black p-2 shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
+                    <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[15px] md:right-[-9px] w-24 h-24 rounded-2xl border overflow-hidden bg-black shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
                       nostalgicMode 
-                        ? 'border-[#39ff14]/70 text-[#39ff14] shadow-[#39ff14]/30' 
-                        : 'border-slate-700/80 text-emerald-500 shadow-slate-950/80'
+                        ? 'border-[#39ff14]/70 shadow-[#39ff14]/30' 
+                        : 'border-slate-700/80 shadow-slate-950/80'
                     }`}>
-                      <div className="flex items-center justify-between border-b border-slate-900 pb-[1.5px] px-[2px] opacity-70">
-                        <span className="scale-75 origin-left font-bold text-[8px] text-slate-400 font-mono">gabi-sh</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 scale-75 animate-pulse" />
-                      </div>
-                      <div className="flex-1 font-mono leading-[7px] scale-[0.8] origin-top-left pt-1.5 px-[2px] opacity-90 space-y-[2px] overflow-hidden">
-                        {sandboxLogs.slice(-5).map((log, idx) => {
-                          const isSystem = log.startsWith('[system]');
-                          const isUserCommand = log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:');
-                          
-                          let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
-                          if (isSystem) {
-                            logColor = 'text-emerald-400 font-bold';
-                          } else if (isUserCommand) {
-                            logColor = 'text-white font-bold';
-                          } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
-                            logColor = 'text-sky-400';
-                          } else if (log.startsWith('[Inteligencia Real]')) {
-                            logColor = 'text-amber-400';
-                          }
-                          
-                          let cleanLog = log
-                            .replace('ubuntu@gabi-sandbox:~$ ', '$ ')
-                            .replace('ubuntu@gabi-sandbox:~/search_workspace$ ', '$ ')
-                            .replace('(env) ubuntu@gabi-sandbox:~/search_workspace$ ', '(env) $ ');
+                      {/* Inner Container: Rendered at 192x192px and scaled to 50% to bypass browser minimum font size limitations */}
+                      <div className="w-[192px] h-[192px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
+                        <div className="flex items-center justify-between border-b border-slate-900 pb-1 px-1 opacity-70">
+                          <span className="font-bold text-[11px] text-slate-400 font-mono">gabi-sh</span>
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        </div>
+                        <div className="flex-1 font-mono text-[9.5px] leading-[12px] pt-2 px-1 opacity-90 space-y-[3px] overflow-hidden">
+                          {sandboxLogs.slice(-6).map((log, idx) => {
+                            const isSystem = log.startsWith('[system]');
+                            const isUserCommand = log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:');
                             
-                          return (
-                            <div key={idx} className={`${logColor} text-[5.5px] leading-[7px] truncate max-w-[100px]`}>
-                              {cleanLog}
-                            </div>
-                          );
-                        })}
+                            let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
+                            if (isSystem) {
+                              logColor = 'text-emerald-400 font-bold';
+                            } else if (isUserCommand) {
+                              logColor = 'text-white font-bold';
+                            } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
+                              logColor = 'text-sky-400';
+                            } else if (log.startsWith('[Inteligencia Real]')) {
+                              logColor = 'text-amber-400';
+                            }
+                            
+                            let cleanLog = log
+                              .replace('ubuntu@gabi-sandbox:~$ ', '$ ')
+                              .replace('ubuntu@gabi-sandbox:~/search_workspace$ ', '$ ')
+                              .replace('(env) ubuntu@gabi-sandbox:~/search_workspace$ ', '(env) $ ');
+                              
+                            return (
+                              <div key={idx} className={`${logColor} truncate max-w-[170px]`}>
+                                {cleanLog}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
