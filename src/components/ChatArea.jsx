@@ -933,20 +933,21 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   <ChevronUp size={12} className="text-slate-500" />
                   
                   {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
-                  <div className="w-14 h-5 relative flex-shrink-0">
-                    <div className={`absolute bottom-[-4px] right-[-10px] md:right-[-20px] w-14 h-14 rounded-xl border flex flex-col justify-between overflow-hidden bg-black text-[5px] p-1.5 shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
+                  <div className="w-24 h-5 relative flex-shrink-0">
+                    <div className={`absolute top-1/2 -translate-y-1/2 right-[-12px] md:right-[-36px] w-24 h-24 rounded-2xl border flex flex-col justify-between overflow-hidden bg-black p-2 shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
                       nostalgicMode 
                         ? 'border-[#39ff14]/70 text-[#39ff14] shadow-[#39ff14]/30' 
                         : 'border-slate-700/80 text-emerald-500 shadow-slate-950/80'
                     }`}>
                       <div className="flex items-center justify-between border-b border-slate-900 pb-[1.5px] px-[2px] opacity-70">
-                        <span className="scale-75 origin-left font-bold text-[6px] text-slate-400 font-mono">gabi-sh</span>
+                        <span className="scale-75 origin-left font-bold text-[8px] text-slate-400 font-mono">gabi-sh</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 scale-75 animate-pulse" />
                       </div>
-                      <div className="flex-1 font-mono leading-[6px] scale-[0.8] origin-top-left pt-1 px-[2px] opacity-90 space-y-[2px]">
-                        <div className="text-white">$ python3</div>
-                        <div className="text-emerald-400 font-bold">&gt;&gt;&gt; ir_tune()</div>
-                        <div className="text-slate-500 truncate">synapses: [ok]</div>
+                      <div className="flex-1 font-mono leading-[8px] scale-[0.8] origin-top-left pt-1.5 px-[2px] opacity-90 space-y-[2px]">
+                        <div className="text-white text-[7px]">$ python3</div>
+                        <div className="text-emerald-400 font-bold text-[7px]">&gt;&gt;&gt; ir_tune()</div>
+                        <div className="text-slate-500 text-[7px]">synapses: [ok]</div>
+                        <div className="text-slate-400 text-[6px] truncate">gabi-ir-v1.bin</div>
                       </div>
                     </div>
                   </div>
