@@ -1,7 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { readDb, writeDb } from './db.js';
 import { runCommand, writeFile, listWorkspaceFiles } from './sandbox.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -140,9 +143,14 @@ app.post('/api/store/emails/read', (req, res) => {
 app.post('/api/chat', async (req, res) => {
   const { prompt, model, apiKeys } = req.body;
   
-  // Resolve keys prioritizing those sent in request, then database
+  // Resolve keys prioritizing those sent in request, then database, then environment variables
   const dbKeys = getUserConfig().apiKeys || {};
-  const activeKeys = { ...dbKeys, ...apiKeys };
+  const activeKeys = {
+    openai: apiKeys?.openai || dbKeys.openai || process.env.OPENAI_API_KEY,
+    anthropic: apiKeys?.anthropic || dbKeys.anthropic || process.env.ANTHROPIC_API_KEY,
+    perplexity: apiKeys?.perplexity || dbKeys.perplexity || process.env.PERPLEXITY_API_KEY,
+    deepseek: apiKeys?.deepseek || dbKeys.deepseek || process.env.DEEPSEEK_API_KEY
+  };
   
   try {
     let resultText = "";
