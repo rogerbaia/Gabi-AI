@@ -76,7 +76,7 @@ export default function Sidebar({
         : 'bg-synaptica-darker border-slate-800'
     }`}>
       {/* Brand & Pulsing Logo */}
-      <div className={`p-5 border-b flex flex-col items-center gap-2 ${
+      <div className={`h-[68px] px-5 border-b flex items-center ${
         nostalgicMode ? 'border-[#39ff14]' : 'border-slate-800'
       }`}>
         <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => { setActiveView('chat'); }}>
