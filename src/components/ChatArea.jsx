@@ -882,7 +882,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
         </div>
 
         {/* Minimized Terminal Badge and Input Box stacked in two separate containers */}
-        <div className={`p-4 ${
+        <div className={`px-4 pt-2 pb-1.5 ${
           nostalgicMode ? 'bg-black' : 'bg-slate-950/20'
         }`}>
           <div className="max-w-3xl mx-auto flex flex-col gap-3">
