@@ -925,17 +925,19 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                 </div>
 
                 {/* Right: Progress ratio and terminal thumbnail */}
-                <div className="flex items-center gap-3 flex-shrink-0 relative">
+                <div className="flex items-center gap-2.5 flex-shrink-0 relative">
                   <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}`}>
                     {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                   </span>
                   
+                  <ChevronUp size={12} className="text-slate-500" />
+                  
                   {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
-                  <div className="w-14 h-6 relative flex-shrink-0">
-                    <div className={`absolute top-1/2 -translate-y-1/2 right-0 w-14 h-14 rounded-xl border flex flex-col justify-between overflow-hidden bg-black text-[5px] p-1.5 shadow-2xl transition-transform duration-300 hover:scale-105 ${
+                  <div className="w-14 h-5 relative flex-shrink-0">
+                    <div className={`absolute bottom-[-4px] right-[-10px] md:right-[-20px] w-14 h-14 rounded-xl border flex flex-col justify-between overflow-hidden bg-black text-[5px] p-1.5 shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
                       nostalgicMode 
-                        ? 'border-[#39ff14]/70 text-[#39ff14] shadow-[#39ff14]/20' 
-                        : 'border-slate-700/80 text-emerald-500 shadow-slate-950/60'
+                        ? 'border-[#39ff14]/70 text-[#39ff14] shadow-[#39ff14]/30' 
+                        : 'border-slate-700/80 text-emerald-500 shadow-slate-950/80'
                     }`}>
                       <div className="flex items-center justify-between border-b border-slate-900 pb-[1.5px] px-[2px] opacity-70">
                         <span className="scale-75 origin-left font-bold text-[6px] text-slate-400 font-mono">gabi-sh</span>
@@ -948,8 +950,6 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                       </div>
                     </div>
                   </div>
-                  
-                  <ChevronUp size={12} className="text-slate-500" />
                 </div>
               </button>
             )}
