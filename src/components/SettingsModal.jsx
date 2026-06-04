@@ -18,7 +18,8 @@ import {
   Key, 
   Cpu, 
   Database, 
-  Workflow
+  Workflow,
+  Sparkles
 } from 'lucide-react';
 
 export default function SettingsModal({
@@ -47,22 +48,22 @@ export default function SettingsModal({
 
   const categories = [
     {
-      group: 'Cuenta',
+      group: 'Panel de Control',
       items: [
-        { id: 'cuenta', label: 'Cuenta', icon: User },
-        { id: 'general', label: 'General', icon: SlidersHorizontal },
-        { id: 'billing', label: 'Uso y facturación', icon: Coins },
-        { id: 'personalizacion', label: 'Personalización', icon: LayoutGrid },
+        { id: 'general', label: 'Espacio de Trabajo', icon: SlidersHorizontal },
+        { id: 'personalizacion', label: 'Estilo y Efectos', icon: Sparkles },
+        { id: 'billing', label: 'NeuroTokens y Facturación', icon: Coins },
+        { id: 'cuenta', label: 'Perfil de Usuario', icon: User },
       ]
     },
     {
-      group: 'Características',
+      group: 'Sistemas de Cómputo',
       items: [
-        { id: 'correo', label: 'Correo Gabi', icon: Mail },
-        { id: 'data', label: 'Controles de datos', icon: FolderLock },
-        { id: 'computer', label: 'My Computer', icon: Monitor },
-        { id: 'plugins', label: 'Mis plugins', icon: LayoutGrid },
-        { id: 'integraciones', label: 'Integraciones', icon: Workflow },
+        { id: 'computer', label: 'Servidor y Hardware', icon: Cpu },
+        { id: 'plugins', label: 'Habilidades de IA', icon: LayoutGrid },
+        { id: 'integraciones', label: 'Conectores de API', icon: Workflow },
+        { id: 'data', label: 'Memoria y Privacidad', icon: FolderLock },
+        { id: 'correo', label: 'Logística de Envío', icon: Mail },
       ]
     }
   ];
@@ -150,19 +151,19 @@ export default function SettingsModal({
         {/* Content Panel (Right Column) */}
         <div className="flex-1 overflow-y-auto p-8 relative">
           
-          {/* Tab 1: GENERAL */}
+          {/* Tab 1: GENERAL (Espacio de Trabajo) */}
           {activeTab === 'general' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">General</h2>
-                <p className="text-xs text-slate-500 mt-1">Configura las preferencias de tu espacio de trabajo de Gabi AI.</p>
+                <h2 className="text-xl font-bold font-display">Espacio de Trabajo</h2>
+                <p className="text-xs text-slate-500 mt-1">Configura las preferencias base y el idioma global para tu entorno de Synaptica.</p>
               </div>
 
               {/* Language Selector */}
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-slate-350 block">Apariencia</label>
                 <div className="space-y-1">
-                  <span className="text-[11px] text-slate-500 font-medium block">Idioma</span>
+                  <span className="text-[11px] text-slate-500 font-medium block">Idioma del Entorno</span>
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
@@ -176,7 +177,7 @@ export default function SettingsModal({
 
               {/* Theme selection */}
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-350 block">Tema</label>
+                <label className="text-xs font-semibold text-slate-350 block">Tema Visual</label>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setTheme('light')}
@@ -216,18 +217,18 @@ export default function SettingsModal({
 
               {/* Communication Preferences */}
               <div className="space-y-3 pt-2">
-                <label className="text-xs font-semibold text-slate-350 block">Preferencias de comunicación</label>
+                <label className="text-xs font-semibold text-slate-350 block">Alertas de Actividad</label>
                 
                 {/* Toggle 1 */}
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold">Notificaciones del navegador</span>
-                    <span className="text-[10px] text-slate-500">Reciba notificaciones en su navegador cuando haya nuevos avances o se complete una tarea.</span>
+                    <span className="text-xs font-semibold">Notificaciones del Sistema</span>
+                    <span className="text-[10px] text-slate-500">Recibe alertas en segundo plano cuando finalice una tarea de cómputo o análisis.</span>
                   </div>
                   <button
                     onClick={() => handleToggle(notifications, setNotifications)}
                     className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out ${
-                      notifications ? 'bg-blue-600' : 'bg-slate-800'
+                      notifications ? 'bg-[#7ED4FD] text-slate-950' : 'bg-slate-800'
                     }`}
                   >
                     <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${
@@ -239,13 +240,13 @@ export default function SettingsModal({
                 {/* Toggle 2 */}
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold">Recibir actualizaciones del producto</span>
-                    <span className="text-[10px] text-slate-500">Obtén acceso anticipado a lanzamientos de funciones e historias de éxito para optimizar tu flujo de trabajo.</span>
+                    <span className="text-xs font-semibold">Novedades de Gabi AI</span>
+                    <span className="text-[10px] text-slate-500">Obtén avisos sobre nuevos modelos, actualizaciones de seguridad y parches de rendimiento.</span>
                   </div>
                   <button
                     onClick={() => handleToggle(productUpdates, setProductUpdates)}
                     className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out ${
-                      productUpdates ? 'bg-blue-600' : 'bg-slate-800'
+                      productUpdates ? 'bg-[#7ED4FD] text-slate-950' : 'bg-slate-800'
                     }`}
                   >
                     <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${
@@ -257,13 +258,13 @@ export default function SettingsModal({
                 {/* Toggle 3 */}
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold">Envíame un correo electrónico cuando comience mi tarea en cola</span>
-                    <span className="text-[10px] text-slate-500">Cuando esté habilitado, te enviaremos un correo electrónico oportuno una vez que tu tarea termine de hacer cola y comience a procesarse.</span>
+                    <span className="text-xs font-semibold">Avisos de Tareas en Cola por E-mail</span>
+                    <span className="text-[10px] text-slate-500">Envíanos un correo electrónico en cuanto tu agente empiece a procesar la tarea en la nube.</span>
                   </div>
                   <button
                     onClick={() => handleToggle(emailOnQueue, setEmailOnQueue)}
                     className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out ${
-                      emailOnQueue ? 'bg-blue-600' : 'bg-slate-800'
+                      emailOnQueue ? 'bg-[#7ED4FD] text-slate-950' : 'bg-slate-800'
                     }`}
                   >
                     <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${
@@ -275,31 +276,31 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 2: CUENTA */}
+          {/* Tab 2: CUENTA (Perfil de Usuario) */}
           {activeTab === 'cuenta' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Mi Cuenta</h2>
-                <p className="text-xs text-slate-500 mt-1">Gestiona tus credenciales y perfil personal.</p>
+                <h2 className="text-xl font-bold font-display">Perfil de Usuario</h2>
+                <p className="text-xs text-slate-500 mt-1">Datos de tu identidad digital y llaves de acceso en la red Synaptica.</p>
               </div>
 
               <div className="p-4 rounded-2xl border border-slate-800/80 bg-slate-900/40 space-y-4">
                 <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
-                  <span className="text-xs text-slate-400">Usuario</span>
+                  <span className="text-xs text-slate-400">Identificador</span>
                   <span className="text-xs font-semibold">Rogerio Baia</span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
-                  <span className="text-xs text-slate-400">Email</span>
+                  <span className="text-xs text-slate-400">Correo Registrado</span>
                   <span className="text-xs font-semibold">rogerio@synaptica.ece</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Tipo de suscripción</span>
+                  <span className="text-xs text-slate-400">Categoría de Cuenta</span>
                   <span className="text-xs font-bold text-sky-400">Synaptica Enterprise</span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-350 block">Credenciales de API</label>
+                <label className="text-xs font-semibold text-slate-350 block">Llave de API Synaptica</label>
                 <div className="flex gap-2">
                   <input
                     type="password"
@@ -315,38 +316,38 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 3: BILLING */}
+          {/* Tab 3: BILLING (NeuroTokens y Facturación) */}
           {activeTab === 'billing' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Uso y facturación</h2>
-                <p className="text-xs text-slate-500 mt-1">Controla tu saldo de NeuroTokens y consumo multimodelo.</p>
+                <h2 className="text-xl font-bold font-display">NeuroTokens y Facturación</h2>
+                <p className="text-xs text-slate-500 mt-1">Monitorea tu saldo disponible de NeuroTokens (NTK) y el costo de procesamiento multimodelo.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col justify-between">
-                  <span className="text-xs text-slate-500">Saldo actual</span>
+                  <span className="text-xs text-slate-500">Saldo Disponible</span>
                   <span className="text-2xl font-bold text-indigo-400">{tokenBalance} NTK</span>
                 </div>
                 <div className="p-4 rounded-2xl border border-slate-800 bg-slate-900/40 flex flex-col justify-between">
-                  <span className="text-xs text-slate-500">Costo por consulta (OmnIA)</span>
+                  <span className="text-xs text-slate-500">Tarifa por Consulta OmnIA</span>
                   <span className="text-2xl font-bold text-emerald-400">5 NTK</span>
                 </div>
               </div>
 
               <div className="space-y-3 pt-2">
-                <h3 className="text-xs font-semibold text-slate-350">Historial reciente de recargas</h3>
+                <h3 className="text-xs font-semibold text-slate-350">Bitácora de Transacciones</h3>
                 <div className="text-xs space-y-2">
                   <div className="flex justify-between py-2 border-b border-slate-900/60">
-                    <span>Recarga Watch-to-Earn (Ad)</span>
+                    <span>Bono de Publicidad Watch-to-Earn</span>
                     <span className="text-emerald-400 font-bold">+10 NTK</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-slate-900/60">
-                    <span>Acreditación de Feedback Útil</span>
+                    <span>Recompensa por Feedback de Sistema</span>
                     <span className="text-emerald-400 font-bold">+5 NTK</span>
                   </div>
                   <div className="flex justify-between py-2">
-                    <span>Canje de Token Market P2P</span>
+                    <span>Transferencia Mercado P2P</span>
                     <span className="text-emerald-400 font-bold">+100 NTK</span>
                   </div>
                 </div>
@@ -354,19 +355,19 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 4: PERSONALIZACION */}
+          {/* Tab 4: PERSONALIZACION (Estilo y Efectos) */}
           {activeTab === 'personalizacion' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Personalización</h2>
-                <p className="text-xs text-slate-500 mt-1">Personaliza la velocidad y los efectos sonoros de la plataforma.</p>
+                <h2 className="text-xl font-bold font-display">Estilo y Efectos</h2>
+                <p className="text-xs text-slate-500 mt-1">Personaliza la estética visual y el comportamiento sonoro de Gabi AI.</p>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold">Modo Nostálgico V.34 (Sonidos de Módem)</span>
-                    <span className="text-[10px] text-slate-500">Reproducir pitidos analógicos de marcado telefónico al procesar.</span>
+                    <span className="text-xs font-semibold">Modo Retro Dial-Up V.34</span>
+                    <span className="text-[10px] text-slate-500">Reproducir efectos acústicos analógicos al realizar razonamientos profundos.</span>
                   </div>
                   <button
                     onClick={() => setNostalgicMode(!nostalgicMode)}
@@ -381,7 +382,7 @@ export default function SettingsModal({
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-xs font-semibold text-slate-350 block">Velocidad de Animación</span>
+                  <span className="text-xs font-semibold text-slate-350 block">Frecuencia de Animación</span>
                   <div className="flex gap-2">
                     {['lenta', 'normal', 'rápida'].map((speed) => (
                       <button
@@ -404,31 +405,31 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 5: CORREO */}
+          {/* Tab 5: CORREO (Logística de Envío) */}
           {activeTab === 'correo' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Bandeja de Correo Gabi</h2>
-                <p className="text-xs text-slate-500 mt-1">Mensajes y confirmaciones enviados por el sistema de logística.</p>
+                <h2 className="text-xl font-bold font-display">Logística de Envío</h2>
+                <p className="text-xs text-slate-500 mt-1">Seguimiento de envíos, canjes físicos e interacciones con el sandbox de logística de Amazon.</p>
               </div>
               <div className="text-xs text-slate-500 p-8 rounded-2xl border border-dashed border-slate-800 text-center">
-                No tienes correos nuevos. Los correos de logística y canjes de premios aparecerán aquí y en la NeuroStore.
+                No hay notificaciones de envíos pendientes. Los recibos de canjes de la NeuroStore y alertas de entrega de Amazon se registrarán aquí.
               </div>
             </div>
           )}
 
-          {/* Tab 6: MY COMPUTER */}
+          {/* Tab 6: MY COMPUTER (Servidor y Hardware) */}
           {activeTab === 'computer' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">My Computer</h2>
-                <p className="text-xs text-slate-500 mt-1">Configuración del sandbox de la computadora virtual de Gabi AI.</p>
+                <h2 className="text-xl font-bold font-display">Servidor y Hardware</h2>
+                <p className="text-xs text-slate-500 mt-1">Dimensiona los recursos de hardware virtuales asignados para la ejecución de agentes en segundo plano.</p>
               </div>
 
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-slate-350 block flex justify-between">
-                    <span>Núcleos de vCPU asignados:</span>
+                    <span>Capacidad de vCPU:</span>
                     <span className="text-indigo-400 font-bold">{cpuCores} Cores</span>
                   </label>
                   <input
@@ -443,7 +444,7 @@ export default function SettingsModal({
 
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-slate-350 block flex justify-between">
-                    <span>Memoria RAM asignada:</span>
+                    <span>Memoria RAM Reservada:</span>
                     <span className="text-indigo-400 font-bold">{ramSize} GB</span>
                   </label>
                   <input
@@ -459,7 +460,7 @@ export default function SettingsModal({
 
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-slate-350 block flex justify-between">
-                    <span>Disco Duro SSD:</span>
+                    <span>Espacio SSD en la Nube:</span>
                     <span className="text-indigo-400 font-bold">{storageSize} GB</span>
                   </label>
                   <input
@@ -476,12 +477,12 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 7: PLUGINS */}
+          {/* Tab 7: PLUGINS (Habilidades de IA) */}
           {activeTab === 'plugins' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Mis Plugins</h2>
-                <p className="text-xs text-slate-500 mt-1">Habilita o deshabilita las herramientas de interacción de la computadora virtual.</p>
+                <h2 className="text-xl font-bold font-display">Habilidades de IA</h2>
+                <p className="text-xs text-slate-500 mt-1">Activa o desactiva herramientas y scripts dinámicos con los que Gabi AI interactúa en el sandbox.</p>
               </div>
 
               <div className="space-y-3">
@@ -489,8 +490,8 @@ export default function SettingsModal({
                   <div className="flex items-center gap-3">
                     <LayoutGrid size={16} className="text-indigo-400" />
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold">Google Search API</span>
-                      <span className="text-[10px] text-slate-500">Búsquedas en tiempo real en la web.</span>
+                      <span className="text-xs font-semibold">Buscador Integrado Web</span>
+                      <span className="text-[10px] text-slate-500">Consultas directas a internet en tiempo real.</span>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-400 rounded-full font-bold">ACTIVO</span>
@@ -500,8 +501,8 @@ export default function SettingsModal({
                   <div className="flex items-center gap-3">
                     <Cpu size={16} className="text-indigo-400" />
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold">Python Sandbox Runtime</span>
-                      <span className="text-[10px] text-slate-500">Ejecución segura de scripts python locales.</span>
+                      <span className="text-xs font-semibold">Entorno de Ejecución Python</span>
+                      <span className="text-[10px] text-slate-500">Intérprete aislado para análisis numérico y automatización.</span>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-400 rounded-full font-bold">ACTIVO</span>
@@ -511,8 +512,8 @@ export default function SettingsModal({
                   <div className="flex items-center gap-3">
                     <Database size={16} className="text-indigo-400" />
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold">Logística API Integration</span>
-                      <span className="text-[10px] text-slate-500">Acceso a devoluciones de Amazon.</span>
+                      <span className="text-xs font-semibold">Integración de Envíos</span>
+                      <span className="text-[10px] text-slate-500">Módulo de conexión para simulación de entregas y devoluciones.</span>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-400 rounded-full font-bold">ACTIVO</span>
@@ -521,30 +522,75 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 8: INTEGRACIONES */}
+          {/* Tab 8: INTEGRACIONES (Conectores de API) */}
           {activeTab === 'integraciones' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Integraciones de Modelos</h2>
-                <p className="text-xs text-slate-500 mt-1">Enlaces y estados de conexión con los proveedores de Inteligencia Artificial.</p>
+                <h2 className="text-xl font-bold font-display">Conectores de API</h2>
+                <p className="text-xs text-slate-500 mt-1">Estado de los puentes de comunicación y endpoints con redes de Modelos de Lenguaje.</p>
               </div>
 
               <div className="space-y-3">
                 <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>OpenAI API Status</span>
+                  <span>Canal OpenAI API</span>
                   <span className="text-emerald-400 font-bold">CONECTADO</span>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>Anthropic (Claude 3) API Status</span>
+                  <span>Canal Anthropic Claude</span>
                   <span className="text-emerald-400 font-bold">CONECTADO</span>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>Perplexity AI Search Status</span>
+                  <span>Canal Perplexity Search</span>
                   <span className="text-emerald-400 font-bold">CONECTADO</span>
                 </div>
                 <div className="p-3 rounded-xl border border-slate-850 bg-slate-900/40 flex justify-between items-center text-xs">
-                  <span>DeepSeek API Status</span>
+                  <span>Canal DeepSeek API</span>
                   <span className="text-emerald-400 font-bold">CONECTADO</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 9: DATA (Memoria y Privacidad) */}
+          {activeTab === 'data' && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-xl font-bold font-display">Memoria y Privacidad</h2>
+                <p className="text-xs text-slate-500 mt-1">Controla las políticas de retención de datos, historial y vaciado de caché local de tus conversaciones.</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-1">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-semibold">Historial del Chat & Entrenamiento</span>
+                    <span className="text-[10px] text-slate-500">Permitir guardar nuevos chats en este dispositivo para mejorar las respuestas de Gabi.</span>
+                  </div>
+                  <button
+                    onClick={() => {}}
+                    className="w-10 h-5 rounded-full p-0.5 transition-colors bg-[#7ED4FD]"
+                  >
+                    <div className="w-4 h-4 rounded-full bg-white translate-x-5" />
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between py-1">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-semibold">Cifrado de Extremo a Extremo</span>
+                    <span className="text-[10px] text-slate-500">Proteger las credenciales de API locales con llave de seguridad criptográfica.</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-400 rounded-full font-bold">ACTIVO</span>
+                </div>
+
+                <div className="pt-4 border-t border-slate-900/60">
+                  <span className="text-xs font-semibold text-slate-350 block mb-2">Acciones de Limpieza</span>
+                  <div className="flex gap-2">
+                    <button className="px-4 py-2 bg-red-950/40 hover:bg-red-950/60 border border-red-900/40 text-red-300 text-xs font-semibold rounded-lg transition-colors">
+                      Borrar Historial Local
+                    </button>
+                    <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+                      Vaciar Caché del Servidor
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

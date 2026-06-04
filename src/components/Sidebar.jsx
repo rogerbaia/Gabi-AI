@@ -15,9 +15,7 @@ import {
   Heart,
   ChevronDown,
   ChevronRight,
-  SlidersHorizontal,
-  LayoutGrid,
-  Monitor
+  Cpu
 } from 'lucide-react';
 
 export default function Sidebar({
@@ -309,33 +307,33 @@ export default function Sidebar({
       <div className={`p-4 border-t ${
         nostalgicMode ? 'border-[#39ff14] bg-black/80' : 'border-slate-800 bg-slate-950/20'
       }`}>
-        {/* Settings, Personalization and Computer icons */}
+        {/* Settings, Style, and Hardware icons (customized to avoid copycat design) */}
         <div className="flex items-center justify-between mb-3 px-1 text-slate-500">
           <div className="flex items-center gap-4">
             <button
               onClick={() => onOpenSettings('general')}
               className="hover:text-slate-200 transition-colors"
-              title="Configuración"
+              title="Espacio de Trabajo"
             >
-              <SlidersHorizontal size={14} />
+              <Settings size={14} />
             </button>
             <button
               onClick={() => onOpenSettings('personalizacion')}
               className="hover:text-slate-200 transition-colors"
-              title="Personalización"
+              title="Estilo y Efectos"
             >
-              <LayoutGrid size={14} />
+              <Sparkles size={14} />
             </button>
             <button
               onClick={() => onOpenSettings('computer')}
               className="hover:text-slate-200 transition-colors"
-              title="My Computer (Sandbox)"
+              title="Servidor y Hardware"
             >
-              <Monitor size={14} />
+              <Cpu size={14} />
             </button>
           </div>
           <span className="text-[10px] opacity-60 font-mono tracking-wide">
-            from Synaptica
+            Synaptica Labs
           </span>
         </div>
 
@@ -349,7 +347,7 @@ export default function Sidebar({
             <span className={`text-xs ${
               nostalgicMode ? 'nostalgic-green-text font-mono' : 'text-slate-400 font-medium'
             }`}>
-              Modo Nostálgico V.34
+              Modo Retro Dial-Up V.34
             </span>
           </div>
           <button
@@ -374,7 +372,7 @@ export default function Sidebar({
         </div>
         {nostalgicMode && (
           <p className="text-[9px] text-[#39ff14] opacity-80 mt-1 font-mono leading-tight">
-            * Se reproducirán sonidos de módem al razonar.
+            * Se reproducirán tonos dial-up al razonar.
           </p>
         )}
       </div>
