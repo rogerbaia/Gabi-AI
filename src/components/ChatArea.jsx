@@ -693,8 +693,8 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
         nostalgicMode ? 'nostalgic-crt text-[#39ff14]' : 'bg-slate-950'
       }`}>
         {/* Top Header */}
-        <div className={`h-[68px] px-6 flex items-center justify-between border-b ${
-          nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-900/20'
+        <div className={`h-[68px] px-6 flex items-center justify-between ${
+          nostalgicMode ? 'border-b border-[#39ff14] bg-black' : 'bg-slate-900/20'
         }`}>
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-xl border ${
