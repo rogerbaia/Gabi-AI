@@ -892,7 +892,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
               <button
                 type="button"
                 onClick={() => setSandboxState('split')}
-                className={`w-full flex items-center justify-between px-4 py-1.5 text-xs font-mono transition-all duration-300 rounded-2xl border ${
+                className={`w-full max-w-[763px] mx-auto flex items-center justify-between px-4 py-1.5 text-xs font-mono transition-all duration-300 rounded-2xl border ${
                   nostalgicMode
                     ? 'border-[#39ff14] bg-black text-[#39ff14] hover:bg-[#39ff14]/10 focus:outline-none focus:ring-1 focus:ring-[#39ff14]'
                     : 'border-slate-800 bg-slate-900/60 text-slate-350 hover:bg-slate-900/90 hover:border-slate-700 focus:outline-none focus:border-slate-700'
@@ -981,7 +981,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
             )}
 
             {/* Box 2: Dialogue input form */}
-            <form onSubmit={handleSendMessage} className="w-full">
+            <form onSubmit={handleSendMessage} className="w-full max-w-[758px] mx-auto">
               <div className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
                 nostalgicMode
                   ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
