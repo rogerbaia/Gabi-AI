@@ -235,7 +235,7 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
     <div className={`flex h-screen w-screen overflow-hidden ${
       nostalgicMode 
         ? 'bg-black text-[#39ff14] font-mono select-none nostalgic-crt' 
-        : 'bg-synaptica-darker text-slate-100'
+        : 'bg-synaptica-darker text-slate-100 p-2 gap-2.5'
     }`}>
       {/* Side Control Bar */}
       <Sidebar
@@ -251,7 +251,11 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
       />
 
       {/* Main Panel Routing */}
-      <main className="flex-1 h-full overflow-hidden flex flex-col">
+      <main className={`flex-1 h-full overflow-hidden flex flex-col ${
+        nostalgicMode 
+          ? '' 
+          : 'bg-slate-950/40 border border-slate-850/50 rounded-2xl shadow-2xl backdrop-blur-sm'
+      }`}>
         {activeView === 'chat' && (
           <ChatArea
             nostalgicMode={nostalgicMode}

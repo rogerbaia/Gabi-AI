@@ -70,10 +70,10 @@ export default function Sidebar({
   };
 
   return (
-    <aside className={`w-80 flex flex-col h-full border-r ${
+    <aside className={`w-80 flex flex-col h-full ${
       nostalgicMode 
-        ? 'bg-black border-[#39ff14] nostalgic-crt' 
-        : 'bg-synaptica-darker border-slate-800'
+        ? 'border-r border-[#39ff14] bg-black nostalgic-crt' 
+        : 'bg-transparent'
     }`}>
       {/* Brand & Pulsing Logo */}
       <div className="h-[68px] px-5 flex items-center">
