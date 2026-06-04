@@ -215,64 +215,180 @@ app.post('/api/chat', async (req, res) => {
   
   try {
     let resultText = "";
+    const activePromises = [];
+    const modelAnswers = {};
     
-    // Check key availability based on model selected
-    if (model === 'omnia' && activeKeys.openai) {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${activeKeys.openai}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }]
+    // 1. Query OpenAI in parallel
+    if (activeKeys.openai) {
+      activePromises.push(
+        fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${activeKeys.openai}`
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }]
+          })
         })
-      });
-      const data = await response.json();
-      resultText = data.choices?.[0]?.message?.content || JSON.stringify(data);
-    } 
-    else if (model === 'investia' && activeKeys.perplexity) {
-      const response = await fetch("https://api.perplexity.ai/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${activeKeys.perplexity}`
-        },
-        body: JSON.stringify({
-          model: "sonar-reasoning",
-          messages: [{ role: "user", content: prompt }]
+        .then(r => r.json())
+        .then(data => {
+          if (data.choices?.[0]?.message?.content) {
+            modelAnswers.openai = data.choices[0].message.content;
+          }
         })
-      });
-      const data = await response.json();
-      resultText = data.choices?.[0]?.message?.content || JSON.stringify(data);
-    } 
-    else if (model === 'viajia' && activeKeys.deepseek) {
-      const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${activeKeys.deepseek}`
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [{ role: "user", content: prompt }]
+        .catch(err => console.error("OpenAI call failed in parallel routing:", err))
+      );
+    }
+    
+    // 2. Query Anthropic Claude in parallel
+    if (activeKeys.anthropic) {
+      activePromises.push(
+        fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "x-api-key": activeKeys.anthropic,
+            "anthropic-version": "2023-06-01",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "claude-3-5-sonnet-20241022",
+            max_tokens: 1024,
+            messages: [{ role: "user", content: prompt }]
+          })
         })
-      });
-      const data = await response.json();
-      resultText = data.choices?.[0]?.message?.content || JSON.stringify(data);
+        .then(r => r.json())
+        .then(data => {
+          if (data.content?.[0]?.text) {
+            modelAnswers.claude = data.content[0].text;
+          }
+        })
+        .catch(err => console.error("Anthropic call failed in parallel routing:", err))
+      );
+    }
+    
+    // 3. Query Perplexity in parallel
+    if (activeKeys.perplexity) {
+      activePromises.push(
+        fetch("https://api.perplexity.ai/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${activeKeys.perplexity}`
+          },
+          body: JSON.stringify({
+            model: "sonar-reasoning",
+            messages: [{ role: "user", content: prompt }]
+          })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.choices?.[0]?.message?.content) {
+            modelAnswers.perplexity = data.choices[0].message.content;
+          }
+        })
+        .catch(err => console.error("Perplexity call failed in parallel routing:", err))
+      );
+    }
+    
+    // 4. Query DeepSeek in parallel
+    if (activeKeys.deepseek) {
+      activePromises.push(
+        fetch("https://api.deepseek.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${activeKeys.deepseek}`
+          },
+          body: JSON.stringify({
+            model: "deepseek-chat",
+            messages: [{ role: "user", content: prompt }]
+          })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.choices?.[0]?.message?.content) {
+            modelAnswers.deepseek = data.choices[0].message.content;
+          }
+        })
+        .catch(err => console.error("DeepSeek call failed in parallel routing:", err))
+      );
+    }
+    
+    // Wait for all active parallel API searches
+    if (activePromises.length > 0) {
+      await Promise.all(activePromises);
+    }
+    
+    const answersList = Object.entries(modelAnswers)
+      .map(([modelName, text]) => `--- RESPUESTA DE ${modelName.toUpperCase()} ---\n${text}`)
+      .join('\n\n');
+      
+    if (answersList) {
+      // If we have answers from multiple models, we run a consolidation synthesis
+      if (Object.keys(modelAnswers).length > 1) {
+        const synthesisPrompt = `Actúa como Gabi AI, el motor inteligente de orquestación y síntesis de Synaptica.
+Hemos realizado una búsqueda simultánea estilo Trivago en múltiples proveedores de IA para responder a la consulta del usuario: "${prompt}".
+
+Aquí tienes las respuestas individuales recolectadas en tiempo real:
+${answersList}
+
+Tu objetivo es consolidar y sintetizar estas respuestas en una única respuesta definitiva de alta calidad.
+- Identifica los puntos de consenso general y únelos de forma fluida.
+- Detecta y elimina cualquier contradicción lógica o contradicciones entre las respuestas.
+- Escribe una respuesta definitiva, clara, directa y muy fácil de leer para el usuario.
+- Ve directo al grano respondiendo la consulta del usuario de forma natural, sin rodeos meta-explicativos ni introducciones sobre cómo hiciste la síntesis.`;
+
+        if (activeKeys.openai) {
+          const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${activeKeys.openai}`
+            },
+            body: JSON.stringify({
+              model: "gpt-4o-mini",
+              messages: [{ role: "system", content: synthesisPrompt }]
+            })
+          });
+          const data = await response.json();
+          resultText = data.choices?.[0]?.message?.content || Object.values(modelAnswers)[0];
+        } else if (activeKeys.anthropic) {
+          const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "x-api-key": activeKeys.anthropic,
+              "anthropic-version": "2023-06-01",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              model: "claude-3-5-sonnet-20241022",
+              max_tokens: 1024,
+              messages: [{ role: "user", content: synthesisPrompt }]
+            })
+          });
+          const data = await response.json();
+          resultText = data.content?.[0]?.text || Object.values(modelAnswers)[0];
+        } else {
+          resultText = Object.values(modelAnswers)[0];
+        }
+      } else {
+        // Just return the single available model's response directly
+        resultText = Object.values(modelAnswers)[0];
+      }
     }
     
     if (resultText) {
       return res.json({ response: resultText, isRealAPI: true });
     }
     
-    // Default fallback to mock simulation if keys are empty or model not matched
+    // Default fallback to mock simulation if keys are empty or models failed
     const fallbackResponse = generateSimpleMockResponse(prompt, model);
     res.json({ response: fallbackResponse, isRealAPI: false });
     
   } catch (error) {
-    console.error("API Call error, falling back to simulation:", error);
+    console.error("Real parallel API or synthesis call failed, falling back:", error);
     const fallbackResponse = generateSimpleMockResponse(prompt, model);
     res.json({ response: fallbackResponse, error: error.message, isRealAPI: false });
   }
