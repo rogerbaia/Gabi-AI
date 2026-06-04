@@ -214,7 +214,8 @@ Basado en la consolidación sinérgica de modelos médicos y bases de datos acad
       investia: 'clinica',
       viajia: 'economia',
       nutriia: 'otros',
-      econoia: 'economia'
+      econoia: 'economia',
+      tubeia: 'otros'
     };
     
     const newChat = {

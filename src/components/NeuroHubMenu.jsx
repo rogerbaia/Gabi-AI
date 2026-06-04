@@ -6,7 +6,8 @@ import {
   Apple, 
   LineChart, 
   Code2, 
-  BrainCircuit
+  BrainCircuit,
+  Youtube
 } from 'lucide-react';
 
 export default function NeuroHubMenu({
@@ -61,6 +62,15 @@ export default function NeuroHubMenu({
       bgColor: 'bg-amber-950/20 border-amber-900/30',
       activeColor: 'bg-amber-500 text-slate-950 font-bold',
       desc: 'Comparación de servicios bancarios, inversiones y cripto'
+    },
+    {
+      id: 'tubeia',
+      name: 'TubeIA',
+      icon: Youtube,
+      color: 'text-[#AAF6AB]',
+      bgColor: 'bg-[#AAF6AB]/10 border-[#AAF6AB]/20',
+      activeColor: 'bg-[#AAF6AB] text-slate-950 font-bold',
+      desc: 'Buscador y reproductor de videos, tutoriales y música sin anuncios'
     }
   ];
 

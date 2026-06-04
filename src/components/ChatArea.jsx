@@ -323,6 +323,24 @@ Comparando guías nutricionales y recomendaciones médicas preventivas:
 3. **Rutina de Ejercicios:**
    * Cardio moderado (30 mins al día) y entrenamiento de fuerza funcional 3 veces por semana.
    * Consulta al oftalmólogo o médico familiar antes de iniciar levantamientos de carga pesada si tienes antecedentes de presión intraocular elevada.`;
+    } else if (selectedModel === 'tubeia') {
+      aiResponse = `### Resultados de Búsqueda y Reproducción en TubeIA 🎬
+
+Hemos consultado la red de videos, tutoriales y streaming de Synaptica para tu búsqueda: *"**${userMsg}**"*
+
+1. **[Video 1] Tutorial Completo: Orquestación de Agentes con Gabi AI (12:45)**
+   * **Canal:** Synaptica Labs | **Vistas:** 12.4K | **Valoración:** 4.9★
+   * *Descripción:* Aprende a desplegar tus propios modelos locales y sincronizar el sandbox virtual.
+   
+2. **[Video 2] Computadoras del Futuro: Virtual Sandbox y Contenedores en Vivo (08:20)**
+   * **Canal:** TechVlog | **Vistas:** 8.1K | **Valoración:** 4.7★
+   * *Descripción:* Un vistazo a fondo sobre cómo las IAs controlan entornos virtuales de forma segura.
+
+3. **[Video 3] Curso Rápido: Sintetizadores de Audio en la Web (15:10)**
+   * **Canal:** AudioCode | **Vistas:** 3.2K | **Valoración:** 4.8★
+   * *Descripción:* Cómo implementar tonos dial-up y efectos de sonido analógicos usando la Web Audio API.
+
+*¡Puedes escribir el nombre de un video para que simulemos su reproducción en el Sandbox virtual!*`;
     } else {
       aiResponse = `### Respuesta Consolidada de OmnIA
 
