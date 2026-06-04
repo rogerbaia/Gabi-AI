@@ -30,7 +30,10 @@ export default {
           primary: '#6366F1', // indigo
           secondary: '#8B5CF6', // purple
           text: '#F3F4F6',
-          muted: '#A3A3A3'
+          muted: '#A3A3A3',
+          green: '#AAF6AB', // Pastel green from logo
+          blue: '#7ED4FD', // Pastel blue from logo
+          purple: '#A98EFA', // Pastel purple from logo
         }
       },
       fontFamily: {

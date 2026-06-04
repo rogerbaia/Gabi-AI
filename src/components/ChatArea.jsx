@@ -856,7 +856,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
           {isThinking && (sandboxState === 'hidden' || sandboxState === 'minimized') && (
             <div className="flex gap-4 max-w-3xl">
               <div className={`w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center ${
-                nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-emerald-950 border-emerald-900/40 text-emerald-400 animate-pulse'
+                nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-synaptica-green/10 border-synaptica-green/20 text-synaptica-green animate-pulse'
               }`}>
                 <BrainCircuit size={16} />
               </div>
@@ -867,7 +867,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                     : 'bg-slate-900/35 border-slate-850/80 backdrop-blur-md text-slate-300'
                 }`}>
                   <div className="flex items-center gap-2 text-xs font-bold mb-2">
-                    <Loader2 size={12} className="animate-spin text-emerald-400" />
+                    <Loader2 size={12} className="animate-spin text-synaptica-green" />
                     <span>Pensando... ({thinkingStep + 1}/8)</span>
                   </div>
                   <div className="text-xs text-slate-400 truncate">
@@ -907,11 +907,19 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                     <div className="flex items-center gap-3 truncate">
                       <div className="flex-shrink-0">
                         {isThinking ? (
-                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse">
+                          <span className={`flex items-center justify-center w-5 h-5 rounded-full animate-pulse ${
+                            nostalgicMode 
+                              ? 'bg-black text-[#39ff14] border border-[#39ff14]' 
+                              : 'bg-synaptica-green/10 text-synaptica-green border border-synaptica-green/20'
+                          }`}>
                             <Loader2 size={10} className="animate-spin" />
                           </span>
                         ) : (
-                          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[10px]">
+                          <span className={`flex items-center justify-center w-5 h-5 rounded-full text-center leading-3 font-bold text-[10px] ${
+                            nostalgicMode 
+                              ? 'bg-black text-[#39ff14] border border-[#39ff14]' 
+                              : 'bg-synaptica-green/20 text-synaptica-green border border-synaptica-green/30'
+                          }`}>
                             ✓
                           </span>
                         )}
@@ -931,7 +939,11 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
 
                     {/* Progress ratio and ChevronUp */}
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className={`font-bold ${isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}`}>
+                      <span className={`font-bold ${
+                        isThinking 
+                          ? nostalgicMode ? 'animate-pulse text-[#39ff14]' : 'animate-pulse text-synaptica-green' 
+                          : nostalgicMode ? 'text-[#39ff14]' : 'text-synaptica-green'
+                      }`}>
                         {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                       </span>
                       <ChevronUp size={12} className="text-slate-500" />
@@ -955,7 +967,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                       <div className="w-[212px] h-[152px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-1 px-1 opacity-70">
                           <span className="font-bold text-[11px] text-slate-400 font-mono">gabi-sh</span>
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className={`w-2 h-2 rounded-full animate-pulse ${nostalgicMode ? 'bg-[#39ff14]' : 'bg-synaptica-green'}`} />
                         </div>
                         <div className="flex-1 font-mono text-[9.5px] leading-[12px] pt-2 px-1 opacity-90 space-y-[3px] overflow-hidden text-left">
                           {sandboxLogs.slice(-6).map((log, idx) => {
@@ -964,7 +976,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                             
                             let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
                             if (isSystem) {
-                              logColor = 'text-emerald-400 font-bold';
+                              logColor = nostalgicMode ? 'text-[#39ff14] font-bold' : 'text-synaptica-green font-bold';
                             } else if (isUserCommand) {
                               logColor = 'text-white font-bold';
                             } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
@@ -1012,7 +1024,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                         <div className="w-[96px] h-[68px] scale-50 origin-top-left flex flex-col justify-between p-1 select-none">
                           <div className="flex items-center justify-between border-b border-slate-950 pb-0.5 px-0.5 opacity-60">
                             <span className="font-bold text-[8px] text-slate-400 font-mono">gabi-sh</span>
-                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className={`w-1 h-1 rounded-full animate-pulse ${nostalgicMode ? 'bg-[#39ff14]' : 'bg-synaptica-green'}`} />
                           </div>
                           <div className="flex-1 font-mono text-[7px] leading-[9px] pt-1 px-0.5 opacity-80 overflow-hidden text-left">
                             $ gabi-sandbox
@@ -1054,7 +1066,11 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                     <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-1">
                       <span>Progreso de la tarea</span>
-                      <span className={isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-500'}>
+                      <span className={`${
+                        isThinking 
+                          ? nostalgicMode ? 'animate-pulse text-[#39ff14]' : 'animate-pulse text-synaptica-green' 
+                          : nostalgicMode ? 'text-[#39ff14]' : 'text-synaptica-green'
+                      }`}>
                         {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                       </span>
                     </div>
@@ -1068,7 +1084,7 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                             key={idx}
                             className={`flex items-start gap-3 transition-all duration-200 ${
                               isDone 
-                                ? 'text-emerald-400 font-bold' 
+                                ? nostalgicMode ? 'text-[#39ff14] font-bold' : 'text-synaptica-green font-bold' 
                                 : isActive 
                                   ? 'text-slate-100 font-bold' 
                                   : 'text-slate-500'
@@ -1076,10 +1092,14 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                           >
                             <span className="flex-shrink-0 mt-0.5">
                               {isDone ? (
-                                <span className="inline-block w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center leading-3 font-bold text-[9px]">✓</span>
+                                <span className={`inline-block w-4 h-4 rounded-full text-center leading-3 font-bold text-[9px] ${
+                                  nostalgicMode 
+                                    ? 'bg-black text-[#39ff14] border border-[#39ff14]' 
+                                    : 'bg-synaptica-green/20 text-synaptica-green border border-synaptica-green/30'
+                                }`}>✓</span>
                               ) : isActive ? (
                                 isThinking && isPlaying ? (
-                                  <Loader2 size={12} className="animate-spin text-emerald-400" />
+                                  <Loader2 size={12} className={`animate-spin ${nostalgicMode ? 'text-[#39ff14]' : 'text-synaptica-green'}`} />
                                 ) : (
                                   <span className="inline-block w-4 h-4 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-center leading-3 font-bold text-[9px]">▶</span>
                                 )
@@ -1097,7 +1117,9 @@ Hemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Cla
                   {/* Card Footer status info */}
                   <div className="mt-3 pt-2 border-t border-slate-850/60 flex items-center justify-between text-[9px] text-slate-500">
                     <span className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-emerald-400 animate-pulse' : 'bg-emerald-500'}`} />
+                      <span className={`w-2 h-2 rounded-full animate-pulse ${
+                        nostalgicMode ? 'bg-[#39ff14]' : 'bg-synaptica-green'
+                      }`} />
                       {isThinking ? (isPlaying ? 'Ejecutando razonamiento...' : 'Pausado') : 'Finalizado'}
                     </span>
                     <span>Consola Gabi Virtual Sandbox</span>
