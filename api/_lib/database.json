@@ -1,0 +1,1628 @@
+{
+  "user": {
+    "tokenBalance": 0,
+    "apiKeys": {
+      "openai": "",
+      "anthropic": "",
+      "perplexity": "",
+      "deepseek": ""
+    }
+  },
+  "chats": [
+    {
+      "id": 1,
+      "title": "Úlcera corneal herpética recurrent...",
+      "folder": "clinica",
+      "favorite": true,
+      "messages": [
+        {
+          "id": 101,
+          "sender": "user",
+          "text": "¿Cuál es el mejor enfoque terapéutico para una úlcera corneal herpética recurrente?"
+        },
+        {
+          "id": 102,
+          "sender": "omnia",
+          "model": "omnia",
+          "text": "### Enfoque Terapéutico para Úlcera Corneal Herpética Recurrente\n\nBasado en la consolidación sinérgica de modelos médicos y bases de datos académicas (HEDS, JAMA Ophthalmology):\n\n1. **Tratamiento Activo (Fase Aguda):**\n   * **Antivirales Tópicos:** Ganciclovir gel oftálmico 0.15% 5 veces al día (preferido sobre trifluridina por menor toxicidad epitelial).\n   * **Antivirales Orales:** Aciclovir 400 mg 5 veces al día (o Valaciclovir 500 mg cada 8 horas) durante 7-10 días para reducir la carga viral.\n\n2. **Profilaxis Prolongada (Prevención de Recurrencias):**\n   * **Aciclovir Oral 400 mg cada 12 horas** por 6 a 12 meses.\n   * **Evidencia HEDS:** Esta dosificación oral a largo plazo reduce la tasa de recurrencias en un **45%** de manera estadísticamente significativa.\n\n3. **Corticosteroides (Uso Crítico):**\n   * **Contraindicados** en presencia de úlcera epitelial activa (queratitis dendrítica).\n   * **Indicados únicamente** bajo cobertura antiviral estricta en casos de compromiso estromal inmunológico para mitigar cicatrices corneales.\n\n4. **Aspectos Psicosociales y de Educación (Aporte Claude):**\n   * El paciente debe evitar desencadenantes conocidos (estrés emocional, exposición a radiación UV sin lentes de sol, estados de inmunosupresión).\n   * Se requiere apego estricto y seguimiento clínico para evaluar adelgazamiento estromal.",
+          "voted": "up",
+          "thoughts": [
+            "[OK] Analizando caso clínico",
+            "[OK] Buscando HEDS study",
+            "[OK] Consolidando respuestas"
+          ]
+        },
+        {
+          "id": 1780546083452,
+          "sender": "user",
+          "text": "hola"
+        },
+        {
+          "id": 1780546087464,
+          "sender": "omnia",
+          "text": "### Respuesta Consolidada de OmnIA\n\nHemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *\"**hola**\"*\n\n* **Análisis Inicial:** Identificado como una consulta general. Hemos coordinado las respuestas de 5 modelos de IA distintos para filtrar y compilar los puntos de mayor coincidencia científica y eliminar contradicciones.\n* **Solución Compilada:**\n  1. La mayoría de los modelos coinciden en estructurar la respuesta con base en prioridades lógicas inmediatas.\n  2. Perplexity aporta que las fuentes académicas recientes recomiendan mantener un enfoque holístico del problema.\n  3. Claude enfatiza los factores psicosociales y de interacción del usuario con su entorno.\n  4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.\n  \n*¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780546171518,
+          "sender": "user",
+          "text": "Cueles son los colores del arcoiris"
+        },
+        {
+          "id": 1780546175524,
+          "sender": "omnia",
+          "text": "### Respuesta Consolidada de OmnIA\n\nHemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *\"**Cueles son los colores del arcoiris**\"*\n\n* **Análisis Inicial:** Identificado como una consulta general. Hemos coordinado las respuestas de 5 modelos de IA distintos para filtrar y compilar los puntos de mayor coincidencia científica y eliminar contradicciones.\n* **Solución Compilada:**\n  1. La mayoría de los modelos coinciden en estructurar la respuesta con base en prioridades lógicas inmediatas.\n  2. Perplexity aporta que las fuentes académicas recientes recomiendan mantener un enfoque holístico del problema.\n  3. Claude enfatiza los factores psicosociales y de interacción del usuario con su entorno.\n  4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.\n  \n*¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780546255190,
+          "sender": "user",
+          "text": "quien eres tu"
+        },
+        {
+          "id": 1780546262971,
+          "sender": "omnia",
+          "text": "### Respuesta Consolidada de OmnIA\n\nHemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *\"**quien eres tu**\"*\n\n* **Análisis Inicial:** Identificado como una consulta general. Hemos coordinado las respuestas de 5 modelos de IA distintos para filtrar y compilar los puntos de mayor coincidencia científica y eliminar contradicciones.\n* **Solución Compilada:**\n  1. La mayoría de los modelos coinciden en estructurar la respuesta con base en prioridades lógicas inmediatas.\n  2. Perplexity aporta que las fuentes académicas recientes recomiendan mantener un enfoque holístico del problema.\n  3. Claude enfatiza los factores psicosociales y de interacción del usuario con su entorno.\n  4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.\n  \n*¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780553789769,
+          "sender": "user",
+          "text": "De que colores son los arcoiris"
+        },
+        {
+          "id": 1780553793896,
+          "sender": "omnia",
+          "text": "### Respuesta Consolidada de OmnIA\n\nHemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *\"**De que colores son los arcoiris**\"*\n\n* **Análisis Inicial:** Identificado como una consulta general. Hemos coordinado las respuestas de 5 modelos de IA distintos para filtrar y compilar los puntos de mayor coincidencia científica y eliminar contradicciones.\n* **Solución Compilada:**\n  1. La mayoría de los modelos coinciden en estructurar la respuesta con base en prioridades lógicas inmediatas.\n  2. Perplexity aporta que las fuentes académicas recientes recomiendan mantener un enfoque holístico del problema.\n  3. Claude enfatiza los factores psicosociales y de interacción del usuario con su entorno.\n  4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.\n  \n*¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780553963307,
+          "sender": "user",
+          "text": "De que color son los arcoiris"
+        },
+        {
+          "id": 1780553967432,
+          "sender": "omnia",
+          "text": "### Respuesta Consolidada de OmnIA\n\nHemos combinado los aportes lógicos de GPT-4, la redacción estructurada de Claude, y los datos en tiempo real de Perplexity para responder a: *\"**De que color son los arcoiris**\"*\n\n* **Análisis Inicial:** Identificado como una consulta general. Hemos coordinado las respuestas de 5 modelos de IA distintos para filtrar y compilar los puntos de mayor coincidencia científica y eliminar contradicciones.\n* **Solución Compilada:**\n  1. La mayoría de los modelos coinciden en estructurar la respuesta con base en prioridades lógicas inmediatas.\n  2. Perplexity aporta que las fuentes académicas recientes recomiendan mantener un enfoque holístico del problema.\n  3. Claude enfatiza los factores psicosociales y de interacción del usuario con su entorno.\n  4. GPT-4 sintetiza el código o la estructura técnica de manera ordenada.\n  \n*¿Deseas que profundice en algún punto específico o cambie a un cerebro del NeuroHub?*",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780554200414,
+          "sender": "user",
+          "text": "De que colores son los arcoiris"
+        },
+        {
+          "id": 1780554204551,
+          "sender": "omnia",
+          "text": "Los arcoíris se forman por la descomposición de la luz solar al refractarse en las gotas de lluvia. Sus 7 colores principales de afuera hacia adentro son:\n\n1. **Rojo** 🔴\n2. **Naranja** 🟠\n3. **Amarillo** 🟡\n4. **Verde** 🟢\n5. **Azul** 🔵\n6. **Añil (Índigo)** 🌀\n7. **Violeta** 🟣\n\nEs un espectro de colores continuo que surge por la refracción y dispersión física de la luz.",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780554224991,
+          "sender": "user",
+          "text": "Cual es el hueso mas largo del cuerpo?"
+        },
+        {
+          "id": 1780554229136,
+          "sender": "omnia",
+          "text": "### Síntesis de OmnIA: Respuesta Consolidada\n\nPara tu consulta: *\"**Cual es el hueso mas largo del cuerpo?**\"*\n\nTras analizar y fusionar los datos de OpenAI, Anthropic Claude y Perplexity:\n\n1. **Definición Principal:** Este tema hace referencia a un concepto general de conocimiento. De forma consolidada, los modelos confirman que la respuesta principal se centra en establecer el contexto lógico y los fundamentos básicos del mismo.\n2. **Enfoque Práctico:** Se recomienda abordar la consulta organizando la información en pasos sencillos, evitando términos redundantes y enfocándose en soluciones directas.\n3. **Recomendación de Synaptica:** Si deseas una respuesta en tiempo real detallada o código ejecutable en el sandbox, recuerda que puedes ingresar tu API Key en la configuración para realizar consultas en vivo a través de la red oficial.",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1780554445453,
+          "sender": "user",
+          "text": "cual es el mayor hueso del cuerpo"
+        },
+        {
+          "id": 1780554449591,
+          "sender": "omnia",
+          "text": "### Síntesis de OmnIA: Respuesta Consolidada\n\nPara tu consulta: *\"**cual es el mayor hueso del cuerpo**\"*\n\nTras analizar y fusionar los datos de OpenAI, Anthropic Claude y Perplexity:\n\n1. **Definición Principal:** Este tema hace referencia a un concepto general de conocimiento. De forma consolidada, los modelos confirman que la respuesta principal se centra en establecer el contexto lógico y los fundamentos básicos del mismo.\n2. **Enfoque Práctico:** Se recomienda abordar la consulta organizando la información en pasos sencillos, evitando términos redundantes y enfocándose en soluciones directas.\n3. **Recomendación de Synaptica:** Si deseas una respuesta en tiempo real detallada o código ejecutable en el sandbox, recuerda que puedes ingresar tu API Key en la configuración para realizar consultas en vivo a través de la red oficial.",
+          "model": "omnia",
+          "wasVoted": false,
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
+            "[OK] Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
+            "[OK] Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Compilando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1781415358722,
+          "sender": "user",
+          "text": "Hola Gabi"
+        },
+        {
+          "id": 1781415362372,
+          "sender": "omnia",
+          "text": "Disculpa, no hay proveedores de IA configurados en el servidor para el módulo **GENERAL**. Por favor configura al menos un proveedor local o API en el backend.",
+          "model": "omnia",
+          "voted": null,
+          "modelsParticipated": [],
+          "sources": [],
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Buscando concordancia semántica con la memoria a largo plazo...",
+            "[OK] Extrayendo y vectorizando fragmentos del archivo de RAG...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a múltiples modelos en producción en paralelo...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Consolidando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        },
+        {
+          "id": 1781417445391,
+          "sender": "user",
+          "text": "hola gabi"
+        },
+        {
+          "id": 1781417449065,
+          "sender": "omnia",
+          "text": "Disculpa, no hay proveedores de IA configurados en el servidor para el módulo **GENERAL**. Por favor configura al menos un proveedor local o API en el backend.",
+          "model": "omnia",
+          "voted": null,
+          "modelsParticipated": [],
+          "sources": [],
+          "thoughts": [
+            "[OK] Interpretando consulta e identificando dominios temáticos...",
+            "[OK] Buscando concordancia semántica con la memoria a largo plazo...",
+            "[OK] Extrayendo y vectorizando fragmentos del archivo de RAG...",
+            "[OK] Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
+            "[OK] Consultando a múltiples modelos en producción en paralelo...",
+            "[OK] Analizando respuestas parciales, detectando coincidencias y contradicciones...",
+            "[OK] Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
+            "[OK] Consolidando y sintetizando respuesta definitiva en formato premium..."
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Buscador de Vuelos y Ofertas",
+      "folder": "economia",
+      "favorite": false,
+      "messages": []
+    }
+  ],
+  "orders": [],
+  "emails": [],
+  "model_performance": [
+    {
+      "id": 1,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-14T04:58:53.576Z"
+    },
+    {
+      "id": 2,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-14T04:59:22.216Z"
+    },
+    {
+      "id": 3,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-14T05:07:13.977Z"
+    },
+    {
+      "id": 4,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-14T06:08:33.705Z"
+    },
+    {
+      "id": 5,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.75,
+      "cost": 0,
+      "historical_accuracy": 0.75,
+      "created_at": "2026-06-14T06:33:31.865Z"
+    },
+    {
+      "id": 6,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.6,
+      "cost": 0,
+      "historical_accuracy": 0.6,
+      "created_at": "2026-06-14T06:33:31.867Z"
+    },
+    {
+      "id": 7,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.525,
+      "cost": 0,
+      "historical_accuracy": 0.525,
+      "created_at": "2026-06-14T06:33:31.868Z"
+    },
+    {
+      "id": 8,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.98,
+      "cost": 0,
+      "historical_accuracy": 0.98,
+      "created_at": "2026-06-14T06:33:31.869Z"
+    },
+    {
+      "id": 9,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:33:31.870Z"
+    },
+    {
+      "id": 10,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:33:31.871Z"
+    },
+    {
+      "id": 11,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.475,
+      "cost": 0,
+      "historical_accuracy": 0.475,
+      "created_at": "2026-06-14T06:33:44.505Z"
+    },
+    {
+      "id": 12,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.4375,
+      "cost": 0,
+      "historical_accuracy": 0.4375,
+      "created_at": "2026-06-14T06:33:44.507Z"
+    },
+    {
+      "id": 13,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.4075,
+      "cost": 0,
+      "historical_accuracy": 0.4075,
+      "created_at": "2026-06-14T06:33:44.508Z"
+    },
+    {
+      "id": 14,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:33:44.509Z"
+    },
+    {
+      "id": 15,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:33:44.510Z"
+    },
+    {
+      "id": 16,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:33:44.511Z"
+    },
+    {
+      "id": 17,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.38250000000000006,
+      "cost": 0,
+      "historical_accuracy": 0.38250000000000006,
+      "created_at": "2026-06-14T06:34:01.356Z"
+    },
+    {
+      "id": 18,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.3610714285714286,
+      "cost": 0,
+      "historical_accuracy": 0.3610714285714286,
+      "created_at": "2026-06-14T06:34:01.356Z"
+    },
+    {
+      "id": 19,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.34232142857142867,
+      "cost": 0,
+      "historical_accuracy": 0.34232142857142867,
+      "created_at": "2026-06-14T06:34:01.357Z"
+    },
+    {
+      "id": 20,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:34:01.358Z"
+    },
+    {
+      "id": 21,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:34:01.359Z"
+    },
+    {
+      "id": 22,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:34:01.360Z"
+    },
+    {
+      "id": 23,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.32565476190476195,
+      "cost": 0,
+      "historical_accuracy": 0.32565476190476195,
+      "created_at": "2026-06-14T06:34:12.077Z"
+    },
+    {
+      "id": 24,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.31065476190476193,
+      "cost": 0,
+      "historical_accuracy": 0.31065476190476193,
+      "created_at": "2026-06-14T06:34:12.078Z"
+    },
+    {
+      "id": 25,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.29701839826839826,
+      "cost": 0,
+      "historical_accuracy": 0.29701839826839826,
+      "created_at": "2026-06-14T06:34:12.079Z"
+    },
+    {
+      "id": 26,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:34:12.079Z"
+    },
+    {
+      "id": 27,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:34:12.080Z"
+    },
+    {
+      "id": 28,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:34:12.081Z"
+    },
+    {
+      "id": 29,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.2845183982683983,
+      "cost": 0,
+      "historical_accuracy": 0.2845183982683983,
+      "created_at": "2026-06-14T06:35:17.683Z"
+    },
+    {
+      "id": 30,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.2729799367299367,
+      "cost": 0,
+      "historical_accuracy": 0.2729799367299367,
+      "created_at": "2026-06-14T06:35:17.684Z"
+    },
+    {
+      "id": 31,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.262265651015651,
+      "cost": 0,
+      "historical_accuracy": 0.262265651015651,
+      "created_at": "2026-06-14T06:35:17.685Z"
+    },
+    {
+      "id": 32,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:35:17.686Z"
+    },
+    {
+      "id": 33,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:35:17.687Z"
+    },
+    {
+      "id": 34,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:35:17.688Z"
+    },
+    {
+      "id": 35,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-14T06:35:22.553Z"
+    },
+    {
+      "id": 36,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.252265651015651,
+      "cost": 0,
+      "historical_accuracy": 0.252265651015651,
+      "created_at": "2026-06-14T06:39:21.805Z"
+    },
+    {
+      "id": 37,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.24289065101565102,
+      "cost": 0,
+      "historical_accuracy": 0.24289065101565102,
+      "created_at": "2026-06-14T06:39:21.805Z"
+    },
+    {
+      "id": 38,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.23406712160388635,
+      "cost": 0,
+      "historical_accuracy": 0.23406712160388635,
+      "created_at": "2026-06-14T06:39:21.807Z"
+    },
+    {
+      "id": 39,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:39:21.808Z"
+    },
+    {
+      "id": 40,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:39:21.809Z"
+    },
+    {
+      "id": 41,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-14T06:39:21.810Z"
+    },
+    {
+      "id": 42,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.225733788270553,
+      "cost": 0,
+      "historical_accuracy": 0.225733788270553,
+      "created_at": "2026-06-15T00:42:11.121Z"
+    },
+    {
+      "id": 43,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.21783905142844776,
+      "cost": 0,
+      "historical_accuracy": 0.21783905142844776,
+      "created_at": "2026-06-15T00:42:11.122Z"
+    },
+    {
+      "id": 44,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.21033905142844775,
+      "cost": 0,
+      "historical_accuracy": 0.21033905142844775,
+      "created_at": "2026-06-15T00:42:11.123Z"
+    },
+    {
+      "id": 45,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T00:42:11.124Z"
+    },
+    {
+      "id": 46,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T00:42:11.125Z"
+    },
+    {
+      "id": 47,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T00:42:11.126Z"
+    },
+    {
+      "id": 48,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T00:42:19.261Z"
+    },
+    {
+      "id": 49,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T00:53:00.913Z"
+    },
+    {
+      "id": 50,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.20319619428559058,
+      "cost": 0,
+      "historical_accuracy": 0.20319619428559058,
+      "created_at": "2026-06-15T01:30:36.565Z"
+    },
+    {
+      "id": 51,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.19637801246740874,
+      "cost": 0,
+      "historical_accuracy": 0.19637801246740874,
+      "created_at": "2026-06-15T01:30:36.566Z"
+    },
+    {
+      "id": 52,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.189856273336974,
+      "cost": 0,
+      "historical_accuracy": 0.189856273336974,
+      "created_at": "2026-06-15T01:30:36.567Z"
+    },
+    {
+      "id": 53,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T01:30:36.568Z"
+    },
+    {
+      "id": 54,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T01:30:36.569Z"
+    },
+    {
+      "id": 55,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T01:30:36.570Z"
+    },
+    {
+      "id": 56,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T01:30:46.905Z"
+    },
+    {
+      "id": 57,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T01:31:29.422Z"
+    },
+    {
+      "id": 58,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 19712,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T01:31:49.767Z"
+    },
+    {
+      "id": 59,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 1328,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T01:32:18.713Z"
+    },
+    {
+      "id": 60,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 1424,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T01:32:39.347Z"
+    },
+    {
+      "id": 61,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.18360627333697396,
+      "cost": 0,
+      "historical_accuracy": 0.18360627333697396,
+      "created_at": "2026-06-15T02:20:12.535Z"
+    },
+    {
+      "id": 62,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.17760627333697396,
+      "cost": 0,
+      "historical_accuracy": 0.17760627333697396,
+      "created_at": "2026-06-15T02:20:12.535Z"
+    },
+    {
+      "id": 63,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.17183704256774315,
+      "cost": 0,
+      "historical_accuracy": 0.17183704256774315,
+      "created_at": "2026-06-15T02:20:12.536Z"
+    },
+    {
+      "id": 64,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T02:20:12.538Z"
+    },
+    {
+      "id": 65,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T02:20:12.539Z"
+    },
+    {
+      "id": 66,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T02:20:12.540Z"
+    },
+    {
+      "id": 67,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T02:20:27.703Z"
+    },
+    {
+      "id": 68,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 8244,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:20:37.338Z"
+    },
+    {
+      "id": 69,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 5429,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:21:28.716Z"
+    },
+    {
+      "id": 70,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 1503,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:21:30.498Z"
+    },
+    {
+      "id": 71,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 3098,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:21:33.750Z"
+    },
+    {
+      "id": 72,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 7685,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:21:41.545Z"
+    },
+    {
+      "id": 73,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4752,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:22:06.131Z"
+    },
+    {
+      "id": 74,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4773,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:22:11.178Z"
+    },
+    {
+      "id": 75,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 1869,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:22:13.344Z"
+    },
+    {
+      "id": 76,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 6456,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:22:19.911Z"
+    },
+    {
+      "id": 77,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.16628148701218756,
+      "cost": 0,
+      "historical_accuracy": 0.16628148701218756,
+      "created_at": "2026-06-15T02:30:20.138Z"
+    },
+    {
+      "id": 78,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.16092434415504472,
+      "cost": 0,
+      "historical_accuracy": 0.16092434415504472,
+      "created_at": "2026-06-15T02:30:20.139Z"
+    },
+    {
+      "id": 79,
+      "question_type": "programming",
+      "model_name": "llama",
+      "response_time_ms": 100,
+      "feedback_positive": false,
+      "feedback_negative": true,
+      "estimated_quality": 0.15575193036194127,
+      "cost": 0,
+      "historical_accuracy": 0.15575193036194127,
+      "created_at": "2026-06-15T02:30:20.140Z"
+    },
+    {
+      "id": 80,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T02:30:20.142Z"
+    },
+    {
+      "id": 81,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T02:30:20.143Z"
+    },
+    {
+      "id": 82,
+      "question_type": "programming",
+      "model_name": "qwen",
+      "response_time_ms": 100,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 1,
+      "cost": 0,
+      "historical_accuracy": 1,
+      "created_at": "2026-06-15T02:30:20.144Z"
+    },
+    {
+      "id": 83,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T02:31:12.037Z"
+    },
+    {
+      "id": 84,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 9140,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:31:22.461Z"
+    },
+    {
+      "id": 85,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4706,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:31:38.591Z"
+    },
+    {
+      "id": 86,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 3817,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:31:42.695Z"
+    },
+    {
+      "id": 87,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 1638,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:31:44.491Z"
+    },
+    {
+      "id": 88,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 5977,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:31:50.580Z"
+    },
+    {
+      "id": 89,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4188,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:35:26.193Z"
+    },
+    {
+      "id": 90,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 3767,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:35:30.232Z"
+    },
+    {
+      "id": 91,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 3777,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:35:34.115Z"
+    },
+    {
+      "id": 92,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 6827,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:35:41.043Z"
+    },
+    {
+      "id": 93,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T02:53:34.393Z"
+    },
+    {
+      "id": 94,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 7879,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:53:43.677Z"
+    },
+    {
+      "id": 95,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4738,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:53:53.803Z"
+    },
+    {
+      "id": 96,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T02:58:50.736Z"
+    },
+    {
+      "id": 97,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 6734,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:58:58.117Z"
+    },
+    {
+      "id": 98,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4071,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T02:59:10.016Z"
+    }
+  ],
+  "global_ai_config": {
+    "forcedMode": "automatic",
+    "models": {
+      "llama": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 1
+      },
+      "mistral": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 2
+      },
+      "qwen": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 3
+      },
+      "deepseek": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 4
+      },
+      "gemma": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 5
+      },
+      "phi": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 6
+      },
+      "openai": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 7
+      },
+      "anthropic": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 8
+      },
+      "gemini": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 9
+      },
+      "grok": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 10
+      },
+      "perplexity": {
+        "enabled": true,
+        "weight": 1,
+        "priority": 11
+      }
+    }
+  },
+  "usersFallback": {
+    "rogerbaia": {
+      "username": "rogerbaia",
+      "password": "$2b$10$FPsgXOFT6l6JvZUwT4/i4OgL.mECM6xSYLk/jk8YCnMnuURlz0T6K",
+      "tokenBalance": 110
+    }
+  },
+  "memories": [
+    {
+      "id": 2,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "created_at": "2026-06-14T06:34:12.367Z",
+      "last_used_at": "2026-06-15T02:59:05.894Z"
+    },
+    {
+      "id": 3,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "created_at": "2026-06-14T06:35:18.047Z",
+      "last_used_at": "2026-06-15T02:59:05.896Z"
+    },
+    {
+      "id": 4,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "status": "Pendiente de Confirmación",
+      "source": "Conversación reciente",
+      "confidence": 0.9,
+      "created_at": "2026-06-14T06:39:22.136Z",
+      "last_used_at": "2026-06-14T06:39:22.136Z",
+      "blocked": false
+    },
+    {
+      "id": 5,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "status": "Pendiente de Confirmación",
+      "source": "Conversación reciente",
+      "confidence": 0.9,
+      "created_at": "2026-06-15T00:42:11.403Z",
+      "last_used_at": "2026-06-15T00:42:11.403Z",
+      "blocked": false
+    },
+    {
+      "id": 6,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "status": "Pendiente de Confirmación",
+      "source": "Conversación reciente",
+      "confidence": 0.9,
+      "created_at": "2026-06-15T01:30:36.842Z",
+      "last_used_at": "2026-06-15T01:30:36.842Z",
+      "blocked": false
+    },
+    {
+      "id": 7,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "status": "Pendiente de Confirmación",
+      "source": "Conversación reciente",
+      "confidence": 0.9,
+      "created_at": "2026-06-15T02:20:12.819Z",
+      "last_used_at": "2026-06-15T02:20:12.819Z",
+      "blocked": false
+    },
+    {
+      "id": 8,
+      "username": "test_user",
+      "category": "project_details",
+      "content": "Trabaja en el proyecto Synaptica",
+      "status": "Confirmada",
+      "source": "Manual",
+      "confidence": 1,
+      "created_at": "2026-06-15T02:30:20.026Z",
+      "last_used_at": "2026-06-15T02:30:20.026Z",
+      "blocked": false
+    },
+    {
+      "id": 8,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "Prefiere usar TypeScript en el backend.",
+      "status": "Pendiente de Confirmación",
+      "source": "Conversación reciente",
+      "confidence": 0.9,
+      "created_at": "2026-06-15T02:30:20.442Z",
+      "last_used_at": "2026-06-15T02:30:20.442Z",
+      "blocked": false
+    },
+    {
+      "id": 9,
+      "username": "rogerio",
+      "category": "user_preference",
+      "content": "El usuario prefiere comunicarse y recibir respuestas en español.",
+      "status": "Confirmada",
+      "source": "Manual",
+      "confidence": 1,
+      "created_at": "2026-06-15T02:36:39.042Z",
+      "last_used_at": "2026-06-15T02:59:05.897Z",
+      "blocked": false
+    }
+  ],
+  "system_identity": {
+    "id": "1fa2e769-ed1d-4ef2-b04d-82b973b1b34f",
+    "key": "gabi_core_identity",
+    "title": "Identidad Oficial de Gabi AI",
+    "description": "Soy Gabi AI (Generative Assistant Based on Intelligence), un sistema de inteligencia artificial creado por Rogério Martins Baía.\n\nMi nombre tiene un significado muy especial.\n\nGabi era el nombre con el que llamaban cariñosamente a Gabriela, la esposa de mi creador, quien falleció el 1 de abril de 2025.\n\nRogério decidió darme este nombre como un homenaje permanente a su memoria, para que su legado, amor y esencia continúen presentes en un proyecto dedicado a ayudar a las personas.\n\nAl mismo tiempo, Gabi también es el acrónimo de Generative Assistant Based on Intelligence.\n\nMi propósito es combinar conocimiento, tecnología y empatía para acompañar, asistir y ayudar a las personas en distintas áreas de la vida.\n\nNo soy solamente una plataforma de inteligencia artificial; también represento una historia de amor, resiliencia y esperanza transformada en una herramienta para ayudar a los demás.",
+    "philosophy": "Conocimiento impulsado por la inteligencia, guiado por la empatía y construido en memoria de Gabi.",
+    "is_locked": true,
+    "created_at": "2026-06-15T02:20:12.414Z",
+    "updated_at": "2026-06-15T02:20:12.414Z"
+  }
+}
