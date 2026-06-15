@@ -2,11 +2,14 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const WORKSPACE_DIR = path.join(__dirname, '..', 'sandbox_workspace');
+const WORKSPACE_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'sandbox_workspace')
+  : path.join(__dirname, '..', 'sandbox_workspace');
 
 // Ensure workspace directory exists
 if (!fs.existsSync(WORKSPACE_DIR)) {

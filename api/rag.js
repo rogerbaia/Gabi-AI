@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 
-// Polyfill for DOMMatrix in Node.js environment to prevent pdf-parse failures
+// Polyfill for DOMMatrix in Node.js environment to prevent unpdf failures
 if (typeof globalThis.DOMMatrix === 'undefined') {
   globalThis.DOMMatrix = class DOMMatrix {
     constructor() {
@@ -15,8 +15,8 @@ if (typeof globalThis.DOMMatrix === 'undefined') {
 }
 
 const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
+import { getDocumentProxy, extractText } from 'unpdf';
 import { convert } from 'html-to-text';
 import dotenv from 'dotenv';
 import { query as dbQuery } from './db.js';
@@ -25,7 +25,7 @@ dotenv.config();
 
 /**
  * Fallback function to extract plain text from PDF buffer using basic Regex pattern matching.
- * Used if pdf-parse fails or is unsupported.
+ * Used if unpdf fails or is unsupported.
  * @param {Buffer} buffer - Raw PDF bytes
  * @returns {string} Extracted text representation
  */
@@ -73,13 +73,15 @@ export async function extractTextFromBuffer(buffer, mimeType) {
 
   if (type.includes('pdf')) {
     try {
-      const data = await pdfParse(buffer);
-      return data.text || "";
+      const pdf = await getDocumentProxy(new Uint8Array(buffer));
+      const { text } = await extractText(pdf, { mergePages: true });
+      return text || "";
     } catch (err) {
-      console.warn("[RAG] pdf-parse falló. Ejecutando extractor de respaldo (fallback)...", err.message);
+      console.warn("[RAG] unpdf falló. Ejecutando extractor de respaldo (fallback)...", err.message);
       return extractRawTextFromPdfBufferFallback(buffer);
     }
   } 
+
   
   if (type.includes('wordprocessingml') || type.includes('docx')) {
     const result = await mammoth.extractRawText({ buffer });
