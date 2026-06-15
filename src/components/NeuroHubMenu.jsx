@@ -3,11 +3,10 @@ import {
   Sparkles, 
   GraduationCap, 
   Plane, 
-  Apple, 
+  Heart, 
   LineChart, 
-  Code2, 
   BrainCircuit,
-  Youtube
+  Search
 } from 'lucide-react';
 
 export default function NeuroHubMenu({
@@ -25,52 +24,43 @@ export default function NeuroHubMenu({
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-950/20 border-emerald-900/30',
       activeColor: 'bg-emerald-500 text-slate-950 font-bold',
-      desc: 'IA Principal consolidada de múltiples cerebros'
-    },
-    {
-      id: 'investia',
-      name: 'InvestIA',
-      icon: GraduationCap,
-      color: 'text-indigo-400',
-      bgColor: 'bg-indigo-950/20 border-indigo-900/30',
-      activeColor: 'bg-indigo-500 text-slate-950 font-bold',
-      desc: 'Análisis científico, papers médicos, citas APA/Vancouver'
+      desc: 'IA Principal consolidada. Búsqueda paralela y síntesis inteligente.'
     },
     {
       id: 'viajia',
-      name: 'ViajIA',
+      name: 'Gabi Travel',
       icon: Plane,
       color: 'text-sky-400',
       bgColor: 'bg-sky-950/20 border-sky-900/30',
       activeColor: 'bg-sky-500 text-slate-950 font-bold',
-      desc: 'Trivago-style: Vuelos, hoteles, rutas y planes turísticos'
-    },
-    {
-      id: 'nutriia',
-      name: 'NutriIA',
-      icon: Apple,
-      color: 'text-rose-400',
-      bgColor: 'bg-rose-950/20 border-rose-900/30',
-      activeColor: 'bg-rose-500 text-slate-950 font-bold',
-      desc: 'Dietas personalizadas, rutinas, bienestar y médicos'
+      desc: 'Módulo de viajes: Vuelos, hoteles, mapas y clima en tiempo real.'
     },
     {
       id: 'econoia',
-      name: 'EconoIA',
+      name: 'Gabi Financial',
       icon: LineChart,
       color: 'text-amber-400',
       bgColor: 'bg-amber-950/20 border-amber-900/30',
       activeColor: 'bg-amber-500 text-slate-950 font-bold',
-      desc: 'Comparación de servicios bancarios, inversiones y cripto'
+      desc: 'Acciones, criptos, velas y noticias financieras con descargo legal.'
     },
     {
-      id: 'tubeia',
-      name: 'TubeIA',
-      icon: Youtube,
-      color: 'text-[#AAF6AB]',
-      bgColor: 'bg-[#AAF6AB]/10 border-[#AAF6AB]/20',
-      activeColor: 'bg-[#AAF6AB] text-slate-950 font-bold',
-      desc: 'Buscador y reproductor de videos, tutoriales y música sin anuncios'
+      id: 'medica',
+      name: 'Gabi Medical',
+      icon: Heart,
+      color: 'text-rose-400',
+      bgColor: 'bg-rose-950/20 border-rose-900/30',
+      activeColor: 'bg-rose-500 text-slate-950 font-bold',
+      desc: 'Apoyo clínico y de diagnóstico. Consultas sobre protocolos y medicina.'
+    },
+    {
+      id: 'research',
+      name: 'Gabi Research',
+      icon: Search,
+      color: 'text-indigo-400',
+      bgColor: 'bg-indigo-950/20 border-indigo-900/30',
+      activeColor: 'bg-indigo-500 text-slate-950 font-bold',
+      desc: 'Búsqueda web profunda, comparación de fuentes bibliográficas y síntesis.'
     }
   ];
 
@@ -100,7 +90,7 @@ export default function NeuroHubMenu({
               : 'bg-slate-900 border-slate-800 backdrop-blur-xl'
           }`}>
             <div className={`p-2 text-[10px] font-bold uppercase tracking-wider ${nostalgicMode ? 'text-[#39ff14]' : 'text-slate-500'} mb-1 border-b ${nostalgicMode ? 'border-[#39ff14]' : 'border-slate-800'}`}>
-              NeuroHub: Cerebros Especializados
+              NeuroHub: Especialidades de Gabi
             </div>
             
             <div className="space-y-1">

@@ -1,396 +1,405 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { readDb, writeDb } from './db.js';
+import multer from 'multer';
+import { 
+  dbInit, 
+  getUserBalance, 
+  updateUserBalance, 
+  getChats, 
+  saveChats, 
+  getOrders, 
+  addOrder, 
+  getEmails, 
+  markEmailRead, 
+  saveFeedback,
+  getGlobalConfig,
+  updateGlobalConfig,
+  getHealthStats,
+  getUserMemories,
+  deleteMemory,
+  updateMemory,
+  updateModelPerformanceFeedback
+} from './db.js';
+import os from 'os';
 import { runCommand, writeFile, listWorkspaceFiles } from './sandbox.js';
+import authRouter, { authenticateToken } from './auth.js';
+import { ingestDocument } from './rag.js';
+import { 
+  queryOrchestrator, 
+  getActiveProviders, 
+  detectLocalModels, 
+  checkInternetConnectivity, 
+  getAvailableLocalModels,
+  extractMemoriesInBackground,
+  updateSystemMode
+} from './orchestrator.js';
 
 dotenv.config();
+
+// Initialize database schema/tables
+dbInit();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Helper to update user config
-const getUserConfig = () => {
-  const db = readDb();
-  return db.user;
-};
+// Set up upload handler in memory
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Endpoints for User profile / Tokens
-app.get('/api/tokens', (req, res) => {
-  const user = getUserConfig();
-  res.json({ tokenBalance: user.tokenBalance, apiKeys: user.apiKeys });
-});
+// Mount User Auth Router
+app.use('/api/auth', authRouter);
 
-app.post('/api/tokens', (req, res) => {
-  const { amount, apiKeys, balance } = req.body;
-  const db = readDb();
-  
-  if (balance !== undefined) {
-    db.user.tokenBalance = Math.max(0, balance);
-  } else if (amount !== undefined) {
-    db.user.tokenBalance = Math.max(0, db.user.tokenBalance + amount);
+// Token Wallet Routes
+app.get('/api/tokens', authenticateToken, async (req, res) => {
+  try {
+    const balance = await getUserBalance(req.user.username);
+    res.json({ tokenBalance: balance });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  if (apiKeys !== undefined) {
-    db.user.apiKeys = { ...db.user.apiKeys, ...apiKeys };
+});
+
+app.post('/api/tokens', authenticateToken, async (req, res) => {
+  const { amount, balance } = req.body;
+  try {
+    const currentBalance = await getUserBalance(req.user.username);
+    let newBalance = currentBalance;
+    if (balance !== undefined) {
+      newBalance = Math.max(0, balance);
+    } else if (amount !== undefined) {
+      newBalance = Math.max(0, currentBalance + amount);
+    }
+    await updateUserBalance(req.user.username, newBalance);
+    res.json({ tokenBalance: newBalance });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  
-  writeDb(db);
-  res.json({ tokenBalance: db.user.tokenBalance, apiKeys: db.user.apiKeys });
 });
 
-// Endpoints for Chats Sincronization
-app.get('/api/chats', (req, res) => {
-  const db = readDb();
-  res.json(db.chats || []);
+// Chats History Sync Routes
+app.get('/api/chats', authenticateToken, async (req, res) => {
+  try {
+    const chats = await getChats(req.user.username);
+    res.json(chats || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.post('/api/chats', (req, res) => {
+app.post('/api/chats', authenticateToken, async (req, res) => {
   const chats = req.body;
-  const db = readDb();
-  db.chats = chats;
-  writeDb(db);
-  res.json({ success: true, count: db.chats.length });
+  try {
+    await saveChats(req.user.username, chats);
+    res.json({ success: true, count: chats.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Sandbox Code Execution Endpoints
-app.post('/api/sandbox/run', async (req, res) => {
+// Sandbox Code execution Endpoints
+app.post('/api/sandbox/run', authenticateToken, async (req, res) => {
   const { command } = req.body;
   if (!command) {
     return res.status(400).json({ error: 'Command is required' });
   }
-  
   const result = await runCommand(command);
   res.json(result);
 });
 
-app.post('/api/sandbox/write', (req, res) => {
+app.post('/api/sandbox/write', authenticateToken, (req, res) => {
   const { filename, content } = req.body;
   if (!filename || content === undefined) {
     return res.status(400).json({ error: 'Filename and content are required' });
   }
-  
   const result = writeFile(filename, content);
   res.json(result);
 });
 
-app.get('/api/sandbox/files', (req, res) => {
+app.get('/api/sandbox/files', authenticateToken, (req, res) => {
   res.json({ files: listWorkspaceFiles() });
 });
 
-// NeuroStore Endpoints
-app.get('/api/store/orders', (req, res) => {
-  const db = readDb();
-  res.json(db.orders || []);
-});
-
-app.post('/api/store/buy', (req, res) => {
-  const { productId, name, price, tokensDeducted } = req.body;
-  const db = readDb();
-  
-  if (db.user.tokenBalance < tokensDeducted) {
-    return res.status(400).json({ error: 'Insufficient NeuroTokens' });
-  }
-  
-  // Deduct tokens
-  db.user.tokenBalance = Math.max(0, db.user.tokenBalance - tokensDeducted);
-  
-  // Create order
-  const orderId = 'AMZ-' + Math.floor(100000 + Math.random() * 900000);
-  const newOrder = {
-    id: orderId,
-    productId,
-    name,
-    price,
-    status: 'Procesando devolución en almacén',
-    timestamp: new Date().toISOString()
-  };
-  
-  db.orders.unshift(newOrder);
-  
-  // Send email tracking simulation
-  const newEmail = {
-    id: Date.now(),
-    subject: `Confirmación de Envío: Pedido ${orderId}`,
-    sender: 'amazon-logistics@synaptica.net',
-    body: `Estimado Cliente,\n\nTu canje de ${name} ha sido procesado mediante nuestro modelo de retorno de inversión de Amazon Logistics.\n\nNúmero de Pedido: ${orderId}\nPrecio Canjeado: ${price} NTK\nEstado: En almacén listo para retorno.\n\nContrato Legal: El reembolso será acreditado al balance de Synaptica tras la liquidación del lote.\n\nSaludos,\nEquipo de Logística Synaptica.`,
-    date: 'Hoy',
-    unread: true
-  };
-  
-  db.emails.unshift(newEmail);
-  
-  writeDb(db);
-  res.json({ success: true, order: newOrder, tokenBalance: db.user.tokenBalance });
-});
-
-// Emails Endpoints
-app.get('/api/store/emails', (req, res) => {
-  const db = readDb();
-  res.json(db.emails || []);
-});
-
-app.post('/api/store/emails/read', (req, res) => {
-  const { id } = req.body;
-  const db = readDb();
-  db.emails = (db.emails || []).map(e => e.id === id ? { ...e, unread: false } : e);
-  writeDb(db);
-  res.json({ success: true });
-});
-
-// Helper for simple, natural language mock responses
-const generateSimpleMockResponse = (queryText, model) => {
-  const query = queryText.toLowerCase().trim();
-  
-  if (query.includes('arcoiris') || query.includes('arco iris')) {
-    return `Los arcoíris se forman por la descomposición de la luz solar al refractarse en las gotas de lluvia. Sus 7 colores principales de afuera hacia adentro son:
-
-1. **Rojo** 🔴
-2. **Naranja** 🟠
-3. **Amarillo** 🟡
-4. **Verde** 🟢
-5. **Azul** 🔵
-6. **Añil (Índigo)** 🌀
-7. **Violeta** 🟣
-
-Es un espectro de colores continuo que surge por la refracción y dispersión física de la luz.`;
-  }
-  
-  if (query.includes('hola') || query.includes('buenos dias') || query.includes('buenas tardes') || query.includes('saludos')) {
-    return `¡Hola! Soy **Gabi AI**, tu meta-IA de Synaptica. ¿En qué te puedo colaborar hoy? Puedes usarme para resolver consultas generales o seleccionar una de mis especialidades en el NeuroHub.`;
-  }
-  
-  if (query.includes('quien eres') || query.includes('que eres') || query.includes('tu nombre')) {
-    return `Soy **Gabi AI**, un agente cognitivo orquestado por Synaptica Labs. Combino múltiples modelos de IA (OpenAI, Claude, Perplexity, DeepSeek) y ejecuto tareas en una computadora virtual (Sandbox) en tiempo real.`;
-  }
-  
-  if (query.includes('synaptica')) {
-    return `**Synaptica** es un laboratorio de Inteligencia Artificial que se especializa en desarrollar agentes autónomos cognitivos y plataformas de computación en la nube para automatizar flujos técnicos complejos.`;
-  }
-  
-  if (query.includes('creador') || query.includes('creo') || query.includes('fundador')) {
-    return `Fui diseñada e implementada por los ingenieros e investigadores de **Synaptica Labs**, bajo la dirección de Rogerio Baia.`;
-  }
-  
-  // Custom response if query is a clinical medical case
-  if (query.includes('úlcera') || query.includes('herpética') || query.includes('corneal')) {
-    return `### Enfoque Terapéutico: Úlcera Corneal Herpética Recurrente
-
-Basado en la directiva del estudio HEDS y directrices oftálmicas:
-
-1. **Fase Aguda:**
-   * **Antiviral Tópico:** Ganciclovir gel oftálmico 0.15% 5 veces al día (menos tóxico que trifluridina).
-   * **Antiviral Oral:** Aciclovir 400 mg 5 veces al día (o Valaciclovir 500 mg c/8h) durante 7-10 días.
-2. **Profilaxis Prolongada:**
-   * **Aciclovir 400 mg c/12h** por 12 meses. Reduce las recurrencias en un **45%**.
-3. **Corticosteroides:**
-   * Contraindicados en úlceras epiteliales activas. Se usan bajo supervisión estricta solo para mitigar cicatrices en queratitis estromal.`;
-  }
-  
-  // Default dynamic response that sounds like a real, direct, synthesised answer for general questions
-  return `### Síntesis de OmnIA: Respuesta Consolidada
-
-Para tu consulta: *"**${queryText}**"*
-
-Tras analizar y fusionar los datos de OpenAI, Anthropic Claude y Perplexity:
-
-1. **Definición Principal:** Este tema hace referencia a un concepto general de conocimiento. De forma consolidada, los modelos confirman que la respuesta principal se centra en establecer el contexto lógico y los fundamentos básicos del mismo.
-2. **Enfoque Práctico:** Se recomienda abordar la consulta organizando la información en pasos sencillos, evitando términos redundantes y enfocándose en soluciones directas.
-3. **Recomendación de Synaptica:** Si deseas una respuesta en tiempo real detallada o código ejecutable en el sandbox, recuerda que puedes ingresar tu API Key en la configuración para realizar consultas en vivo a través de la red oficial.`;
-};
-
-// External Real APIs proxy integration
-app.post('/api/chat', async (req, res) => {
-  const { prompt, model, apiKeys } = req.body;
-  
-  // Resolve keys prioritizing those sent in request, then database, then environment variables
-  const dbKeys = getUserConfig().apiKeys || {};
-  const activeKeys = {
-    openai: apiKeys?.openai || dbKeys.openai || process.env.OPENAI_API_KEY,
-    anthropic: apiKeys?.anthropic || dbKeys.anthropic || process.env.ANTHROPIC_API_KEY,
-    perplexity: apiKeys?.perplexity || dbKeys.perplexity || process.env.PERPLEXITY_API_KEY,
-    deepseek: apiKeys?.deepseek || dbKeys.deepseek || process.env.DEEPSEEK_API_KEY
-  };
-  
+// Store & Orders Routes
+app.get('/api/store/orders', authenticateToken, async (req, res) => {
   try {
-    let resultText = "";
-    const activePromises = [];
-    const modelAnswers = {};
-    
-    // 1. Query OpenAI in parallel
-    if (activeKeys.openai) {
-      activePromises.push(
-        fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${activeKeys.openai}`
-          },
-          body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [{ role: "user", content: prompt }]
-          })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.choices?.[0]?.message?.content) {
-            modelAnswers.openai = data.choices[0].message.content;
-          }
-        })
-        .catch(err => console.error("OpenAI call failed in parallel routing:", err))
-      );
-    }
-    
-    // 2. Query Anthropic Claude in parallel
-    if (activeKeys.anthropic) {
-      activePromises.push(
-        fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "x-api-key": activeKeys.anthropic,
-            "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: "claude-3-5-sonnet-20241022",
-            max_tokens: 1024,
-            messages: [{ role: "user", content: prompt }]
-          })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.content?.[0]?.text) {
-            modelAnswers.claude = data.content[0].text;
-          }
-        })
-        .catch(err => console.error("Anthropic call failed in parallel routing:", err))
-      );
-    }
-    
-    // 3. Query Perplexity in parallel
-    if (activeKeys.perplexity) {
-      activePromises.push(
-        fetch("https://api.perplexity.ai/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${activeKeys.perplexity}`
-          },
-          body: JSON.stringify({
-            model: "sonar-reasoning",
-            messages: [{ role: "user", content: prompt }]
-          })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.choices?.[0]?.message?.content) {
-            modelAnswers.perplexity = data.choices[0].message.content;
-          }
-        })
-        .catch(err => console.error("Perplexity call failed in parallel routing:", err))
-      );
-    }
-    
-    // 4. Query DeepSeek in parallel
-    if (activeKeys.deepseek) {
-      activePromises.push(
-        fetch("https://api.deepseek.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${activeKeys.deepseek}`
-          },
-          body: JSON.stringify({
-            model: "deepseek-chat",
-            messages: [{ role: "user", content: prompt }]
-          })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.choices?.[0]?.message?.content) {
-            modelAnswers.deepseek = data.choices[0].message.content;
-          }
-        })
-        .catch(err => console.error("DeepSeek call failed in parallel routing:", err))
-      );
-    }
-    
-    // Wait for all active parallel API searches
-    if (activePromises.length > 0) {
-      await Promise.all(activePromises);
-    }
-    
-    const answersList = Object.entries(modelAnswers)
-      .map(([modelName, text]) => `--- RESPUESTA DE ${modelName.toUpperCase()} ---\n${text}`)
-      .join('\n\n');
-      
-    if (answersList) {
-      // If we have answers from multiple models, we run a consolidation synthesis
-      if (Object.keys(modelAnswers).length > 1) {
-        const synthesisPrompt = `Actúa como Gabi AI, el motor inteligente de orquestación y síntesis de Synaptica.
-Hemos realizado una búsqueda simultánea estilo Trivago en múltiples proveedores de IA para responder a la consulta del usuario: "${prompt}".
+    const orders = await getOrders(req.user.username);
+    res.json(orders || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-Aquí tienes las respuestas individuales recolectadas en tiempo real:
-${answersList}
+app.post('/api/store/buy', authenticateToken, async (req, res) => {
+  const { productId, name, price, tokensDeducted } = req.body;
+  const username = req.user.username;
 
-Tu objetivo es consolidar y sintetizar estas respuestas en una única respuesta definitiva de alta calidad.
-- Identifica los puntos de consenso general y únelos de forma fluida.
-- Detecta y elimina cualquier contradicción lógica o contradicciones entre las respuestas.
-- Escribe una respuesta definitiva, clara, directa y muy fácil de leer para el usuario.
-- Ve directo al grano respondiendo la consulta del usuario de forma natural, sin rodeos meta-explicativos ni introducciones sobre cómo hiciste la síntesis.`;
+  try {
+    const tokenBalance = await getUserBalance(username);
+    if (tokenBalance < tokensDeducted) {
+      return res.status(400).json({ error: 'Insufficient NeuroTokens' });
+    }
 
-        if (activeKeys.openai) {
-          const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${activeKeys.openai}`
-            },
-            body: JSON.stringify({
-              model: "gpt-4o-mini",
-              messages: [{ role: "system", content: synthesisPrompt }]
-            })
-          });
-          const data = await response.json();
-          resultText = data.choices?.[0]?.message?.content || Object.values(modelAnswers)[0];
-        } else if (activeKeys.anthropic) {
-          const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-              "x-api-key": activeKeys.anthropic,
-              "anthropic-version": "2023-06-01",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              model: "claude-3-5-sonnet-20241022",
-              max_tokens: 1024,
-              messages: [{ role: "user", content: synthesisPrompt }]
-            })
-          });
-          const data = await response.json();
-          resultText = data.content?.[0]?.text || Object.values(modelAnswers)[0];
-        } else {
-          resultText = Object.values(modelAnswers)[0];
-        }
-      } else {
-        // Just return the single available model's response directly
-        resultText = Object.values(modelAnswers)[0];
+    const newBalance = Math.max(0, tokenBalance - tokensDeducted);
+    await updateUserBalance(username, newBalance);
+
+    const orderId = 'AMZ-' + Math.floor(100000 + Math.random() * 900000);
+    const newOrder = {
+      id: orderId,
+      productId,
+      name,
+      price,
+      status: 'Procesando devolución en almacén',
+      timestamp: new Date().toISOString()
+    };
+    await addOrder(username, newOrder);
+
+    const newEmail = {
+      id: Date.now(),
+      subject: `Confirmación de Envío: Pedido ${orderId}`,
+      sender: 'amazon-logistics@synaptica.net',
+      body: `Estimado Cliente,\n\nTu canje de ${name} ha sido procesado mediante nuestro modelo de retorno de inversión de Amazon Logistics.\n\nNúmero de Pedido: ${orderId}\nPrecio Canjeado: ${price} NTK\nEstado: En almacén listo para retorno.\n\nContrato Legal: El reembolso será acreditado al balance de Synaptica tras la liquidación del lote.\n\nSaludos,\nEquipo de Logística Synaptica.`,
+      date: 'Hoy',
+      unread: true
+    };
+    await addEmail(username, newEmail);
+
+    res.json({ success: true, order: newOrder, tokenBalance: newBalance });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Emails Simulation Routes
+app.get('/api/store/emails', authenticateToken, async (req, res) => {
+  try {
+    const emails = await getEmails(req.user.username);
+    res.json(emails || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/store/emails/read', authenticateToken, async (req, res) => {
+  const { id } = req.body;
+  try {
+    await markEmailRead(req.user.username, id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Provider API Status Route
+app.get('/api/providers/status', authenticateToken, (req, res) => {
+  res.json({ status: getActiveProviders() });
+});
+
+// Route to check local models & connection status dynamically
+app.get('/api/providers/detect', authenticateToken, async (req, res) => {
+  try {
+    const isOnline = await checkInternetConnectivity();
+    const installed = await detectLocalModels();
+    const available = await getAvailableLocalModels(installed);
+    
+    res.json({
+      offlineMode: !isOnline,
+      localModels: installed,
+      availableLocalProviders: available
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Admin health telemetry and control endpoints
+app.get('/api/admin/health', authenticateToken, async (req, res) => {
+  try {
+    const dbStats = await getHealthStats();
+    const globalConfig = await getGlobalConfig();
+    const systemMode = await updateSystemMode();
+
+    const freeMem = os.freemem();
+    const totalMem = os.totalmem();
+    const usedMem = totalMem - freeMem;
+    const cpuLoad = os.loadavg();
+    const cpus = os.cpus();
+    
+    const simulatedGpuUsage = Math.round(20 + Math.random() * 45);
+    const simulatedVramUsage = Math.round(4.2 + Math.random() * 3.1);
+    const simulatedGpuTemp = Math.round(55 + Math.random() * 15);
+
+    res.json({
+      dbStats,
+      globalConfig,
+      systemMode,
+      system: {
+        cpuUsage: cpuLoad,
+        cpusCount: cpus.length,
+        totalRamGb: Math.round(totalMem / (1024 * 1024 * 1024)),
+        usedRamGb: Math.round(usedMem / (1024 * 1024 * 1024)),
+        gpuUsagePct: simulatedGpuUsage,
+        usedVramGb: simulatedVramUsage,
+        gpuTempC: simulatedGpuTemp,
+        uptimeHours: Math.round(os.uptime() / 3600)
       }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/config', authenticateToken, async (req, res) => {
+  try {
+    const newConfig = req.body;
+    if (!newConfig || typeof newConfig !== 'object') {
+      return res.status(400).json({ error: 'Invalid configuration payload' });
+    }
+    const success = await updateGlobalConfig(newConfig);
+    if (success) {
+      res.json({ success: true, config: newConfig });
+    } else {
+      res.status(500).json({ error: 'Failed to persist configurations' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Feedback Logging Route
+app.post('/api/feedback', authenticateToken, async (req, res) => {
+  const { queryText, category, bestModel, vote } = req.body;
+  try {
+    await saveFeedback(req.user.username, queryText, category, bestModel, vote);
+    
+    // Dynamic quality adaptation based on user votes
+    if (category && bestModel && vote) {
+      await updateModelPerformanceFeedback(category, bestModel, vote);
+      console.log(`[Feedback] Adjusted quality for model "${bestModel}" under category "${category}" due to user "${vote}" vote.`);
     }
     
-    if (resultText) {
-      return res.json({ response: resultText, isRealAPI: true });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Memories Review and Management Routes
+app.get('/api/memories', authenticateToken, async (req, res) => {
+  try {
+    const list = await getUserMemories(req.user.username);
+    res.json(list || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/memories/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { category, content, status, blocked } = req.body;
+  try {
+    const success = await updateMemory(id, req.user.username, { category, content, status, blocked });
+    res.json({ success });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/memories/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const success = await deleteMemory(id, req.user.username);
+    res.json({ success });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/memories/export', authenticateToken, async (req, res) => {
+  try {
+    const list = await getUserMemories(req.user.username);
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename=gabi_memories_${req.user.username}.json`);
+    res.json(list || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// RAG Document Upload Route
+app.post('/api/documents/upload', authenticateToken, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No se subió ningún archivo.' });
     }
-    
-    // Default fallback to mock simulation if keys are empty or models failed
-    const fallbackResponse = generateSimpleMockResponse(prompt, model);
-    res.json({ response: fallbackResponse, isRealAPI: false });
-    
-  } catch (error) {
-    console.error("Real parallel API or synthesis call failed, falling back:", error);
-    const fallbackResponse = generateSimpleMockResponse(prompt, model);
-    res.json({ response: fallbackResponse, error: error.message, isRealAPI: false });
+    const result = await ingestDocument(req.file.originalname, req.file.mimetype, req.file.buffer);
+    res.json({ success: true, message: `Documento "${req.file.originalname}" indexado correctamente (${result.chunksCount} fragmentos).` });
+  } catch (err) {
+    console.error("[Server] Document upload ingestion failed:", err);
+    res.status(500).json({ error: `Error al procesar el archivo: ${err.message}` });
+  }
+});
+
+// Unified Gabi AI Orchestration Route
+app.post('/api/chat', authenticateToken, async (req, res) => {
+  const { prompt, model, mode } = req.body;
+
+  if (!prompt) {
+    return res.status(400).json({ error: 'El prompt es requerido.' });
+  }
+
+  try {
+    // 1. Check token balance (OmnIA queries cost 5 tokens)
+    const tokenBalance = await getUserBalance(req.user.username);
+    if (tokenBalance < 5) {
+      return res.status(402).json({ error: 'Saldo de NeuroTokens insuficiente para realizar la consulta.' });
+    }
+
+    // Deduct tokens
+    const nextBalance = Math.max(0, tokenBalance - 5);
+    await updateUserBalance(req.user.username, nextBalance);
+
+    // 2. Load short term memory history from synced chats
+    const chats = await getChats(req.user.username);
+    let activeHistory = [];
+    if (chats && chats.length > 0) {
+      // Find active conversation matching the frontend request context
+      // As a fallback, we grab messages from the most recent active chat
+      activeHistory = chats[0].messages || [];
+    }
+
+    // 3. Query multi-model orchestrator
+    const result = await queryOrchestrator(prompt, req.user.username, activeHistory, model, mode);
+
+    // 4. Autonomous memory extraction trigger (every 5 turns / 10 messages)
+    try {
+      const globalConfig = await getGlobalConfig();
+      const isAutoLearningEnabled = globalConfig?.autoLearningEnabled !== false;
+      const currentMessageCount = activeHistory.length + 2;
+      
+      if (isAutoLearningEnabled && currentMessageCount > 0 && currentMessageCount % 10 === 0) {
+        console.log(`[Server] Conversation turn count reached a multiple of 5 (${currentMessageCount} messages). Triggering background memory extraction...`);
+        extractMemoriesInBackground(req.user.username, activeHistory, prompt, result.response).catch(err => {
+          console.error("[Server] Error in background memory extraction:", err);
+        });
+      }
+    } catch (configErr) {
+      console.error("[Server] Auto-learning configuration check failed:", configErr);
+    }
+
+    res.json({
+      response: result.response,
+      modelsParticipated: result.modelsParticipated,
+      sources: result.sources,
+      category: result.category,
+      isRealAPI: result.isRealAPI,
+      tokenBalance: nextBalance,
+      effectiveMode: result.effectiveMode
+    });
+  } catch (err) {
+    console.error("[Server] Orchestration chat error:", err);
+    res.status(500).json({ error: `Error en el motor OmnIA: ${err.message}` });
   }
 });
 

@@ -202,6 +202,31 @@ export default function Sidebar({
         </button>
 
         <button
+          onClick={() => setActiveView('health')}
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+            activeView === 'health'
+              ? nostalgicMode ? 'bg-[#39ff14]/20 border border-[#39ff14] text-[#39ff14]' : 'bg-indigo-950/25 text-indigo-400 border border-indigo-900/30'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+          }`}
+        >
+          <Cpu size={16} className={activeView === 'health' && !nostalgicMode ? 'text-indigo-400' : ''} />
+          <span>AI Health Center</span>
+        </button>
+
+        <button
+          onClick={() => setActiveView('corazon')}
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+            activeView === 'corazon'
+              ? nostalgicMode ? 'bg-[#39ff14]/20 border border-[#39ff14] text-[#39ff14]' : 'bg-sky-950/20 text-sky-400 border border-sky-900/30'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+          }`}
+          title="El corazón de Gabi"
+        >
+          <span className="text-base select-none pr-0.5">💙</span>
+          <span>El corazón de Gabi</span>
+        </button>
+
+        <button
           onClick={() => setActiveView('admin')}
           className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
             activeView === 'admin'

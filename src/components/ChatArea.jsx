@@ -23,108 +23,13 @@ import {
   Terminal,
   Loader2,
   Minimize2,
-  Columns
+  Columns,
+  Paperclip,
+  Menu
 } from 'lucide-react';
 import { playDialUpSound, stopDialUpSound } from '../utils/audio';
 import NeuroHubMenu from './NeuroHubMenu';
 import confetti from 'canvas-confetti';
-
-// Helper for simple, natural language mock responses (matches backend)
-const generateSimpleMockResponse = (queryText, model) => {
-  const query = queryText.toLowerCase().trim();
-  
-  if (query.includes('arcoiris') || query.includes('arco iris')) {
-    return `Los arcoíris se forman por la descomposición de la luz solar al refractarse en las gotas de lluvia. Sus 7 colores principales de afuera hacia adentro son:
-
-1. **Rojo** 🔴
-2. **Naranja** 🟠
-3. **Amarillo** 🟡
-4. **Verde** 🟢
-5. **Azul** 🔵
-6. **Añil (Índigo)** 🌀
-7. **Violeta** 🟣
-
-Es un espectro de colores continuo que surge por la refracción y dispersión física de la luz.`;
-  }
-  
-  if (query.includes('hola') || query.includes('buenos dias') || query.includes('buenas tardes') || query.includes('saludos')) {
-    return `¡Hola! Soy **Gabi AI**, tu meta-IA de Synaptica. ¿En qué te puedo colaborar hoy? Puedes usarme para resolver consultas generales o seleccionar una de mis especialidades en el NeuroHub.`;
-  }
-  
-  if (query.includes('quien eres') || query.includes('que eres') || query.includes('tu nombre')) {
-    return `Soy **Gabi AI**, un agente cognitivo orquestado por Synaptica Labs. Combino múltiples modelos de IA (OpenAI, Claude, Perplexity, DeepSeek) y ejecuto tareas en una computadora virtual (Sandbox) en tiempo real.`;
-  }
-  
-  if (query.includes('synaptica')) {
-    return `**Synaptica** es un laboratorio de Inteligencia Artificial que se especializa en desarrollar agentes autónomos cognitivos y plataformas de computación en la nube para automatizar flujos técnicos complejos.`;
-  }
-  
-  if (query.includes('creador') || query.includes('creo') || query.includes('fundador')) {
-    return `Fui diseñada e implementada por los ingenieros e investigadores de **Synaptica Labs**, bajo la dirección de Rogerio Baia.`;
-  }
-  
-  if (query.includes('úlcera') || query.includes('herpética') || query.includes('corneal')) {
-    return `### Enfoque Terapéutico: Úlcera Corneal Herpética Recurrente
-
-Basado en la directiva del estudio HEDS y directrices oftálmicas:
-
-1. **Fase Aguda:**
-   * **Antiviral Tópico:** Ganciclovir gel oftálmico 0.15% 5 veces al día (menos tóxico que trifluridina).
-   * **Antiviral Oral:** Aciclovir 400 mg 5 veces al día (o Valaciclovir 500 mg c/8h) durante 7-10 días.
-2. **Profilaxis Prolongada:**
-   * **Aciclovir 400 mg c/12h** por 12 meses. Reduce las recurrencias en un **45%**.
-3. **Corticosteroides:**
-   * Contraindicados en úlceras epiteliales activas. Se usan bajo supervisión estricta solo para mitigar cicatrices en queratitis estromal.`;
-  }
-  
-  if (model === 'viajia') {
-    return `### Propuesta de Viaje: ViajIA engine ✈️
-
-Hemos recopilado tarifas hoteleras y opciones de rutas para: *"**${queryText}**"*
-
-1. **Vuelos Directos:**
-   * Económico: $180 USD (Equipaje de mano).
-   * Corporativo: $240 USD (Flexibilidad total).
-2. **Alojamiento Recomendado:**
-   * **Hotel Vista Hermosa (4.8★):** $85 USD/noche con desayuno incluido.
-3. **Recomendaciones:** Agenda con anticipación para asegurar tarifas promocionales.`;
-  }
-  
-  if (model === 'nutriia') {
-    return `### Plan de Bienestar y Nutrición 🥗
-
-Comparando guías nutricionales y médicas preventivas para: *"**${queryText}**"*
-
-1. **Distribución Calórica:** 45% carbohidratos complejos, 30% proteínas, 25% grasas saludables.
-2. **Alimentos Clave:** Espinacas, almendras, salmón y aguacate. Evitar azúcares refinados.
-3. **Ejercicio:** Cardio moderado de 30 minutos y fuerza 3 veces a la semana.`;
-  }
-  
-  if (model === 'tubeia') {
-    return `### Resultados de Búsqueda: TubeIA 🎬
-
-Canales de video de Synaptica indexados para: *"**${queryText}**"*
-
-1. **[Video 1] Tutorial: Agentes de IA en Producción (12:45)**
-   * *Canal:* Synaptica Labs | *Vistas:* 12.4K | *Valoración:* 4.9★
-2. **[Video 2] Computadoras del Futuro: Virtual Sandbox (08:20)**
-   * *Canal:* TechVlog | *Vistas:* 8.1K | *Valoración:* 4.7★
-3. **[Video 3] Curso: Web Audio API y Sintetizadores (15:10)**
-   * *Canal:* AudioCode | *Vistas:* 3.2K | *Valoración:* 4.8★
-
-*Escribe el nombre de un video para reproducirlo virtualmente en el Sandbox.*`;
-  }
-  
-  return `### Síntesis de OmnIA: Respuesta Consolidada
-
-Para tu consulta: *"**${queryText}**"*
-
-Tras analizar y fusionar los datos de OpenAI, Anthropic Claude y Perplexity:
-
-1. **Definición Principal:** Este tema hace referencia a un concepto general de conocimiento. De forma consolidada, los modelos confirman que la respuesta principal se centra en establecer el contexto lógico y los fundamentos básicos del mismo.
-2. **Enfoque Práctico:** Se recomienda abordar la consulta organizando la información en pasos sencillos, evitando términos redundantes y enfocándose en soluciones directas.
-3. **Recomendación de Synaptica:** Si deseas una respuesta en tiempo real detallada o código ejecutable en el sandbox, recuerda que puedes ingresar tu API Key en la configuración para realizar consultas en vivo a través de la red oficial.`;
-};
 
 export default function ChatArea({
   nostalgicMode,
@@ -134,9 +39,87 @@ export default function ChatArea({
   addMessageToChat,
   selectedModel,
   setSelectedModel,
-  addFeedbackToHistory
+  addFeedbackToHistory,
+  token,
+  onOpenSettings,
+  onOpenMenu
 }) {
   const [inputText, setInputText] = useState('');
+
+  // Verified Memory state & helpers
+  const [pendingMemories, setPendingMemories] = useState([]);
+
+  const fetchPendingMemories = async () => {
+    if (!token) return;
+    try {
+      const res = await fetch('/api/memories', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const pending = (data || []).filter(m => m.status === 'Pendiente de Confirmación' && !m.blocked);
+        setPendingMemories(pending);
+      }
+    } catch (err) {
+      console.error("Error fetching pending memories in ChatArea:", err);
+    }
+  };
+
+  const handleConfirmAllPending = async () => {
+    try {
+      await Promise.all(pendingMemories.map(mem => 
+        fetch(`/api/memories/${mem.id}`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: 'Confirmada' })
+        })
+      ));
+      setPendingMemories([]);
+      alert("¡Todas las preferencias detectadas han sido guardadas con éxito!");
+    } catch (err) {
+      console.error("Error confirming all pending memories:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchPendingMemories();
+    }
+  }, [token]);
+  
+  // Hybrid Routing addition
+  const [selectedMode, setSelectedMode] = useState('automatic');
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [localModelsList, setLocalModelsList] = useState([]);
+  const [availableLocalProvidersList, setAvailableLocalProvidersList] = useState([]);
+
+  useEffect(() => {
+    async function detectProviders() {
+      try {
+        const res = await fetch('/api/providers/detect', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setIsOfflineMode(data.offlineMode);
+          setLocalModelsList(data.localModels || []);
+          setAvailableLocalProvidersList(data.availableLocalProviders || []);
+        }
+      } catch (err) {
+        console.error("Error detecting local providers:", err);
+      }
+    }
+    if (token) {
+      detectProviders();
+      const timer = setInterval(detectProviders, 10000);
+      return () => clearInterval(timer);
+    }
+  }, [token]);
   const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [thinkingStep, setThinkingStep] = useState(0);
@@ -144,7 +127,11 @@ export default function ChatArea({
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Sandbox (Computadora virtual de Gabi) state
+  // File Upload State
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Sandbox state
   const [sandboxState, setSandboxState] = useState(() => {
     return localStorage.getItem('synaptica_sandbox_state') || 'minimized';
   });
@@ -195,6 +182,42 @@ export default function ChatArea({
     }
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/documents/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al subir el archivo.');
+      }
+      
+      alert(data.message || 'Documento indexado con éxito.');
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.8 }
+      });
+    } catch (err) {
+      alert(`Error al subir documento: ${err.message}`);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -215,13 +238,13 @@ export default function ChatArea({
   // Tasks Checklist for Meta-IA Reasoning (Estilo DeepSeek + Manus)
   const reasoningTasks = [
     "Interpretando consulta e identificando dominios temáticos...",
+    "Buscando concordancia semántica con la memoria a largo plazo...",
+    "Extrayendo y vectorizando fragmentos del archivo de RAG...",
     "Estableciendo enlaces paralelos con IAs asociadas (Omni-Routing)...",
-    "Consultando a OpenAI (GPT-4) - Solicitando estructuración clínica y dosificación...",
-    "Consultando a Anthropic (Claude 3) - Generando tono comprensivo y educación del paciente...",
-    "Consultando a Perplexity - Buscando papers científicos recientes y citas en JAMA/HEDS...",
-    "Analizando respuestas parciales, detectando coincidencias y contradicciones científicas...",
+    "Consultando a múltiples modelos en producción en paralelo...",
+    "Analizando respuestas parciales, detectando coincidencias y contradicciones...",
     "Ejecutando motor de Inteligencia Real para ajustar pesos sinápticos...",
-    "Compilando y sintetizando respuesta definitiva en formato premium..."
+    "Consolidando y sintetizando respuesta definitiva en formato premium..."
   ];
 
   // Sincronizar consulta cuando cambia el chat activo
@@ -248,11 +271,11 @@ export default function ChatArea({
     }
   }, [activeChat?.id]);
 
-  // Efecto del temporizador de razonamiento para la simulación
+  // Razonador interactivo
   useEffect(() => {
     let timer;
     if (isThinking && isPlaying) {
-      const durationPerStep = nostalgicMode ? 950 : 500;
+      const durationPerStep = nostalgicMode ? 800 : 400;
       timer = setTimeout(() => {
         if (thinkingStep < reasoningTasks.length - 1) {
           setThinkingStep(prev => prev + 1);
@@ -266,7 +289,7 @@ export default function ChatArea({
     return () => clearTimeout(timer);
   }, [isThinking, isPlaying, thinkingStep, nostalgicMode]);
 
-  // Generar logs en base al paso actual, la consulta y el modelo
+  // Generar logs dinámicos para el sandbox terminal
   const getLogsForStep = (step, queryText, model) => {
     if (!queryText) return ['[system] Computadora lista. Esperando consulta...'];
     const querySnippet = queryText.substring(0, 30) + (queryText.length > 30 ? '...' : '');
@@ -278,37 +301,32 @@ export default function ChatArea({
         "ubuntu@gabi-sandbox:~$ mkdir -p ./search_workspace && cd ./search_workspace"
       ],
       [
+        "ubuntu@gabi-sandbox:~/search_workspace$ # Buscando en memoria a largo plazo...",
+        "ubuntu@gabi-sandbox:~/search_workspace$ python3 fetch_memories.py --user=active"
+      ],
+      [
+        "ubuntu@gabi-sandbox:~/search_workspace$ # Ejecutando RAG vector search...",
+        "ubuntu@gabi-sandbox:~/search_workspace$ python3 search_kb.py --query=\"" + querySnippet + "\""
+      ],
+      [
         `ubuntu@gabi-sandbox:~/search_workspace$ echo "Query: ${querySnippet}" > query.txt`,
         "ubuntu@gabi-sandbox:~/search_workspace$ python3 -m venv env && source env/bin/activate"
       ],
       [
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Consultando OpenAI GPT-4 para estructura clínica...",
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 -c \"import openai; print('OpenAI API connection OK')\"",
-        "OpenAI: Obteniendo directrices para la consulta..."
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Ejecutando consultas paralelas a los modelos...",
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ curl -s -X POST \"https://api.openai.com/v1/chat/completions\" ...",
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ curl -s -X POST \"https://api.anthropic.com/v1/messages\" ..."
       ],
       [
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Consultando Anthropic Claude para tono y soporte...",
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ curl -s -X POST \"https://api.anthropic.com/v1/messages\" -d \"model=claude-3\" ...",
-        "Claude: Generando respuestas estructuradas y guías de interacción."
-      ],
-      [
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ # Buscando papers en Perplexity para citas académicas...",
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ curl -s -X POST \"https://api.perplexity.ai/chat/completions\" ...",
-        "Perplexity: Referencias bibliográficas cargadas con éxito."
-      ],
-      [
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 analyze_contradictions.py --inputs=openai,claude,perplexity",
-        "Analizador: Buscando contradicciones lógicas en las respuestas de los modelos...",
-        "Analizador: Sin discrepancias críticas. Datos consolidados."
+        "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 analyze_contradictions.py",
+        "Analizador: Buscando contradicciones lógicas en las respuestas..."
       ],
       [
         "(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 adjust_synapses.py --category=" + category,
-        "[Inteligencia Real] Calibrando pesos neuronales para temática: " + category,
         "[Inteligencia Real] Ajustando peso de modelos en base a feedback histórico..."
       ],
       [
-        `(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 merge.py --category=${category} --output=synthesis.md`,
-        "(env) ubuntu@gabi-sandbox:~/search_workspace$ cat ./synthesis.md",
+        `(env) ubuntu@gabi-sandbox:~/search_workspace$ python3 merge.py --output=synthesis.md`,
         "[system] Tareas finalizadas con éxito. Respuesta definitiva enviada al chat."
       ]
     ];
@@ -322,7 +340,6 @@ export default function ChatArea({
     return logs;
   };
 
-  // Actualizar logs cuando cambia el paso o la consulta (con ejecución de comando real en backend)
   useEffect(() => {
     if (!currentQueryText) {
       setSandboxLogs(['[system] Computadora lista. Esperando consulta...']);
@@ -331,12 +348,9 @@ export default function ChatArea({
 
     async function runRealSandboxCommand() {
       const stepLogs = getLogsForStep(thinkingStep, currentQueryText, selectedModel);
-      
-      // Intentamos extraer el comando del paso actual (líneas que inician con ubuntu@gabi-sandbox o similar)
       const commandLine = stepLogs.find(log => log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:'));
       
       if (commandLine) {
-        // Limpiamos el host prompt para obtener el comando limpio
         const cleanCommand = commandLine
           .replace(/ubuntu@gabi-sandbox:~\$ /g, '')
           .replace(/ubuntu@gabi-sandbox:~\/search_workspace\$ /g, '')
@@ -347,13 +361,15 @@ export default function ChatArea({
           try {
             const res = await fetch('/api/sandbox/run', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
               body: JSON.stringify({ command: cleanCommand })
             });
             if (res.ok) {
               const data = await res.json();
               if (data.logs && data.logs.length > 0) {
-                // Formateamos las salidas del sandbox real y las agregamos
                 const realOutputs = data.logs.map(log => `[sandbox-stdout] ${log}`);
                 setSandboxLogs([
                   ...stepLogs,
@@ -364,12 +380,10 @@ export default function ChatArea({
               }
             }
           } catch (err) {
-            console.warn("Error en la ejecución real del sandbox, usando simulación local:", err);
+            // fallback quietly
           }
         }
       }
-      
-      // Fallback a los logs simulados estáticos si no hay comando ejecutable o falla el backend
       setSandboxLogs(stepLogs);
     }
 
@@ -381,12 +395,9 @@ export default function ChatArea({
     if (!inputText.trim()) return;
 
     if (tokenBalance < 5) {
-      alert("Necesitas al menos 5 NeuroTokens para realizar una consulta multimodelo. Ve al Mercado de Tokens para ganar o comprar más.");
+      alert("Necesitas al menos 5 NeuroTokens para realizar una consulta. Ve al Mercado de Tokens para ganar o comprar más.");
       return;
     }
-
-    // Deduct tokens
-    setTokenBalance(prev => Math.max(0, prev - 5));
 
     const userMsg = inputText.trim();
     setInputText('');
@@ -398,14 +409,12 @@ export default function ChatArea({
       text: userMsg
     });
 
-    // Iniciar simulación reactiva controlada por useEffect
     setCurrentQueryText(userMsg);
     setThinkingStep(0);
     setIsThinking(true);
     setIsPlaying(true);
     setShowThinkingDetails(true);
 
-    // Ajustar vista de la computadora a minimizada si estaba cerrada (mantiene su estado si ya estaba abierta o minimizada)
     if (sandboxState === 'hidden') {
       setSandboxState('minimized');
     }
@@ -417,94 +426,117 @@ export default function ChatArea({
 
   const triggerResponseGeneration = async () => {
     const userMsg = currentQueryText || "Consulta";
-    let aiResponse = "";
     
-    // Consultar al backend para llamada real a la API si existen llaves configuradas
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           prompt: userMsg,
-          model: selectedModel
+          model: selectedModel,
+          mode: selectedMode
         })
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.response) {
-          aiResponse = data.response;
-        }
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Error de conexión con el backend.');
       }
+
+      if (data.tokenBalance !== undefined) {
+        setTokenBalance(data.tokenBalance);
+      }
+
+      // Add actual consolidated response to chat
+      addMessageToChat({
+        id: Date.now() + 1,
+        sender: 'omnia',
+        text: data.response,
+        model: selectedModel,
+        voted: null,
+        modelsParticipated: data.modelsParticipated || [],
+        sources: data.sources || [],
+        thoughts: reasoningTasks.map((t) => `[OK] ${t}`)
+      });
+
+      // Refetch pending memories in 3 seconds to catch async background extraction output
+      setTimeout(fetchPendingMemories, 3000);
+      
     } catch (err) {
-      console.warn("Error consultando API real en backend, usando simulación local:", err);
-    }
-
-    if (!aiResponse) {
-      aiResponse = generateSimpleMockResponse(userMsg, selectedModel);
-    }
-
-    // Add response to chat state
-    addMessageToChat({
-      id: Date.now() + 1,
-      sender: 'omnia',
-      text: aiResponse,
-      model: selectedModel,
-      wasVoted: false,
-      thoughts: reasoningTasks.map((t, i) => `[OK] ${t}`)
-    });
-
-    if (nostalgicMode) {
-      stopDialUpSound();
+      alert(`Error: ${err.message}`);
+      // Add error response
+      addMessageToChat({
+        id: Date.now() + 1,
+        sender: 'omnia',
+        text: `### Error en la consulta\n\nNo se pudo obtener una respuesta del servidor de Gabi AI. Detalle: ${err.message}`,
+        model: selectedModel,
+        voted: null,
+        thoughts: ['[ERROR] Falló la comunicación con los servidores']
+      });
+    } finally {
+      if (nostalgicMode) {
+        stopDialUpSound();
+      }
     }
   };
 
-  const handleVote = (msgId, voteType) => {
-    // Award +5 NTK on positive feedback, simulate learning
-    if (voteType === 'up') {
-      setTokenBalance(prev => prev + 5);
-      confetti({
-        particleCount: 80,
-        spread: 50,
-        colors: ['#10B981', '#39ff14'],
-        origin: { y: 0.8 }
-      });
-      alert("¡Gracias por tu feedback! Tu voto ayuda a calibrar los pesos sinápticos de la Inteligencia Real. Se te han acreditado +5 NeuroTokens.");
-    }
-    
-    // Register item in synaptic map history
-    addFeedbackToHistory({
-      query: activeChat.messages.find(m => m.sender === 'user')?.text || 'Consulta',
-      category: selectedModel === 'omnia' ? 'general' : selectedModel,
-      bestModel: selectedModel === 'omnia' ? 'claude' : (selectedModel === 'clinica' ? 'perplexity' : 'deepseek'),
-      vote: voteType
-    });
-
-    // Mark message as voted in chat
+  const handleVote = async (msgId, voteType) => {
+    // Marcamos localmente
     addMessageToChat({
       id: msgId,
       sender: 'omnia_vote_update',
       vote: voteType
     });
+
+    if (voteType === 'up') {
+      setTokenBalance(prev => prev + 5);
+      confetti({
+        particleCount: 60,
+        spread: 40,
+        colors: ['#10B981', '#39ff14'],
+        origin: { y: 0.8 }
+      });
+    }
+
+    // Registrar en servidor
+    try {
+      const msg = activeChat.messages.find(m => m.id === msgId);
+      const userMsg = activeChat.messages.find(m => m.sender === 'user')?.text || 'Consulta';
+      
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          queryText: userMsg,
+          category: selectedModel,
+          bestModel: msg?.modelsParticipated?.[0] || 'openai',
+          vote: voteType
+        })
+      });
+    } catch (e) {
+      console.warn("Feedback sync failed:", e);
+    }
   };
 
   const handlePlayPause = () => {
     if (isThinking) {
       setIsPlaying(prev => !prev);
       if (nostalgicMode) {
-        if (!isPlaying) {
-          playDialUpSound();
-        } else {
-          stopDialUpSound();
-        }
+        if (!isPlaying) playDialUpSound();
+        else stopDialUpSound();
       }
     } else {
-      // Re-run simulation
       setIsThinking(true);
       setIsPlaying(true);
       setThinkingStep(0);
-      if (nostalgicMode) {
-        playDialUpSound();
-      }
+      if (nostalgicMode) playDialUpSound();
     }
   };
 
@@ -665,9 +697,9 @@ export default function ChatArea({
         <div className="flex-1 overflow-y-auto p-4 bg-black font-mono text-[11px] leading-relaxed space-y-2">
           {sandboxLogs.map((log, idx) => {
             const isSystem = log.startsWith('[system]');
-            const isUserCommand = log.includes('ubuntu@gabi-sandbox:~$') || log.includes('ubuntu@gabi-sandbox:~/search_workspace$') || log.includes('(env) ubuntu@gabi-sandbox:');
+            const isUserCommand = log.includes('ubuntu@gabi-sandbox:') || log.includes('(env) ubuntu@gabi-sandbox:');
             
-            let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-300';
+            let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
             if (isSystem) {
               logColor = 'text-emerald-500 font-bold';
             } else if (isUserCommand) {
@@ -802,6 +834,15 @@ export default function ChatArea({
           nostalgicMode ? 'border-b border-[#39ff14] bg-black' : 'bg-slate-900/20'
         }`}>
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onOpenMenu}
+              className={`md:hidden p-1.5 rounded-lg border ${
+                nostalgicMode ? 'border-[#39ff14] text-[#39ff14]' : 'border-slate-800 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Menu size={16} />
+            </button>
             <div className={`p-2 rounded-xl border ${
               nostalgicMode ? 'border-[#39ff14]' : 'bg-slate-900 border-slate-800 text-emerald-400'
             }`}>
@@ -832,14 +873,62 @@ export default function ChatArea({
               <span className="hidden sm:inline">Computadora</span>
             </button>
 
-            <span className={`text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 ${
-              nostalgicMode ? 'border border-[#39ff14] text-[#39ff14]' : 'bg-emerald-950 text-emerald-400 border border-emerald-900/30'
-            }`}>
-              <Activity size={10} className="animate-ping" />
-              ONLINE
-            </span>
+            {isOfflineMode ? (
+              <span className={`text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 ${
+                nostalgicMode ? 'border border-red-500 text-red-500' : 'bg-red-950 text-red-400 border border-red-900/30'
+              }`}>
+                <Activity size={10} className="animate-pulse" />
+                OFFLINE
+              </span>
+            ) : (
+              <span className={`text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 ${
+                nostalgicMode ? 'border border-[#39ff14] text-[#39ff14]' : 'bg-emerald-950 text-emerald-400 border border-emerald-900/30'
+              }`}>
+                <Activity size={10} className="animate-ping" />
+                ONLINE
+              </span>
+            )}
           </div>
         </div>
+
+        {isOfflineMode && (
+          <div className="bg-red-950/40 border-b border-red-900/30 py-2 px-6 flex items-center justify-between text-xs text-red-400 font-mono">
+            <span className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+              <strong>Modo Offline Activado:</strong> Ejecución restringida a modelos de IA locales (Ollama/vLLM).
+            </span>
+            <span className="text-[10px] opacity-75">Sin consumo de API externa</span>
+          </div>
+        )}
+
+        {pendingMemories.length > 0 && (
+          <div className={`py-2.5 px-6 border-b flex items-center justify-between gap-4 text-xs ${
+            nostalgicMode 
+              ? 'bg-black border-[#39ff14]/30 text-[#39ff14] font-mono' 
+              : 'bg-indigo-950/40 border-indigo-900/30 text-indigo-300'
+          }`}>
+            <span className="flex items-center gap-2">
+              <BrainCircuit className="text-indigo-400 animate-pulse" size={14} />
+              <span>
+                Gabi detectó <strong>{pendingMemories.length}</strong> posible{pendingMemories.length > 1 ? 's' : ''} preferencia{pendingMemories.length > 1 ? 's' : ''}. ¿Deseas guardarla{pendingMemories.length > 1 ? 's' : ''}?
+              </span>
+            </span>
+            <div className="flex gap-2 font-sans select-none shrink-0">
+              <button 
+                onClick={handleConfirmAllPending}
+                className="px-2.5 py-1 bg-indigo-650 hover:bg-indigo-600 text-white rounded font-bold text-[10px] transition-colors cursor-pointer"
+              >
+                Guardar
+              </button>
+              <button 
+                onClick={() => onOpenSettings?.('data')}
+                className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-350 rounded font-semibold text-[10px] transition-colors cursor-pointer"
+              >
+                Revisar
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Messages area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -855,24 +944,8 @@ export default function ChatArea({
                   Pregunta a Gabi AI
                 </h3>
                 <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                  Escribe tu consulta y observa el proceso de razonamiento en tiempo real. Gabi AI consultará a 5 IAs distintas para darte la mejor síntesis filtrada.
+                  Escribe tu consulta y observa el proceso de razonamiento en la computadora. Gabi AI consultará de forma paralela y silenciosa a los mejores modelos y sintetizará la respuesta definitiva.
                 </p>
-              </div>
-              {/* Try simulated medical query */}
-              <div className="flex gap-2 flex-wrap justify-center pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setInputText('¿Cuál es el mejor enfoque terapéutico para una úlcera corneal herpética recurrente?');
-                  }}
-                  className={`text-[11px] px-3 py-1.5 rounded-lg border transition-all ${
-                    nostalgicMode
-                      ? 'border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14]/10 font-mono'
-                      : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
-                  }`}
-                >
-                  Simular Caso Clínico (Úlcera Corneal) 🩺
-                </button>
               </div>
             </div>
           ) : (
@@ -918,6 +991,43 @@ export default function ChatArea({
                         return <p key={idx} className="text-xs text-slate-300 font-sans leading-relaxed">{line}</p>;
                       })}
                     </div>
+
+                    {/* Model Participation Badges */}
+                    {msg.sender === 'omnia' && msg.modelsParticipated && msg.modelsParticipated.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-4 pt-2 border-t border-slate-900">
+                        <span className="text-[10px] text-slate-500 font-mono flex items-center">Modelos:</span>
+                        {msg.modelsParticipated.map((m, idx) => (
+                          <span key={idx} className="text-[9.5px] px-2 py-0.5 rounded-full bg-slate-950 border border-slate-900 text-sky-400 font-mono">
+                            {m}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Document and Web Search Citations */}
+                    {msg.sender === 'omnia' && msg.sources && msg.sources.length > 0 && (
+                      <div className="space-y-1.5 mt-3 p-3 rounded-xl bg-slate-950/40 border border-slate-900">
+                        <div className="text-[9.5px] text-slate-500 font-bold uppercase tracking-wider">Fuentes de Información:</div>
+                        <div className="flex flex-col gap-1 text-[10.5px]">
+                          {msg.sources.map((src, idx) => {
+                            const isWeb = src.startsWith('http://') || src.startsWith('https://');
+                            return (
+                              <div key={idx} className="flex items-center gap-1.5 text-slate-400">
+                                <span className="text-emerald-400 font-mono">•</span>
+                                {isWeb ? (
+                                  <a href={src} target="_blank" rel="noopener noreferrer" className="hover:underline text-indigo-400 flex items-center gap-1 font-mono truncate max-w-full">
+                                    <span className="truncate">{src}</span>
+                                    <ExternalLink size={10} className="flex-shrink-0" />
+                                  </a>
+                                ) : (
+                                  <span className="font-semibold text-emerald-300 font-mono">[Archivo] {src}</span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Rating & Action buttons for AI messages */}
@@ -961,7 +1071,7 @@ export default function ChatArea({
           {isThinking && (sandboxState === 'hidden' || sandboxState === 'minimized') && (
             <div className="flex gap-4 max-w-3xl">
               <div className={`w-8 h-8 rounded-lg border flex-shrink-0 flex items-center justify-center ${
-                nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-synaptica-green/10 border-synaptica-green/20 text-synaptica-green animate-pulse'
+                nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'bg-emerald-950/20 border-emerald-900/30 text-emerald-400 animate-pulse'
               }`}>
                 <BrainCircuit size={16} />
               </div>
@@ -972,7 +1082,7 @@ export default function ChatArea({
                     : 'bg-slate-900/35 border-slate-850/80 backdrop-blur-md text-slate-300'
                 }`}>
                   <div className="flex items-center gap-2 text-xs font-bold mb-2">
-                    <Loader2 size={12} className="animate-spin text-synaptica-green" />
+                    <Loader2 size={12} className="animate-spin text-emerald-400" />
                     <span>Pensando... ({thinkingStep + 1}/8)</span>
                   </div>
                   <div className="text-xs text-slate-400 truncate">
@@ -986,7 +1096,7 @@ export default function ChatArea({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Minimized Terminal Badge and Input Box stacked in two separate containers */}
+        {/* Input Box */}
         <div className={`px-4 pt-1 pb-0 ${
           nostalgicMode ? 'bg-black' : 'bg-slate-950/20'
         }`}>
@@ -999,32 +1109,22 @@ export default function ChatArea({
                   className={`w-full max-w-3xl mx-auto flex items-center justify-between p-1.5 text-xs font-mono rounded-2xl border transition-all duration-300 ${
                     nostalgicMode
                       ? 'border-[#39ff14] bg-black text-[#39ff14]'
-                      : 'border-slate-800 bg-slate-900/60 text-slate-350'
+                      : 'border-slate-800 bg-slate-900/60 text-slate-355'
                   }`}
                 >
-                  {/* Left/Middle clickable part to open the task list summary */}
                   <button
                     type="button"
                     onClick={() => setSandboxState('reduced')}
                     className="flex-1 flex items-center justify-between pl-2.5 pr-4 py-0.5 focus:outline-none hover:opacity-85 text-left truncate"
                   >
-                    {/* Checkmark status and details */}
                     <div className="flex items-center gap-3 truncate">
                       <div className="flex-shrink-0">
                         {isThinking ? (
-                          <span className={`flex items-center justify-center w-5 h-5 rounded-full animate-pulse ${
-                            nostalgicMode 
-                              ? 'bg-black text-[#39ff14] border border-[#39ff14]' 
-                              : 'bg-synaptica-green/10 text-synaptica-green border border-synaptica-green/20'
-                          }`}>
+                          <span className="flex items-center justify-center w-5 h-5 rounded-full animate-pulse bg-emerald-950/40 text-emerald-400 border border-emerald-900/30">
                             <Loader2 size={10} className="animate-spin" />
                           </span>
                         ) : (
-                          <span className={`flex items-center justify-center w-5 h-5 rounded-full text-center leading-3 font-bold text-[10px] ${
-                            nostalgicMode 
-                              ? 'bg-black text-[#39ff14] border border-[#39ff14]' 
-                              : 'bg-synaptica-green/20 text-synaptica-green border border-synaptica-green/30'
-                          }`}>
+                          <span className="flex items-center justify-center w-5 h-5 rounded-full text-center leading-3 font-bold text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-900/40">
                             ✓
                           </span>
                         )}
@@ -1042,12 +1142,9 @@ export default function ChatArea({
                       </div>
                     </div>
 
-                    {/* Progress ratio and ChevronUp */}
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <span className={`font-bold ${
-                        isThinking 
-                          ? nostalgicMode ? 'animate-pulse text-[#39ff14]' : 'animate-pulse text-synaptica-green' 
-                          : nostalgicMode ? 'text-[#39ff14]' : 'text-synaptica-green'
+                        isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-400'
                       }`}>
                         {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                       </span>
@@ -1055,20 +1152,17 @@ export default function ChatArea({
                     </div>
                   </button>
 
-                  {/* Right clickable part (mini computer screen) to open the full computer sandbox */}
                   <button
                     type="button"
                     onClick={() => setSandboxState('split')}
                     className="w-[106px] h-5 relative flex-shrink-0 focus:outline-none"
                     title="Abrir terminal de comandos"
                   >
-                    {/* Terminal screen thumbnail container - RIGHT ALIGNED & OVERFLOWING */}
                     <div className={`absolute top-1/2 -translate-y-1/2 mt-[-30px] right-[20px] md:right-[-4px] w-[106px] h-[76px] rounded-2xl border overflow-hidden bg-black shadow-2xl transition-all duration-300 hover:scale-105 z-20 ${
                       nostalgicMode 
                         ? 'border-[#39ff14]/70 shadow-[#39ff14]/30' 
                         : 'border-slate-700/80 shadow-slate-950/80'
                     }`}>
-                      {/* Inner Container: Rendered at 212x152px and scaled to 50% to bypass browser minimum font size limitations */}
                       <div className="w-[212px] h-[152px] scale-50 origin-top-left flex flex-col justify-between p-3 select-none">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-1 px-1 opacity-70">
                           <span className="font-bold text-[11px] text-slate-400 font-mono">gabi-sh</span>
@@ -1081,7 +1175,7 @@ export default function ChatArea({
                             
                             let logColor = nostalgicMode ? 'text-[#39ff14]' : 'text-slate-350';
                             if (isSystem) {
-                              logColor = nostalgicMode ? 'text-[#39ff14] font-bold' : 'text-synaptica-green font-bold';
+                              logColor = 'text-emerald-400 font-bold';
                             } else if (isUserCommand) {
                               logColor = 'text-white font-bold';
                             } else if (log.startsWith('OpenAI:') || log.startsWith('Claude:') || log.startsWith('Perplexity:') || log.startsWith('Analizador:')) {
@@ -1114,10 +1208,8 @@ export default function ChatArea({
                       : 'bg-slate-900/65 border-slate-800 text-slate-100 backdrop-blur-md'
                   }`}
                 >
-                  {/* Card Header */}
                   <div className="flex items-center justify-between pb-2 border-b border-slate-850 mb-3">
                     <div className="flex items-center gap-3">
-                      {/* Mini screen button */}
                       <button
                         type="button"
                         onClick={() => setSandboxState('split')}
@@ -1167,14 +1259,11 @@ export default function ChatArea({
                     </div>
                   </div>
 
-                  {/* Card Body - Tasks checklist */}
                   <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                     <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-1">
                       <span>Progreso de la tarea</span>
-                      <span className={`${
-                        isThinking 
-                          ? nostalgicMode ? 'animate-pulse text-[#39ff14]' : 'animate-pulse text-synaptica-green' 
-                          : nostalgicMode ? 'text-[#39ff14]' : 'text-synaptica-green'
+                      <span className={`font-bold ${
+                        isThinking ? 'animate-pulse text-emerald-400' : 'text-emerald-405'
                       }`}>
                         {isThinking ? `${thinkingStep + 1}/8` : '8/8'}
                       </span>
@@ -1189,7 +1278,7 @@ export default function ChatArea({
                             key={idx}
                             className={`flex items-start gap-3 transition-all duration-200 ${
                               isDone 
-                                ? nostalgicMode ? 'text-[#39ff14] font-bold' : 'text-synaptica-green font-bold' 
+                                ? 'text-emerald-450 font-bold' 
                                 : isActive 
                                   ? 'text-slate-100 font-bold' 
                                   : 'text-slate-500'
@@ -1197,14 +1286,10 @@ export default function ChatArea({
                           >
                             <span className="flex-shrink-0 mt-0.5">
                               {isDone ? (
-                                <span className={`inline-block w-4 h-4 rounded-full text-center leading-3 font-bold text-[9px] ${
-                                  nostalgicMode 
-                                    ? 'bg-black text-[#39ff14] border border-[#39ff14]' 
-                                    : 'bg-synaptica-green/20 text-synaptica-green border border-synaptica-green/30'
-                                }`}>✓</span>
+                                <span className="inline-block w-4 h-4 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-900 text-center leading-3 font-bold text-[9px]">✓</span>
                               ) : isActive ? (
                                 isThinking && isPlaying ? (
-                                  <Loader2 size={12} className={`animate-spin ${nostalgicMode ? 'text-[#39ff14]' : 'text-synaptica-green'}`} />
+                                  <Loader2 size={12} className="animate-spin text-emerald-400" />
                                 ) : (
                                   <span className="inline-block w-4 h-4 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-center leading-3 font-bold text-[9px]">▶</span>
                                 )
@@ -1219,12 +1304,9 @@ export default function ChatArea({
                     </div>
                   </div>
 
-                  {/* Card Footer status info */}
                   <div className="mt-3 pt-2 border-t border-slate-850/60 flex items-center justify-between text-[9px] text-slate-500">
                     <span className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full animate-pulse ${
-                        nostalgicMode ? 'bg-[#39ff14]' : 'bg-synaptica-green'
-                      }`} />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
                       {isThinking ? (isPlaying ? 'Ejecutando razonamiento...' : 'Pausado') : 'Finalizado'}
                     </span>
                     <span>Consola Gabi Virtual Sandbox</span>
@@ -1240,15 +1322,13 @@ export default function ChatArea({
                   ? 'border-[#39ff14] bg-black focus-within:ring-2 focus-within:ring-[#39ff14]'
                   : 'border-slate-800 bg-slate-900/60 focus-within:border-slate-700 focus-within:bg-slate-900/90'
               }`}>
-                {/* Main Input Textarea and Actions */}
                 <div className="px-3 pt-2 pb-1.5 flex flex-col gap-1.5">
-                  {/* Top Row: Textarea and Actions */}
                   <div className="flex items-end gap-2">
                     <div className="flex-1">
                       <textarea
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder={selectedModel === 'omnia' ? 'Habla con Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
+                        placeholder={selectedModel === 'omnia' ? 'Haz una pregunta a Gabi AI (IA Multimodelo)...' : `Consulta a ${selectedModel.toUpperCase()}...`}
                         rows={1}
                         className="w-full bg-transparent border-0 outline-none text-sm text-slate-100 placeholder-slate-500 resize-none max-h-40 px-2 py-1"
                         onKeyDown={(e) => {
@@ -1262,13 +1342,37 @@ export default function ChatArea({
                     
                     {/* Input action items */}
                     <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800/50 flex-shrink-0">
+                      {/* Document Ingestion input and button */}
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileUpload}
+                        accept=".pdf,.docx,.txt,.md,.html"
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        disabled={isUploading}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`p-2 rounded-xl transition-all ${
+                          isUploading
+                            ? 'bg-indigo-950 text-slate-100 animate-pulse'
+                            : nostalgicMode
+                              ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
+                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                        }`}
+                        title="Subir archivo a la base de conocimiento RAG (.pdf, .docx, .txt, .md, .html)"
+                      >
+                        {isUploading ? <Loader2 size={16} className="animate-spin text-indigo-400" /> : <Paperclip size={16} />}
+                      </button>
+
                       {/* Voice microphone button */}
                       <button
                         type="button"
                         onClick={toggleListening}
                         className={`p-2 rounded-xl transition-all ${
                           isListening
-                            ? 'bg-rose-500 text-slate-950 animate-pulse'
+                            ? 'bg-rose-550 text-slate-950 animate-pulse'
                             : nostalgicMode
                               ? 'text-[#39ff14] hover:bg-[#39ff14]/15'
                               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -1291,7 +1395,7 @@ export default function ChatArea({
                     </div>
                   </div>
 
-                  {/* Bottom Row: Specialization selection and balance info (No border-t divider) */}
+                  {/* Bottom Row */}
                   <div className="flex items-center justify-between pt-1.5 mt-1 text-xs">
                     <NeuroHubMenu
                       selectedModel={selectedModel}
@@ -1301,21 +1405,40 @@ export default function ChatArea({
                       nostalgicMode={nostalgicMode}
                     />
 
-                    <span className="text-[10px] text-slate-500 font-mono">
-                      Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] text-slate-500 font-mono">Red:</span>
+                        <select
+                          value={selectedMode}
+                          onChange={(e) => setSelectedMode(e.target.value)}
+                          className={`text-[10px] bg-slate-950 border border-slate-850 rounded px-1.5 py-0.5 font-mono text-slate-300 focus:outline-none cursor-pointer ${
+                            nostalgicMode ? 'bg-black border-[#39ff14] text-[#39ff14]' : ''
+                          }`}
+                        >
+                          <option value="automatic">Auto (Consenso)</option>
+                          <option value="economy">Económico (Local)</option>
+                          <option value="premium">Premium (API)</option>
+                          <option value="offline">Offline (Forzar Local)</option>
+                        </select>
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-mono font-medium">
+                        Consumo: <strong>5 NTK</strong> | Saldo: <strong className={nostalgicMode ? 'text-[#39ff14]' : 'text-emerald-400'}>{tokenBalance} NTK</strong>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </form>
           </div>
         </div>
-
-        {/* Replaced absolute floating reduced overlay with inline version above */}
       </div>
 
       {/* Split/Fullscreen Sidebar Panel (Right) */}
-      {(sandboxState === 'split' || sandboxState === 'fullscreen') && renderTerminalSidebar()}
+      {(sandboxState === 'split' || sandboxState === 'fullscreen') && (
+        <div className="absolute md:relative inset-y-0 right-0 z-30 h-full flex">
+          {renderTerminalSidebar()}
+        </div>
+      )}
     </div>
   );
 }

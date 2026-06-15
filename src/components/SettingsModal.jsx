@@ -8,18 +8,24 @@ import {
   Mail, 
   SlidersHorizontal, 
   LayoutGrid, 
-  Monitor, 
-  HelpCircle, 
-  Volume2, 
-  Moon, 
-  Sun, 
-  Laptop, 
-  Bell, 
-  Key, 
   Cpu, 
-  Database, 
   Workflow,
-  Sparkles
+  Sparkles,
+  HelpCircle,
+  Sun,
+  Moon,
+  Laptop,
+  LogOut,
+  CheckCircle,
+  AlertCircle,
+  Trash2,
+  BrainCircuit,
+  Edit2,
+  Lock,
+  Unlock,
+  Download,
+  Check,
+  Calendar
 } from 'lucide-react';
 
 export default function SettingsModal({
@@ -30,51 +36,210 @@ export default function SettingsModal({
   nostalgicMode,
   setNostalgicMode,
   tokenBalance,
-  setTokenBalance
+  setTokenBalance,
+  token,
+  onLogout
 }) {
   if (!isOpen) return null;
 
   // Local state for settings preferences
   const [language, setLanguage] = useState('es');
-  const [theme, setTheme] = useState('dark'); // claro, oscuro, automatico
+  const [theme, setTheme] = useState('dark');
   const [notifications, setNotifications] = useState(true);
   const [productUpdates, setProductUpdates] = useState(true);
   const [emailOnQueue, setEmailOnQueue] = useState(true);
-  const [animationSpeed, setAnimationSpeed] = useState('normal'); // slow, normal, fast
+  const [animationSpeed, setAnimationSpeed] = useState('normal');
   const [cpuCores, setCpuCores] = useState(4);
   const [ramSize, setRamSize] = useState(8);
   const [storageSize, setStorageSize] = useState(50);
-  const [apiKey, setApiKey] = useState('sk-synaptica-••••••••••••••••');
 
-  const [keys, setKeys] = useState({
-    openai: '',
-    anthropic: '',
-    perplexity: '',
-    deepseek: ''
+  const [providerStatus, setProviderStatus] = useState({
+    openai: false,
+    anthropic: false,
+    perplexity: false,
+    deepseek: false,
+    gemini: false,
+    grok: false,
+    mistral: false,
+    qwen: false,
+    llama: false,
+    gemma: false,
+    phi: false,
+    openrouter: false
   });
 
-  // Load keys on mount
+  const [localModelsList, setLocalModelsList] = useState([]);
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [availableLocalProviders, setAvailableLocalProviders] = useState([]);
+
+  // Adaptive Learning System state variables
+  const [memories, setMemories] = useState([]);
+  const [autoLearning, setAutoLearning] = useState(true);
+  const [memoriesLoading, setMemoriesLoading] = useState(false);
+  const [editingMemoryId, setEditingMemoryId] = useState(null);
+  const [editCategory, setEditCategory] = useState('');
+  const [editContent, setEditContent] = useState('');
+
+  // Load provider statuses, local models, global config and memories from backend on open
   useEffect(() => {
-    if (isOpen) {
-      fetch('/api/tokens')
+    if (isOpen && token) {
+      // Fetch status
+      fetch('/api/providers/status', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
         .then(res => res.json())
         .then(data => {
-          if (data.apiKeys) {
-            setKeys(data.apiKeys);
+          if (data.status) {
+            setProviderStatus(data.status);
           }
         })
-        .catch(() => {});
-    }
-  }, [isOpen]);
+        .catch(err => console.error("Error fetching provider statuses:", err));
 
-  const handleSaveKey = (provider, value) => {
-    const updatedKeys = { ...keys, [provider]: value };
-    setKeys(updatedKeys);
-    fetch('/api/tokens', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKeys: { [provider]: value } })
-    }).catch(() => {});
+      // Fetch detected local models
+      fetch('/api/providers/detect', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          setLocalModelsList(data.localModels || []);
+          setIsOfflineMode(data.offlineMode || false);
+          setAvailableLocalProviders(data.availableLocalProviders || []);
+        })
+        .catch(err => console.error("Error fetching local providers:", err));
+
+      // Fetch global config for autoLearning state
+      fetch('/api/admin/health', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.globalConfig) {
+            setAutoLearning(data.globalConfig.autoLearningEnabled !== false);
+          }
+        })
+        .catch(err => console.error("Error fetching global config:", err));
+
+      // Fetch user memories list
+      setMemoriesLoading(true);
+      fetch('/api/memories', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          setMemories(data || []);
+          setMemoriesLoading(false);
+        })
+        .catch(err => {
+          console.error("Error fetching memories:", err);
+          setMemoriesLoading(false);
+        });
+    }
+  }, [isOpen, token]);
+
+  const handleToggleAutoLearning = () => {
+    const nextVal = !autoLearning;
+    setAutoLearning(nextVal);
+    
+    fetch('/api/admin/health', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        const currentConfig = data.globalConfig || { models: {} };
+        const updatedConfig = {
+          ...currentConfig,
+          autoLearningEnabled: nextVal
+        };
+        
+        fetch('/api/admin/config', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedConfig)
+        })
+          .then(res => res.json())
+          .catch(err => console.error("Error saving global config:", err));
+      });
+  };
+
+  const handleDeleteMemory = (id) => {
+    fetch(`/api/memories/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setMemories(prev => prev.filter(m => m.id !== id));
+        }
+      })
+      .catch(err => console.error("Error deleting memory:", err));
+  };
+
+  const handleUpdateMemory = (id, updates) => {
+    fetch(`/api/memories/${id}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updates)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setMemories(prev => prev.map(m => {
+            if (m.id === id) {
+              return { ...m, ...updates };
+            }
+            return m;
+          }));
+        }
+      })
+      .catch(err => console.error("Error updating memory:", err));
+  };
+
+  const handleConfirmMemory = (id) => {
+    handleUpdateMemory(id, { status: 'Confirmada' });
+  };
+
+  const handleConfirmAsTemporal = (id) => {
+    handleUpdateMemory(id, { status: 'Temporal' });
+  };
+
+  const handleToggleBlockMemory = (id, isCurrentlyBlocked) => {
+    handleUpdateMemory(id, { blocked: !isCurrentlyBlocked });
+  };
+
+  const handleStartEdit = (mem) => {
+    setEditingMemoryId(mem.id);
+    setEditCategory(mem.category || 'user_preference');
+    setEditContent(mem.content || '');
+  };
+
+  const handleSaveEdit = (id) => {
+    handleUpdateMemory(id, { category: editCategory, content: editContent });
+    setEditingMemoryId(null);
+  };
+
+  const handleExportMemories = () => {
+    fetch('/api/memories/export', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `gabi_memories_export.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(err => console.error("Error exporting memories:", err));
   };
 
   const categories = [
@@ -92,7 +257,7 @@ export default function SettingsModal({
       items: [
         { id: 'computer', label: 'Servidor y Hardware', icon: Cpu },
         { id: 'plugins', label: 'Habilidades de IA', icon: LayoutGrid },
-        { id: 'integraciones', label: 'Conectores de API', icon: Workflow },
+        { id: 'integraciones', label: 'Proveedores de IA', icon: Workflow },
         { id: 'data', label: 'Memoria y Privacidad', icon: FolderLock },
         { id: 'correo', label: 'Logística de Envío', icon: Mail },
       ]
@@ -105,7 +270,6 @@ export default function SettingsModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-      {/* Modal Card */}
       <div className={`w-full max-w-4xl h-[600px] rounded-3xl border overflow-hidden flex shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 ${
         nostalgicMode 
           ? 'bg-black border-[#39ff14] text-[#39ff14] font-mono' 
@@ -129,12 +293,12 @@ export default function SettingsModal({
           {/* Top Profile Header */}
           <div className="p-4 border-b border-slate-800/50">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                R
+              <div className="w-9 h-9 rounded-full bg-indigo-650 flex items-center justify-center text-white font-bold text-sm">
+                U
               </div>
               <div className="flex flex-col overflow-hidden">
-                <span className="text-xs font-bold truncate">Rogerio Baia</span>
-                <span className="text-[10px] text-slate-500 font-medium">Personal</span>
+                <span className="text-xs font-bold truncate">Usuario Activo</span>
+                <span className="text-[10px] text-slate-500 font-medium">Synaptica Gabi AI</span>
               </div>
             </div>
           </div>
@@ -250,7 +414,6 @@ export default function SettingsModal({
               <div className="space-y-3 pt-2">
                 <label className="text-xs font-semibold text-slate-350 block">Alertas de Actividad</label>
                 
-                {/* Toggle 1 */}
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
                     <span className="text-xs font-semibold">Notificaciones del Sistema</span>
@@ -268,7 +431,6 @@ export default function SettingsModal({
                   </button>
                 </div>
 
-                {/* Toggle 2 */}
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
                     <span className="text-xs font-semibold">Novedades de Gabi AI</span>
@@ -286,7 +448,6 @@ export default function SettingsModal({
                   </button>
                 </div>
 
-                {/* Toggle 3 */}
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
                     <span className="text-xs font-semibold">Avisos de Tareas en Cola por E-mail</span>
@@ -318,31 +479,27 @@ export default function SettingsModal({
               <div className="p-4 rounded-2xl border border-slate-800/80 bg-slate-900/40 space-y-4">
                 <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
                   <span className="text-xs text-slate-400">Identificador</span>
-                  <span className="text-xs font-semibold">Rogerio Baia</span>
+                  <span className="text-xs font-semibold">Usuario de Synaptica</span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
-                  <span className="text-xs text-slate-400">Correo Registrado</span>
-                  <span className="text-xs font-semibold">rogerio@synaptica.ece</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Categoría de Cuenta</span>
-                  <span className="text-xs font-bold text-sky-400">Synaptica Enterprise</span>
+                  <span className="text-xs text-slate-400">Estado de Cuenta</span>
+                  <span className="text-xs font-bold text-sky-400">Synaptica Real Platform</span>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-350 block">Llave de API Synaptica</label>
-                <div className="flex gap-2">
-                  <input
-                    type="password"
-                    readOnly
-                    value={apiKey}
-                    className="flex-1 text-xs bg-slate-900 border border-slate-800 rounded-lg p-2 outline-none text-slate-400"
-                  />
-                  <button className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg">
-                    Copiar
-                  </button>
-                </div>
+              {/* Log Out Button */}
+              <div className="pt-4 border-t border-slate-900/60 flex flex-col gap-3">
+                <span className="text-xs font-semibold text-slate-350 block">Acciones de Cuenta</span>
+                <button 
+                  onClick={() => {
+                    onClose();
+                    onLogout();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-red-950/40 hover:bg-red-950/60 border border-red-900/40 text-red-300 text-xs font-bold rounded-xl transition-colors"
+                >
+                  <LogOut size={14} />
+                  <span>Cerrar Sesión</span>
+                </button>
               </div>
             </div>
           )}
@@ -541,7 +698,7 @@ export default function SettingsModal({
 
                 <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/40 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Database size={16} className="text-indigo-400" />
+                    <Mail size={16} className="text-indigo-400" />
                     <div className="flex flex-col">
                       <span className="text-xs font-semibold">Integración de Envíos</span>
                       <span className="text-[10px] text-slate-500">Módulo de conexión para simulación de entregas y devoluciones.</span>
@@ -553,102 +710,370 @@ export default function SettingsModal({
             </div>
           )}
 
-          {/* Tab 8: INTEGRACIONES (Conectores de API) */}
+          {/* Tab 8: INTEGRACIONES / PROVEEDORES (AI Providers Status) */}
           {activeTab === 'integraciones' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold font-display">Conectores de API</h2>
-                <p className="text-xs text-slate-500 mt-1">Configura tus credenciales reales para realizar consultas en vivo a través del backend.</p>
+                <h2 className="text-xl font-bold font-display">Proveedores de IA</h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Estado en tiempo real de los proveedores de inteligencia artificial configurados de forma segura en el servidor privado de Gabi AI.
+                </p>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-350 block">OpenAI API Key (GPT-4)</label>
-                  <input
-                    type="password"
-                    placeholder="sk-or-..."
-                    value={keys.openai || ''}
-                    onChange={(e) => handleSaveKey('openai', e.target.value)}
-                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
-                  />
+              {/* Local Ollama Detection Card */}
+              <div className={`p-4 rounded-2xl border flex flex-col gap-3 ${
+                nostalgicMode ? 'border-[#39ff14] bg-black text-[#39ff14]' : 'border-slate-800 bg-slate-900/40'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className={`w-2.5 h-2.5 rounded-full ${localModelsList.length > 0 ? 'bg-emerald-450 animate-pulse' : 'bg-red-400'}`} />
+                    <span className="text-xs font-bold font-mono">Servidor Ollama Local:</span>
+                  </div>
+                  <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold font-mono border ${
+                    localModelsList.length > 0 
+                      ? nostalgicMode ? 'border-[#39ff14]' : 'bg-emerald-950 text-emerald-450 border-emerald-900/30' 
+                      : nostalgicMode ? 'border-red-500 text-red-500' : 'bg-red-950 text-red-400 border-red-900/30'
+                  }`}>
+                    {localModelsList.length > 0 ? 'CONECTADO (http://localhost:11434)' : 'DESCONECTADO'}
+                  </span>
                 </div>
+                <div className="text-[11px] font-mono">
+                  {localModelsList.length > 0 ? (
+                    <div>
+                      <div className="font-bold mb-1.5 text-slate-300">Modelos Locales Instalados:</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {localModelsList.map((model, idx) => (
+                          <span key={idx} className="bg-slate-950 text-indigo-400 px-2 py-0.5 rounded border border-slate-850 text-[10px]">
+                            {model}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="text-slate-500">Inicia Ollama en tu sistema local para que Gabi AI pueda conectarse automáticamente.</span>
+                  )}
+                </div>
+              </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-350 block">Anthropic Claude API Key</label>
-                  <input
-                    type="password"
-                    placeholder="sk-ant-..."
-                    value={keys.anthropic || ''}
-                    onChange={(e) => handleSaveKey('anthropic', e.target.value)}
-                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
-                  />
-                </div>
+              <div className="space-y-2.5">
+                {Object.entries(providerStatus).map(([providerName, isActive]) => (
+                  <div 
+                    key={providerName}
+                    className={`p-3.5 rounded-2xl border flex items-center justify-between transition-colors ${
+                      nostalgicMode 
+                        ? 'border-[#39ff14] bg-black text-[#39ff14]' 
+                        : 'bg-slate-900/45 border-slate-800/80 hover:border-slate-800'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-xl border ${
+                        nostalgicMode 
+                          ? 'border-[#39ff14]' 
+                          : isActive 
+                            ? 'bg-emerald-950/20 border-emerald-900/30 text-emerald-400' 
+                            : 'bg-slate-950 border-slate-850 text-slate-500'
+                      }`}>
+                        <Workflow size={14} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold uppercase tracking-wide">
+                          {providerName === 'openai' ? 'OpenAI (GPT-4o)' :
+                           providerName === 'anthropic' ? 'Anthropic (Claude 3.5)' :
+                           providerName === 'perplexity' ? 'Perplexity Search' :
+                           providerName === 'deepseek' ? 'DeepSeek (Local/API)' :
+                           providerName === 'gemini' ? 'Google Gemini 1.5' :
+                           providerName === 'grok' ? 'xAI Grok 2' :
+                           providerName === 'mistral' ? 'Mistral AI (Local/API)' :
+                           providerName === 'qwen' ? 'Qwen (Local/API)' :
+                           providerName === 'llama' ? 'Llama (Local/API)' :
+                           providerName === 'gemma' ? 'Gemma (Local/API)' :
+                           providerName === 'phi' ? 'Phi (Local/API)' :
+                           providerName === 'openrouter' ? 'OpenRouter Gateway' :
+                           'Custom Model'}
+                        </span>
+                        <span className="text-[10px] text-slate-500 mt-0.5 font-medium">
+                          {['llama', 'mistral', 'qwen', 'deepseek', 'gemma', 'phi'].includes(providerName)
+                            ? 'Modelo local híbrido con fallback a API oficial'
+                            : providerName === 'openrouter'
+                              ? 'Pasarela de contingencia global multimodelo'
+                              : 'Conector HTTP nativo de Synaptica'}
+                        </span>
+                      </div>
+                    </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-350 block">Perplexity API Key</label>
-                  <input
-                    type="password"
-                    placeholder="pplx-..."
-                    value={keys.perplexity || ''}
-                    onChange={(e) => handleSaveKey('perplexity', e.target.value)}
-                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-350 block">DeepSeek API Key</label>
-                  <input
-                    type="password"
-                    placeholder="sk-..."
-                    value={keys.deepseek || ''}
-                    onChange={(e) => handleSaveKey('deepseek', e.target.value)}
-                    className="w-full text-xs bg-slate-900 border border-slate-800 rounded-lg p-2.5 outline-none text-slate-200 focus:border-slate-700"
-                  />
-                </div>
+                    <div>
+                      {isActive ? (
+                        <span className={`inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${
+                          nostalgicMode 
+                            ? 'border-[#39ff14]' 
+                            : 'bg-emerald-950 text-emerald-400 border-emerald-900/30'
+                        }`}>
+                          <CheckCircle size={10} />
+                          <span>Activo</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-950 text-slate-500 border border-slate-850">
+                          <AlertCircle size={10} />
+                          <span>Inactivo</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
           {/* Tab 9: DATA (Memoria y Privacidad) */}
           {activeTab === 'data' && (
-            <div className="space-y-6">
+            <div className="space-y-6 flex flex-col h-full">
               <div>
                 <h2 className="text-xl font-bold font-display">Memoria y Privacidad</h2>
-                <p className="text-xs text-slate-500 mt-1">Controla las políticas de retención de datos, historial y vaciado de caché local de tus conversaciones.</p>
+                <p className="text-xs text-slate-500 mt-1">Controla las políticas de retención de datos, recuerdos autónomos y configuración de aprendizaje.</p>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between py-1">
                   <div className="flex flex-col">
-                    <span className="text-xs font-semibold">Historial del Chat & Entrenamiento</span>
-                    <span className="text-[10px] text-slate-500">Permitir guardar nuevos chats en este dispositivo para mejorar las respuestas de Gabi.</span>
+                    <span className="text-xs font-semibold flex items-center gap-1.5">
+                      <BrainCircuit size={14} className="text-indigo-400" />
+                      Aprendizaje Autónomo de Gabi
+                    </span>
+                    <span className="text-[10px] text-slate-500">Permite que Gabi extraiga automáticamente preferencias y proyectos de tus chats (cada 5 turnos).</span>
                   </div>
                   <button
-                    onClick={() => {}}
-                    className="w-10 h-5 rounded-full p-0.5 transition-colors bg-[#7ED4FD]"
+                    onClick={handleToggleAutoLearning}
+                    className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out ${
+                      autoLearning ? 'bg-[#7ED4FD] text-slate-950' : 'bg-slate-800'
+                    }`}
                   >
-                    <div className="w-4 h-4 rounded-full bg-white translate-x-5" />
+                    <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                      autoLearning ? 'translate-x-5' : 'translate-x-0'
+                    }`} />
                   </button>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-between py-1">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-semibold">Cifrado de Extremo a Extremo</span>
-                    <span className="text-[10px] text-slate-500">Proteger las credenciales de API locales con llave de seguridad criptográfica.</span>
+              {/* User Memories List Display */}
+              <div className="space-y-3 pt-2 flex-1 flex flex-col min-h-0 select-none">
+                {/* Pending memories section */}
+                {memories.filter(m => m.status === 'Pendiente de Confirmación' && !m.blocked).length > 0 && (
+                  <div className="p-3.5 rounded-2xl border border-indigo-500/25 bg-indigo-950/15 space-y-2.5 shrink-0">
+                    <div className="flex items-center gap-1.5 text-indigo-300 font-bold text-[11px]">
+                      <BrainCircuit size={13} className="animate-pulse" />
+                      <span>Gabi detectó estas posibles preferencias en tus chats. ¿Deseas guardarlas?</span>
+                    </div>
+                    <div className="space-y-2 max-h-28 overflow-y-auto pr-1">
+                      {memories.filter(m => m.status === 'Pendiente de Confirmación' && !m.blocked).map(mem => (
+                        <div key={mem.id} className="p-2.5 bg-slate-900/70 border border-slate-800 rounded-xl text-[11px] flex justify-between items-start gap-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[8px] uppercase font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-900/35 px-1.5 py-0.5 rounded">
+                                {mem.category === 'user_preference' ? 'Preferencia' : 
+                                 mem.category === 'project_details' ? 'Proyecto' : 
+                                 mem.category}
+                              </span>
+                              <span className="text-[8px] text-slate-500 font-mono">
+                                Confianza: {Math.round((mem.confidence || 0.8) * 100)}%
+                              </span>
+                            </div>
+                            <p className="text-slate-300 font-medium">{mem.content}</p>
+                          </div>
+                          <div className="flex gap-1 shrink-0 items-center">
+                            <button 
+                              onClick={() => handleConfirmMemory(mem.id)}
+                              className="px-2 py-0.5 bg-indigo-650 hover:bg-indigo-600 text-white rounded text-[9px] font-bold flex items-center gap-0.5 transition-all"
+                            >
+                              <Check size={9} /> Guardar
+                            </button>
+                            <button 
+                              onClick={() => handleConfirmAsTemporal(mem.id)}
+                              className="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-350 rounded text-[9px] font-semibold transition-all"
+                            >
+                              Temporal
+                            </button>
+                            <button 
+                              onClick={() => handleToggleBlockMemory(mem.id, false)}
+                              className="p-1 text-slate-550 hover:text-slate-300 rounded transition-all"
+                              title="Bloquear"
+                            >
+                              <Lock size={10} />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteMemory(mem.id)}
+                              className="p-1 text-slate-550 hover:text-rose-400 rounded transition-all"
+                              title="Rechazar"
+                            >
+                              <Trash2 size={10} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 bg-emerald-950 text-emerald-400 rounded-full font-bold">ACTIVO</span>
-                </div>
+                )}
 
-                <div className="pt-4 border-t border-slate-900/60">
-                  <span className="text-xs font-semibold text-slate-350 block mb-2">Acciones de Limpieza</span>
-                  <div className="flex gap-2">
-                    <button className="px-4 py-2 bg-red-950/40 hover:bg-red-950/60 border border-red-900/40 text-red-300 text-xs font-semibold rounded-lg transition-colors">
-                      Borrar Historial Local
-                    </button>
-                    <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
-                      Vaciar Caché del Servidor
-                    </button>
+                <h3 className="text-xs font-semibold text-slate-350 flex items-center justify-between gap-1">
+                  <div className="flex items-center gap-1">
+                    <span>Recuerdos de Gabi AI sobre ti</span>
+                    <span className="text-[10px] text-slate-500 font-normal">
+                      ({memories.filter(m => m.status !== 'Pendiente de Confirmación').length} hechos activos)
+                    </span>
                   </div>
+                  <button
+                    onClick={handleExportMemories}
+                    className="text-[9px] font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 hover:underline cursor-pointer border border-indigo-900/30 bg-indigo-950/20 px-2 py-0.5 rounded"
+                  >
+                    <Download size={10} /> Exportar JSON
+                  </button>
+                </h3>
+                
+                {memoriesLoading ? (
+                  <div className="text-xs text-slate-500 italic p-6 text-center border border-dashed border-slate-850 rounded-xl">
+                    Cargando recuerdos...
+                  </div>
+                ) : memories.filter(m => m.status !== 'Pendiente de Confirmación').length === 0 ? (
+                  <div className="text-[11px] text-slate-500 italic p-6 text-center border border-dashed border-slate-850 rounded-xl leading-relaxed">
+                    No hay recuerdos activos registrados aún. Gabi extraerá y guardará información automáticamente mientras converses.
+                  </div>
+                ) : (
+                  <div className="flex-1 overflow-y-auto space-y-2 max-h-56 pr-1.5 scrollbar-thin">
+                    {memories.filter(m => m.status !== 'Pendiente de Confirmación').map((mem) => {
+                      const isEditing = editingMemoryId === mem.id;
+                      const isBlocked = !!mem.blocked;
+                      const isTemporal = mem.status === 'Temporal';
+
+                      return (
+                        <div 
+                          key={mem.id} 
+                          className={`p-3 rounded-xl border text-xs flex justify-between items-start gap-4 transition-all ${
+                            isBlocked 
+                              ? 'border-red-950/20 bg-red-950/5 opacity-60' 
+                              : 'border-slate-850 bg-slate-950/30 hover:border-slate-800'
+                          }`}
+                        >
+                          {isEditing ? (
+                            <div className="flex-1 space-y-2">
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  value={editCategory}
+                                  onChange={(e) => setEditCategory(e.target.value)}
+                                  className="bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] font-mono text-indigo-400 outline-none w-1/3"
+                                  placeholder="Categoría"
+                                  autoFocus
+                                />
+                                <span className="text-[10px] text-slate-500 self-center">Edición inline</span>
+                              </div>
+                              <textarea
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                                className="w-full bg-slate-900 border border-slate-800 rounded p-1.5 text-[11px] text-slate-200 outline-none h-14 resize-none"
+                                placeholder="Contenido"
+                              />
+                              <div className="flex gap-1.5">
+                                <button
+                                  onClick={() => handleSaveEdit(mem.id)}
+                                  className="px-2 py-0.5 bg-indigo-650 hover:bg-indigo-600 text-white rounded text-[9px] font-bold"
+                                >
+                                  Guardar
+                                </button>
+                                <button
+                                  onClick={() => setEditingMemoryId(null)}
+                                  className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-350 rounded text-[9px] font-semibold"
+                                >
+                                  Cancelar
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-1 flex-1">
+                              <div className="flex flex-wrap items-center gap-1 text-[9px]">
+                                <span className={`uppercase font-bold border px-1.5 py-0.2 rounded ${
+                                  isTemporal 
+                                    ? 'text-amber-400 bg-amber-950/40 border-amber-900/20' 
+                                    : 'text-indigo-400 bg-indigo-950/40 border-indigo-900/20'
+                                }`}>
+                                  {mem.category === 'user_preference' ? 'Preferencia' : 
+                                   mem.category === 'project_details' ? 'Proyecto' : 
+                                   mem.category || 'Hecho'}
+                                </span>
+                                <span className={`px-1.5 py-0.2 rounded-full font-semibold border ${
+                                  isTemporal 
+                                    ? 'bg-amber-950/20 text-amber-500 border-amber-900/20' 
+                                    : 'bg-indigo-950/20 text-indigo-500 border-indigo-900/20'
+                                }`}>
+                                  {mem.status}
+                                </span>
+                                {isBlocked && (
+                                  <span className="bg-red-950/45 text-red-400 border border-red-900/25 px-1.5 py-0.2 rounded-full font-bold">
+                                    BLOQUEADA
+                                  </span>
+                                )}
+                                <span className="text-slate-550 font-mono text-[8px]">
+                                  Confianza: {Math.round((mem.confidence || 1.0) * 100)}%
+                                </span>
+                                <span className="text-slate-550 font-mono text-[8px] flex items-center gap-0.5">
+                                  <Calendar size={8} /> Creado: {new Date(mem.timestamp || mem.created_at).toLocaleDateString()}
+                                </span>
+                                {mem.last_used_at && (
+                                  <span className="text-slate-550 font-mono text-[8px]">
+                                    Último uso: {new Date(mem.last_used_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                )}
+                              </div>
+                              <p className={`text-slate-300 font-medium leading-relaxed ${isBlocked ? 'line-through text-slate-500' : ''}`}>
+                                {mem.content}
+                              </p>
+                              <p className="text-[9px] text-slate-550 italic">Fuente: {mem.source || 'Manual'}</p>
+                            </div>
+                          )}
+                          
+                          {!isEditing && (
+                            <div className="flex gap-1 shrink-0">
+                              <button
+                                onClick={() => handleStartEdit(mem)}
+                                className="p-1 text-slate-550 hover:text-indigo-400 hover:bg-slate-900 rounded transition-all"
+                                title="Editar"
+                              >
+                                <Edit2 size={11} />
+                              </button>
+                              <button
+                                onClick={() => handleToggleBlockMemory(mem.id, isBlocked)}
+                                className={`p-1 rounded transition-all ${
+                                  isBlocked 
+                                    ? 'text-red-450 hover:bg-slate-900' 
+                                    : 'text-slate-550 hover:text-red-450 hover:bg-slate-900'
+                                }`}
+                                title={isBlocked ? "Desbloquear" : "Bloquear"}
+                              >
+                                {isBlocked ? <Unlock size={11} /> : <Lock size={11} />}
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteMemory(mem.id)}
+                                className="text-slate-550 hover:text-rose-450 p-1 hover:bg-slate-900 rounded transition-all"
+                                title="Borrar"
+                              >
+                                <Trash2 size={11} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-slate-900/60 flex flex-col gap-3 shrink-0">
+                <span className="text-xs font-semibold text-slate-350 block">Acciones de Limpieza</span>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-red-950/40 hover:bg-red-950/60 border border-red-900/40 text-red-300 text-xs font-semibold rounded-lg transition-colors">
+                    Borrar Historial de Chat
+                  </button>
+                  <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg transition-colors">
+                    Vaciar Caché del Servidor
+                  </button>
                 </div>
               </div>
             </div>
