@@ -20,6 +20,7 @@ import { getDocumentProxy, extractText } from 'unpdf';
 import { convert } from 'html-to-text';
 import dotenv from 'dotenv';
 import { query as dbQuery } from './db.js';
+import { getOllamaBaseUrl, getOllamaHeaders } from './providers/helper.js';
 
 dotenv.config();
 
@@ -141,25 +142,30 @@ export async function generateEmbedding(text) {
   let embedding = null;
 
   // 1. Try local Ollama embedding first
-  try {
-    const res = await fetch("http://localhost:11434/api/embeddings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "nomic-embed-text",
-        prompt: text
-      })
-    });
-    
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.embedding && Array.isArray(data.embedding)) {
-        embedding = data.embedding;
-        console.log(`[RAG] Generado embedding local usando nomic-embed-text (${embedding.length} dims).`);
+  const baseUrl = getOllamaBaseUrl();
+  if (baseUrl) {
+    try {
+      const res = await fetch(`${baseUrl}/api/embeddings`, {
+        method: "POST",
+        headers: getOllamaHeaders(),
+        body: JSON.stringify({
+          model: "nomic-embed-text",
+          prompt: text
+        })
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.embedding && Array.isArray(data.embedding)) {
+          embedding = data.embedding;
+          console.log(`[RAG] Generado embedding local usando nomic-embed-text (${embedding.length} dims).`);
+        }
       }
+    } catch (err) {
+      console.log("[RAG] Ollama local embedding not available or failed. Falling back to OpenAI...", err.message);
     }
-  } catch (err) {
-    console.log("[RAG] Ollama local embedding not available or failed. Falling back to OpenAI...", err.message);
+  } else {
+    console.log("[RAG] Ollama local/tunnel not configured or disabled in Vercel. Falling back to OpenAI...");
   }
 
   // 2. Fallback to OpenAI if local fails or is empty

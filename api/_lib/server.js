@@ -34,6 +34,7 @@ import {
   extractMemoriesInBackground,
   updateSystemMode
 } from './orchestrator.js';
+import { getOllamaDetailedStatus } from './providers/helper.js';
 
 dotenv.config();
 
@@ -202,11 +203,13 @@ app.get('/api/providers/detect', authenticateToken, async (req, res) => {
     const isOnline = await checkInternetConnectivity();
     const installed = await detectLocalModels();
     const available = await getAvailableLocalModels(installed);
+    const ollamaStatus = await getOllamaDetailedStatus();
     
     res.json({
       offlineMode: !isOnline,
       localModels: installed,
-      availableLocalProviders: available
+      availableLocalProviders: available,
+      ollamaStatus
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -219,6 +222,7 @@ app.get('/api/admin/health', authenticateToken, async (req, res) => {
     const dbStats = await getHealthStats();
     const globalConfig = await getGlobalConfig();
     const systemMode = await updateSystemMode();
+    const ollamaStatus = await getOllamaDetailedStatus();
 
     const freeMem = os.freemem();
     const totalMem = os.totalmem();
@@ -234,6 +238,7 @@ app.get('/api/admin/health', authenticateToken, async (req, res) => {
       dbStats,
       globalConfig,
       systemMode,
+      ollamaStatus,
       system: {
         cpuUsage: cpuLoad,
         cpusCount: cpus.length,

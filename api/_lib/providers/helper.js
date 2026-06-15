@@ -1,12 +1,28 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Default Ollama local endpoint
-const OLLAMA_DEFAULT_URL = "http://localhost:11434/v1/chat/completions";
+export function getOllamaBaseUrl() {
+  if (process.env.VERCEL) {
+    if (process.env.OLLAMA_BASE_URL) {
+      return process.env.OLLAMA_BASE_URL.replace(/\/$/, '');
+    }
+    return null; // Localhost not allowed in Vercel
+  }
+  if (process.env.OLLAMA_BASE_URL) {
+    return process.env.OLLAMA_BASE_URL.replace(/\/$/, '');
+  }
+  return "http://localhost:11434";
+}
 
-/**
- * Helper to fetch a URL with a timeout
- */
+export function getOllamaHeaders() {
+  const headers = { "Content-Type": "application/json" };
+  if (process.env.OLLAMA_TUNNEL_SECRET) {
+    headers["X-Tunnel-Secret"] = process.env.OLLAMA_TUNNEL_SECRET;
+  }
+  return headers;
+}
+
+// Helper to fetch a URL with a timeout
 async function fetchWithTimeout(resource, options = {}) {
   const { timeout = 4000 } = options;
   
@@ -34,8 +50,12 @@ async function fetchWithTimeout(resource, options = {}) {
  */
 export async function getBestOllamaModelMatch(modelName) {
   if (!modelName) return null;
+  const baseUrl = getOllamaBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const res = await fetch("http://localhost:11434/api/tags");
+    const res = await fetch(`${baseUrl}/api/tags`, {
+      headers: getOllamaHeaders()
+    });
     if (!res.ok) return null;
     const data = await res.json();
     if (data.models && data.models.length > 0) {
@@ -135,19 +155,24 @@ export async function queryHybrid({
   if (currentSystemMode !== 'cloud' || !hasAnyActiveApi) {
     matchedModel = await getBestOllamaModelMatch(localModelName);
   }
-  const localUrl = localProviderUrl || (matchedModel ? OLLAMA_DEFAULT_URL : (!hasAnyActiveApi ? OLLAMA_DEFAULT_URL : null));
-
+  const baseUrl = getOllamaBaseUrl();
+  const localUrl = localProviderUrl || (matchedModel ? baseUrl : (!hasAnyActiveApi ? baseUrl : null));
   if (localUrl) {
-    const cleanLocalUrl = localUrl.endsWith('/chat/completions') 
-      ? localUrl 
-      : localUrl.replace(/\/$/, '') + '/chat/completions';
+    let cleanLocalUrl = localUrl;
+    if (!cleanLocalUrl.endsWith('/chat/completions')) {
+      if (cleanLocalUrl.includes('11434') || (!cleanLocalUrl.includes('/v1') && !cleanLocalUrl.includes('/api'))) {
+        cleanLocalUrl = cleanLocalUrl.replace(/\/$/, '') + '/v1/chat/completions';
+      } else {
+        cleanLocalUrl = cleanLocalUrl.replace(/\/$/, '') + '/chat/completions';
+      }
+    }
 
     const activeLocalModel = matchedModel || localModelName;
     console.log(`[Hybrid] Attempting LOCAL execution for [${providerName}] using model [${activeLocalModel}] via ${cleanLocalUrl}...`);
     try {
       const localRes = await fetchWithTimeout(cleanLocalUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getOllamaHeaders(),
         body: JSON.stringify({
           model: activeLocalModel,
           messages,
@@ -305,4 +330,58 @@ export async function queryHybrid({
     error: null,
     confidenceEstimate: 0.85
   };
+}
+
+/**
+ * Detailed diagnosis of local and tunnel Ollama availability
+ * @returns {Promise<Object>} Status object
+ */
+export async function getOllamaDetailedStatus() {
+  const status = {
+    local: {
+      configured: !process.env.VERCEL,
+      connected: false,
+      models: []
+    },
+    tunnel: {
+      configured: !!process.env.OLLAMA_BASE_URL,
+      connected: false,
+      models: []
+    }
+  };
+
+  // Check local Ollama only if NOT on Vercel
+  if (!process.env.VERCEL) {
+    try {
+      const res = await fetchWithTimeout("http://localhost:11434/api/tags", { timeout: 1500 });
+      if (res.ok) {
+        status.local.connected = true;
+        const data = await res.json();
+        status.local.models = data.models ? data.models.map(m => m.name) : [];
+      }
+    } catch (e) {
+      // Offline/unreachable
+    }
+  }
+
+  // Check tunnel Ollama only if OLLAMA_BASE_URL is configured
+  if (process.env.OLLAMA_BASE_URL) {
+    try {
+      const cleanUrl = process.env.OLLAMA_BASE_URL.replace(/\/$/, '') + '/api/tags';
+      const headers = getOllamaHeaders();
+      const res = await fetchWithTimeout(cleanUrl, { 
+        headers,
+        timeout: 1500 
+      });
+      if (res.ok) {
+        status.tunnel.connected = true;
+        const data = await res.json();
+        status.tunnel.models = data.models ? data.models.map(m => m.name) : [];
+      }
+    } catch (e) {
+      // Offline/unreachable
+    }
+  }
+
+  return status;
 }

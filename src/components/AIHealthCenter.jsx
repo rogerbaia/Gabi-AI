@@ -199,7 +199,14 @@ export default function AIHealthCenter({ nostalgicMode, token }) {
     );
   }
 
-  const { dbStats, system } = healthData;
+  const { 
+    dbStats, 
+    system, 
+    ollamaStatus = { 
+      local: { configured: false, connected: false, models: [] }, 
+      tunnel: { configured: false, connected: false, models: [] } 
+    } 
+  } = healthData;
   const activeModels = config?.models ? Object.values(config.models).filter(m => m.enabled).length : 0;
   const inactiveModels = config?.models ? Object.values(config.models).filter(m => !m.enabled).length : 0;
 
@@ -468,6 +475,126 @@ export default function AIHealthCenter({ nostalgicMode, token }) {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Ollama Status Section */}
+            <div className={`p-5 rounded-2xl border ${
+              nostalgicMode ? 'border-[#39ff14] bg-black' : 'border-slate-800 bg-slate-900/25'
+            }`}>
+              <h3 className="text-sm font-semibold flex items-center gap-2 mb-4">
+                <BrainCircuit size={16} className="text-indigo-400" />
+                Auditoría de Conectores de Ollama
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Local Ollama Card */}
+                <div className={`p-4 rounded-xl border ${
+                  nostalgicMode 
+                    ? 'border-[#39ff14] bg-black' 
+                    : 'border-slate-800/65 bg-slate-950/30'
+                }`}>
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-800/80 mb-3">
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-200">Ollama Local</h4>
+                      <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">localhost:11434</span>
+                    </div>
+                    
+                    <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-full font-bold border ${
+                      !ollamaStatus.local.configured
+                        ? 'bg-slate-850 text-slate-500 border-slate-800/30'
+                        : ollamaStatus.local.connected
+                          ? 'bg-emerald-950/40 text-emerald-450 border-emerald-900/30'
+                          : 'bg-rose-950/40 text-rose-450 border-rose-900/30'
+                    }`}>
+                      {!ollamaStatus.local.configured 
+                        ? 'No disponible en Vercel' 
+                        : ollamaStatus.local.connected 
+                          ? 'Conectado' 
+                          : 'Desconectado'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <div className="flex justify-between text-[11px] font-mono text-slate-450">
+                      <span>Configurado en este entorno:</span>
+                      <strong className={ollamaStatus.local.configured ? "text-emerald-400" : "text-slate-500"}>
+                        {ollamaStatus.local.configured ? "Sí" : "No"}
+                      </strong>
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Modelos Detectados ({ollamaStatus.local.models.length}):</span>
+                      {ollamaStatus.local.models.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {ollamaStatus.local.models.map((m, idx) => (
+                            <span key={idx} className="text-[10px] font-mono bg-slate-900/60 text-slate-350 border border-slate-850 px-2 py-0.5 rounded">
+                              {m}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-500 italic block mt-1">
+                          {ollamaStatus.local.configured ? "Ninguno detectado o servicio apagado." : "No se escanea localhost en la nube."}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tunnel Ollama Card */}
+                <div className={`p-4 rounded-xl border ${
+                  nostalgicMode 
+                    ? 'border-[#39ff14] bg-black' 
+                    : 'border-slate-800/65 bg-slate-950/30'
+                }`}>
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-800/80 mb-3">
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-200">Ollama Remoto por Túnel</h4>
+                      <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">OLLAMA_BASE_URL (Seguro)</span>
+                    </div>
+                    
+                    <span className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-full font-bold border ${
+                      !ollamaStatus.tunnel.configured
+                        ? 'bg-slate-850 text-slate-500 border-slate-800/30'
+                        : ollamaStatus.tunnel.connected
+                          ? 'bg-emerald-950/40 text-emerald-450 border-emerald-900/30'
+                          : 'bg-rose-950/40 text-rose-450 border-rose-900/30'
+                    }`}>
+                      {!ollamaStatus.tunnel.configured 
+                        ? 'No configurado' 
+                        : ollamaStatus.tunnel.connected 
+                          ? 'Conectado' 
+                          : 'Desconectado'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <div className="flex justify-between text-[11px] font-mono text-slate-450">
+                      <span>Configurado en Vercel/Env:</span>
+                      <strong className={ollamaStatus.tunnel.configured ? "text-emerald-400" : "text-rose-400"}>
+                        {ollamaStatus.tunnel.configured ? "Sí" : "No"}
+                      </strong>
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Modelos Detectados ({ollamaStatus.tunnel.models.length}):</span>
+                      {ollamaStatus.tunnel.models.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {ollamaStatus.tunnel.models.map((m, idx) => (
+                            <span key={idx} className="text-[10px] font-mono bg-slate-900/60 text-slate-350 border border-slate-850 px-2 py-0.5 rounded">
+                              {m}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-500 italic block mt-1">
+                          {ollamaStatus.tunnel.configured ? "Ninguno detectado. Inicia el túnel en tu PC." : "Configure OLLAMA_BASE_URL en variables de entorno."}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

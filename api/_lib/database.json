@@ -1492,6 +1492,90 @@
       "cost": 0,
       "historical_accuracy": 0.9,
       "created_at": "2026-06-15T03:15:44.930Z"
+    },
+    {
+      "id": 103,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T03:26:42.761Z"
+    },
+    {
+      "id": 104,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T03:27:42.733Z"
+    },
+    {
+      "id": 105,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 6369,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:27:49.221Z"
+    },
+    {
+      "id": 106,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 5144,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:27:56.973Z"
+    },
+    {
+      "id": 107,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4164,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:28:01.402Z"
+    },
+    {
+      "id": 108,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4497,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:28:06.157Z"
+    },
+    {
+      "id": 109,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 8463,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:28:14.877Z"
     }
   ],
   "global_ai_config": {
@@ -1568,7 +1652,7 @@
       "category": "user_preference",
       "content": "Prefiere usar TypeScript en el backend.",
       "created_at": "2026-06-14T06:34:12.367Z",
-      "last_used_at": "2026-06-15T03:15:40.142Z"
+      "last_used_at": "2026-06-15T03:28:06.392Z"
     },
     {
       "id": 3,
@@ -1576,7 +1660,7 @@
       "category": "user_preference",
       "content": "Prefiere usar TypeScript en el backend.",
       "created_at": "2026-06-14T06:35:18.047Z",
-      "last_used_at": "2026-06-15T03:15:40.144Z"
+      "last_used_at": "2026-06-15T03:28:06.393Z"
     },
     {
       "id": 4,
@@ -1659,7 +1743,7 @@
       "source": "Manual",
       "confidence": 1,
       "created_at": "2026-06-15T02:36:39.042Z",
-      "last_used_at": "2026-06-15T03:15:40.145Z",
+      "last_used_at": "2026-06-15T03:28:06.394Z",
       "blocked": false
     }
   ],

@@ -10,6 +10,7 @@ import { query as queryLlama } from './providers/llama.js';
 import { query as queryGemma } from './providers/gemma.js';
 import { query as queryPhi } from './providers/phi.js';
 import { query as queryOpenRouter } from './providers/openrouter.js';
+import { getOllamaBaseUrl, getOllamaHeaders } from './providers/helper.js';
 
 import { query as dbQuery, saveModelPerformance, getBestModelForCategory, getGlobalConfig, addMemory, getUserMemories, updateMemoryLastUsed, getSystemIdentity } from './db.js';
 import { queryRAG } from './rag.js';
@@ -95,8 +96,12 @@ export function getActiveProviders() {
  * @returns {Promise<Array<string>>} List of model names
  */
 export async function detectLocalModels() {
+  const baseUrl = getOllamaBaseUrl();
+  if (!baseUrl) return [];
   try {
-    const res = await fetch("http://localhost:11434/api/tags");
+    const res = await fetch(`${baseUrl}/api/tags`, {
+      headers: getOllamaHeaders()
+    });
     if (!res.ok) return [];
     const data = await res.json();
     return data.models ? data.models.map(m => m.name) : [];
@@ -608,8 +613,14 @@ REGLAS DE COMPORTAMIENTO PARA LA RESPUESTA:
   }
 
   if (successfulResults.length === 0) {
+    let errorMsg = `Error: Todos los proveedores de IA configurados fallaron. Por favor verifica que Ollama local esté iniciado y con los modelos descargados, o comprueba tu conexión de red para acceder a los proveedores en la nube.`;
+    
+    if (process.env.VERCEL && !process.env.OLLAMA_BASE_URL) {
+      errorMsg = "Modelos locales no disponibles en producción. Configura OLLAMA_BASE_URL o usa APIs externas.";
+    }
+
     return {
-      response: `Error: Todos los proveedores de IA configurados fallaron. Por favor verifica que Ollama local esté iniciado y con los modelos descargados, o comprueba tu conexión de red para acceder a los proveedores en la nube.`,
+      response: errorMsg,
       modelsParticipated: [],
       sources: [],
       category,
