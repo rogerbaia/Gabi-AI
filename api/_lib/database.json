@@ -1,6 +1,6 @@
 {
   "user": {
-    "tokenBalance": 0,
+    "tokenBalance": 10000,
     "apiKeys": {
       "openai": "",
       "anthropic": "",
@@ -1444,6 +1444,30 @@
       "cost": 0,
       "historical_accuracy": 0.9,
       "created_at": "2026-06-15T02:59:10.016Z"
+    },
+    {
+      "id": 99,
+      "question_type": "programming",
+      "model_name": "llama-test-local",
+      "response_time_ms": 250,
+      "feedback_positive": true,
+      "feedback_negative": false,
+      "estimated_quality": 0.95,
+      "cost": 0,
+      "historical_accuracy": 0.95,
+      "created_at": "2026-06-15T03:06:55.192Z"
+    },
+    {
+      "id": 100,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 12152,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:07:08.673Z"
     }
   ],
   "global_ai_config": {
@@ -1520,7 +1544,7 @@
       "category": "user_preference",
       "content": "Prefiere usar TypeScript en el backend.",
       "created_at": "2026-06-14T06:34:12.367Z",
-      "last_used_at": "2026-06-15T02:59:05.894Z"
+      "last_used_at": "2026-06-15T03:06:55.282Z"
     },
     {
       "id": 3,
@@ -1528,7 +1552,7 @@
       "category": "user_preference",
       "content": "Prefiere usar TypeScript en el backend.",
       "created_at": "2026-06-14T06:35:18.047Z",
-      "last_used_at": "2026-06-15T02:59:05.896Z"
+      "last_used_at": "2026-06-15T03:06:55.283Z"
     },
     {
       "id": 4,
@@ -1611,7 +1635,7 @@
       "source": "Manual",
       "confidence": 1,
       "created_at": "2026-06-15T02:36:39.042Z",
-      "last_used_at": "2026-06-15T02:59:05.897Z",
+      "last_used_at": "2026-06-15T03:06:55.284Z",
       "blocked": false
     }
   ],

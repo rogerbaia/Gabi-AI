@@ -16,7 +16,7 @@ const DB_PATH = path.join(__dirname, 'database.json');
 
 const DEFAULT_DATA = {
   user: {
-    tokenBalance: 120,
+    tokenBalance: 10000,
     apiKeys: {
       openai: '',
       anthropic: '',
@@ -132,7 +132,7 @@ No soy solamente una plataforma de inteligencia artificial; también represento 
         id SERIAL PRIMARY KEY,
         username VARCHAR(50) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
-        token_balance INT DEFAULT 120
+        token_balance INT DEFAULT 10000
       );
     `);
 
@@ -346,7 +346,7 @@ No soy solamente una plataforma de inteligencia artificial; también represento 
 export async function createUser(username, hashedPassword) {
   if (isPg && pool) {
     const res = await pool.query(
-      "INSERT INTO users (username, password, token_balance) VALUES ($1, $2, 120) RETURNING id, username, token_balance",
+      "INSERT INTO users (username, password, token_balance) VALUES ($1, $2, 10000) RETURNING id, username, token_balance",
       [username, hashedPassword]
     );
     return res.rows[0];
@@ -357,9 +357,9 @@ export async function createUser(username, hashedPassword) {
     throw new Error("User already exists");
   }
   if (!db.usersFallback) db.usersFallback = {};
-  db.usersFallback[username] = { username, password: hashedPassword, tokenBalance: 120 };
+  db.usersFallback[username] = { username, password: hashedPassword, tokenBalance: 10000 };
   writeDb(db);
-  return { username, token_balance: 120 };
+  return { username, token_balance: 10000 };
 }
 
 export async function getUserByUsername(username) {
@@ -382,11 +382,30 @@ export async function getUserByUsername(username) {
 export async function getUserBalance(username) {
   if (isPg && pool) {
     const res = await pool.query("SELECT token_balance FROM users WHERE username = $1", [username]);
-    return res.rows[0]?.token_balance ?? 120;
+    let balance = res.rows[0]?.token_balance ?? 10000;
+    if (balance < 5) {
+      await pool.query("UPDATE users SET token_balance = 10000 WHERE username = $1", [username]);
+      balance = 10000;
+    }
+    return balance;
   }
   const db = readDb();
-  if (username === 'rogerio') return db.user.tokenBalance;
-  return db.usersFallback?.[username]?.tokenBalance ?? 120;
+  if (username === 'rogerio') {
+    if (db.user.tokenBalance < 5) {
+      db.user.tokenBalance = 10000;
+      writeDb(db);
+    }
+    return db.user.tokenBalance;
+  }
+  let balance = db.usersFallback?.[username]?.tokenBalance ?? 10000;
+  if (balance < 5) {
+    if (db.usersFallback?.[username]) {
+      db.usersFallback[username].tokenBalance = 10000;
+      writeDb(db);
+    }
+    balance = 10000;
+  }
+  return balance;
 }
 
 export async function updateUserBalance(username, newBalance) {
