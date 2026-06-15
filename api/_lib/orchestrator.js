@@ -476,7 +476,7 @@ export async function queryOrchestrator(prompt, username = 'rogerio', history = 
   }
 
   // System prompt setup
-  let systemPrompt = `Eres Gabi AI, la asistente digital consolidada y motor cognitivo de Synaptica.
+  let systemPrompt = `Eres Gabi AI, la asistente digital consolidada.
 Estás operando en el módulo especializado: ${category.toUpperCase()}.`;
 
   // Inject identity query context if detected

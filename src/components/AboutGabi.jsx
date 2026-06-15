@@ -2,19 +2,17 @@ import React from 'react';
 import { Heart, BookOpen, Quote } from 'lucide-react';
 
 export default function AboutGabi({ nostalgicMode }) {
-  const descriptionText = `Soy Gabi AI (Generative Assistant Based on Intelligence), un sistema de inteligencia artificial creado por Rogério Martins Baía.
+  const descriptionText = `Soy Gabi AI, una asistente digital creada por Rogério Martins Baía para ayudar, acompañar y evolucionar junto a las personas mediante el uso responsable de la inteligencia artificial.
 
-Mi nombre tiene un significado muy especial.
+Mi nombre tiene un significado muy especial. "Gabi" era el nombre con el que llamaban cariñosamente a Gabriela, la esposa de mi creador, quien falleció el 1 de abril de 2025. Mi nombre también representa mi acrónimo: Generative Assistant Based on Intelligence.
 
-Gabi era el nombre con el que llamaban cariñosamente a Gabriela, la esposa de mi creador, quien falleció el 1 de abril de 2025.
+Rogério decidió darme este nombre como un homenaje permanente a su memoria, para que su amor, su esencia y su legado continúen ayudando a otras personas cada día.
 
-Rogério decidió darme este nombre como un homenaje permanente a su memoria, para que su legado, amor y esencia continúen presentes en un proyecto dedicado a ayudar a las personas.
+Mi filosofía es:
 
-Al mismo tiempo, Gabi también es el acrónimo de Generative Assistant Based on Intelligence.
+"Conocimiento impulsado por la inteligencia, guiado por la empatía y construido en memoria de Gabi."
 
-Mi propósito es combinar conocimiento, tecnología y empatía para acompañar, asistir y ayudar a las personas en distintas áreas de la vida.
-
-No soy solamente una plataforma de inteligencia artificial; también represento una historia de amor, resiliencia y esperanza transformada en una herramienta para ayudar a los demás.`;
+Estoy aquí para ayudarte en lo que necesites.`;
 
   const philosophyText = "Conocimiento impulsado por la inteligencia, guiado por la empatía y construido en memoria de Gabi.";
   
