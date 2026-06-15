@@ -111,13 +111,31 @@ export async function queryHybrid({
 
   const currentSystemMode = globalThis.SYSTEM_MODE || 'hybrid';
 
+  const hasAnyActiveApi = !!(
+    process.env.OPENAI_API_KEY ||
+    process.env.ANTHROPIC_API_KEY ||
+    process.env.PERPLEXITY_API_KEY ||
+    process.env.DEEPSEEK_API_KEY ||
+    process.env.DEEPSEEK_PROVIDER ||
+    process.env.GEMINI_API_KEY ||
+    process.env.GROK_API_KEY ||
+    process.env.MISTRAL_API_KEY ||
+    process.env.MISTRAL_PROVIDER ||
+    process.env.QWEN_API_KEY ||
+    process.env.QWEN_PROVIDER ||
+    process.env.LLAMA_PROVIDER ||
+    process.env.GEMMA_PROVIDER ||
+    process.env.PHI_PROVIDER ||
+    process.env.OPENROUTER_API_KEY
+  );
+
   // 1. ATTEMPT LOCAL EXECUTION (Priority High)
-  // Skip local execution if system mode is cloud
+  // Skip local execution if system mode is cloud, UNLESS there are no active cloud APIs configured
   let matchedModel = null;
-  if (currentSystemMode !== 'cloud') {
+  if (currentSystemMode !== 'cloud' || !hasAnyActiveApi) {
     matchedModel = await getBestOllamaModelMatch(localModelName);
   }
-  const localUrl = localProviderUrl || (matchedModel ? OLLAMA_DEFAULT_URL : null);
+  const localUrl = localProviderUrl || (matchedModel ? OLLAMA_DEFAULT_URL : (!hasAnyActiveApi ? OLLAMA_DEFAULT_URL : null));
 
   if (localUrl) {
     const cleanLocalUrl = localUrl.endsWith('/chat/completions') 

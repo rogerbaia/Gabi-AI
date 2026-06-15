@@ -1468,6 +1468,30 @@
       "cost": 0,
       "historical_accuracy": 0.9,
       "created_at": "2026-06-15T03:07:08.673Z"
+    },
+    {
+      "id": 101,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 7654,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:14:59.980Z"
+    },
+    {
+      "id": 102,
+      "question_type": "general",
+      "model_name": "llama3.1:8b (Local)",
+      "response_time_ms": 4720,
+      "feedback_positive": false,
+      "feedback_negative": false,
+      "estimated_quality": 0.9,
+      "cost": 0,
+      "historical_accuracy": 0.9,
+      "created_at": "2026-06-15T03:15:44.930Z"
     }
   ],
   "global_ai_config": {
@@ -1544,7 +1568,7 @@
       "category": "user_preference",
       "content": "Prefiere usar TypeScript en el backend.",
       "created_at": "2026-06-14T06:34:12.367Z",
-      "last_used_at": "2026-06-15T03:06:55.282Z"
+      "last_used_at": "2026-06-15T03:15:40.142Z"
     },
     {
       "id": 3,
@@ -1552,7 +1576,7 @@
       "category": "user_preference",
       "content": "Prefiere usar TypeScript en el backend.",
       "created_at": "2026-06-14T06:35:18.047Z",
-      "last_used_at": "2026-06-15T03:06:55.283Z"
+      "last_used_at": "2026-06-15T03:15:40.144Z"
     },
     {
       "id": 4,
@@ -1635,7 +1659,7 @@
       "source": "Manual",
       "confidence": 1,
       "created_at": "2026-06-15T02:36:39.042Z",
-      "last_used_at": "2026-06-15T03:06:55.284Z",
+      "last_used_at": "2026-06-15T03:15:40.145Z",
       "blocked": false
     }
   ],

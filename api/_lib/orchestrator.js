@@ -253,7 +253,10 @@ async function getRankedProviders(category, effectiveMode, availableLocal) {
     financial: ['qwen', 'deepseek', 'llama'],
     travel: ['gemma', 'mistral', 'phi'],
     research: ['deepseek', 'mistral', 'qwen'],
-    general: ['llama', 'mistral', 'qwen']
+    general: ['llama', 'mistral', 'qwen'],
+    creative: ['gemma', 'llama', 'mistral'],
+    fast: ['phi', 'llama', 'mistral'],
+    balanced: ['mistral', 'llama', 'qwen']
   };
 
   const defaultApiRanking = {
@@ -262,7 +265,10 @@ async function getRankedProviders(category, effectiveMode, availableLocal) {
     financial: ['openai', 'deepseek', 'qwen'],
     travel: ['perplexity', 'openai', 'gemini'],
     research: ['perplexity', 'openai', 'anthropic'],
-    general: ['openai', 'anthropic', 'gemini']
+    general: ['openai', 'anthropic', 'gemini'],
+    creative: ['openai', 'anthropic', 'gemini'],
+    fast: ['openai', 'anthropic', 'gemini'],
+    balanced: ['openai', 'anthropic', 'gemini']
   };
 
   const localPref = defaultLocalRanking[category] || defaultLocalRanking.general;
@@ -510,7 +516,15 @@ REGLAS DE COMPORTAMIENTO PARA LA RESPUESTA:
   }
 
   // 4. Get ranked providers/models list
-  const rankedModels = await getRankedProviders(category, effectiveMode, availableLocal);
+  let rankedModels = await getRankedProviders(category, effectiveMode, availableLocal);
+
+  // Fallback to local llama if no active APIs or ranked models exist
+  const activeApis = getActiveProviders();
+  const hasAnyActiveApi = Object.values(activeApis).some(v => v === true);
+  if (rankedModels.length === 0 && !hasAnyActiveApi) {
+    console.log(`[Orchestrator] Empty ranked models list and no active APIs. Defaulting to 'llama' local.`);
+    rankedModels = ['llama'];
+  }
 
   if (rankedModels.length === 0) {
     const errorMsg = effectiveMode === 'offline' 
